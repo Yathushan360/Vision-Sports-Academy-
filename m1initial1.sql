@@ -22,3 +22,12 @@ CREATE TABLE payments (
     CONSTRAINT pk_payments PRIMARY KEY (payment_id), 
     CONSTRAINT fk_payments_fee FOREIGN KEY (fee_id) REFERENCES fee_structure(fee_id)
 );
+
+CREATE TABLE payment_reminders (
+    reminder_id    INT,
+    payment_id     INT NOT NULL,
+    sent_at        DATETIME DEFAULT CURRENT_TIMESTAMP,
+    channel        ENUM('EMAIL', 'SMS', 'APP') DEFAULT 'SMS',
+    CONSTRAINT pk_reminders PRIMARY KEY (reminder_id),
+    CONSTRAINT fk_reminders_payment FOREIGN KEY (payment_id) REFERENCES payments(payment_id) ON DELETE CASCADE
+);
