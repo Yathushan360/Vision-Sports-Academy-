@@ -1,11 +1,13 @@
 package lk.sliit.visionacademy.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "fee_structure")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class FeeStructure {
 
     @Id
