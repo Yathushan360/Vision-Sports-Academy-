@@ -6,6 +6,7 @@
     <title>Sports Academy - Training Sessions</title>
 
     <style>
+
         body {
             font-family: Arial, sans-serif;
             background: #f4f6f8;
@@ -19,7 +20,7 @@
             background: white;
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
         }
 
         h1 {
@@ -41,6 +42,11 @@
             font-size: 14px;
         }
 
+        input:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
         .add-button {
             grid-column: span 2;
             padding: 12px;
@@ -56,12 +62,44 @@
             background: #1d4ed8;
         }
 
+        .update-button {
+            grid-column: span 2;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background: #16a34a;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .update-button:hover {
+            background: #15803d;
+        }
+
+        .cancel-button {
+            grid-column: span 2;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background: #6b7280;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .cancel-button:hover {
+            background: #4b5563;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
-        th, td {
+
+        th,
+        td {
             padding: 12px;
             border: 1px solid #ddd;
             text-align: center;
@@ -76,6 +114,23 @@
             background: #f8fafc;
         }
 
+        tr:hover {
+            background: #eef4ff;
+        }
+
+        .edit-btn {
+            background: #16a34a;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        .edit-btn:hover {
+            background: #15803d;
+        }
 
         .delete-btn {
             background: #dc2626;
@@ -89,6 +144,51 @@
         .delete-btn:hover {
             background: #b91c1c;
         }
+
+        .message {
+            text-align: center;
+            margin: 15px 0;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+        }
+
+        @media (max-width: 700px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            form {
+                grid-template-columns: 1fr;
+            }
+
+            .add-button,
+            .update-button,
+            .cancel-button {
+                grid-column: span 1;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th,
+            td {
+                padding: 8px;
+            }
+
+        }
+
     </style>
 </head>
 
@@ -98,29 +198,74 @@
 
     <h1>🏟️ Training Sessions</h1>
 
+    <div id="message" class="message"></div>
+
     <form id="sessionForm">
 
-        <input type="text" id="coach" placeholder="Coach Name" required>
+        <input
+            type="text"
+            id="coach"
+            placeholder="Coach Name"
+            required
+        >
 
-        <input type="text" id="ground" placeholder="Ground" required>
+        <input
+            type="text"
+            id="ground"
+            placeholder="Ground"
+            required
+        >
 
-        <input type="text" id="playerGroup" placeholder="Player Group" required>
+        <input
+            type="text"
+            id="playerGroup"
+            placeholder="Player Group"
+            required
+        >
 
-        <input type="date" id="sessionDate" required>
+        <input
+            type="date"
+            id="sessionDate"
+            required
+        >
 
-        <input type="time" id="startTime" required>
+        <input
+            type="time"
+            id="startTime"
+            required
+        >
 
-        <input type="time" id="endTime" required>
+        <input
+            type="time"
+            id="endTime"
+            required
+        >
 
-        <button class="add-button" type="submit">
+        <button
+            class="add-button"
+            id="submitButton"
+            type="submit"
+        >
             + Add Training Session
+        </button>
+
+        <button
+            class="cancel-button"
+            id="cancelButton"
+            type="button"
+            style="display: none;"
+            onclick="cancelEdit()"
+        >
+            Cancel Edit
         </button>
 
     </form>
 
+
     <table>
 
         <thead>
+
             <tr>
                 <th>ID</th>
                 <th>Coach</th>
@@ -131,118 +276,437 @@
                 <th>End</th>
                 <th>Action</th>
             </tr>
+
         </thead>
 
-        <tbody id="sessionTable"></tbody>
+        <tbody id="sessionTable">
+
+        </tbody>
 
     </table>
 
 </div>
 
+
 <script>
 
     const apiUrl = "/api/training-sessions";
 
+    let editingId = null;
+
+
+    // Show message
+    function showMessage(message) {
+
+        const messageBox = document.getElementById("message");
+
+        messageBox.textContent = message;
+
+        setTimeout(function() {
+
+            messageBox.textContent = "";
+
+        }, 3000);
+
+    }
+
+
+    // Load all training sessions
     function loadSessions() {
 
         fetch(apiUrl)
-            .then(response => response.json())
+
+            .then(response => {
+
+                if (!response.ok) {
+                    throw new Error("Failed to load training sessions");
+                }
+
+                return response.json();
+
+            })
+
             .then(data => {
 
                 const table = document.getElementById("sessionTable");
 
                 table.innerHTML = "";
 
+
+                if (data.length === 0) {
+
+                    table.innerHTML = `
+                        <tr>
+                            <td colspan="8" class="empty-message">
+                                No training sessions available.
+                            </td>
+                        </tr>
+                    `;
+
+                    return;
+                }
+
+
                 data.forEach(session => {
 
                     const row = document.createElement("tr");
 
+
                     row.innerHTML = `
+
                         <td>${session.id}</td>
+
                         <td>${session.coach}</td>
+
                         <td>${session.ground}</td>
+
                         <td>${session.playerGroup}</td>
+
                         <td>${session.sessionDate}</td>
+
                         <td>${session.startTime}</td>
+
                         <td>${session.endTime}</td>
+
                         <td>
-                            <button class="delete-btn"
-                                onclick="deleteSession(${session.id})">
+
+                            <button
+                                class="edit-btn"
+                                onclick="editSession(${session.id})"
+                            >
+                                Edit
+                            </button>
+
+                            <button
+                                class="delete-btn"
+                                onclick="deleteSession(${session.id})"
+                            >
                                 Delete
                             </button>
+
                         </td>
+
                     `;
 
+
                     table.appendChild(row);
+
                 });
 
+            })
+
+            .catch(error => {
+
+                console.error(error);
+
+                showMessage("Error loading training sessions.");
+
             });
+
     }
 
 
-    document.getElementById("sessionForm").addEventListener("submit", function(event) {
+    // Add or Update Training Session
+    document
+        .getElementById("sessionForm")
+        .addEventListener("submit", function(event) {
 
-        event.preventDefault();
+            event.preventDefault();
 
-        const session = {
 
-            coach: document.getElementById("coach").value,
+            const session = {
 
-            ground: document.getElementById("ground").value,
+                coach: document.getElementById("coach").value,
 
-            playerGroup: document.getElementById("playerGroup").value,
+                ground: document.getElementById("ground").value,
 
-            sessionDate: document.getElementById("sessionDate").value,
+                playerGroup: document.getElementById("playerGroup").value,
 
-            startTime: document.getElementById("startTime").value,
+                sessionDate: document.getElementById("sessionDate").value,
 
-            endTime: document.getElementById("endTime").value
+                startTime: document.getElementById("startTime").value,
 
-        };
+                endTime: document.getElementById("endTime").value
 
-        fetch(apiUrl, {
+            };
 
-            method: "POST",
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+            // ADD
+            if (editingId === null) {
 
-            body: JSON.stringify(session)
+                fetch(apiUrl, {
 
-        })
-        .then(response => response.json())
-        .then(() => {
+                    method: "POST",
 
-            document.getElementById("sessionForm").reset();
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
 
-            loadSessions();
+                    body: JSON.stringify(session)
+
+                })
+
+                .then(response => {
+
+                    if (!response.ok) {
+                        throw new Error("Failed to add training session");
+                    }
+
+                    return response.json();
+
+                })
+
+                .then(() => {
+
+                    document
+                        .getElementById("sessionForm")
+                        .reset();
+
+                    loadSessions();
+
+                    showMessage("Training session added successfully.");
+
+                })
+
+                .catch(error => {
+
+                    console.error(error);
+
+                    showMessage("Error adding training session.");
+
+                });
+
+            }
+
+
+            // UPDATE
+            else {
+
+                fetch(apiUrl + "/" + editingId, {
+
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify(session)
+
+                })
+
+                .then(response => {
+
+                    if (!response.ok) {
+                        throw new Error("Failed to update training session");
+                    }
+
+                    return response.json();
+
+                })
+
+                .then(() => {
+
+                    document
+                        .getElementById("sessionForm")
+                        .reset();
+
+                    editingId = null;
+
+
+                    document
+                        .getElementById("submitButton")
+                        .textContent = "+ Add Training Session";
+
+
+                    document
+                        .getElementById("submitButton")
+                        .className = "add-button";
+
+
+                    document
+                        .getElementById("cancelButton")
+                        .style.display = "none";
+
+
+                    loadSessions();
+
+                    showMessage("Training session updated successfully.");
+
+                })
+
+                .catch(error => {
+
+                    console.error(error);
+
+                    showMessage("Error updating training session.");
+
+                });
+
+            }
 
         });
 
-    });
+
+    // Edit Training Session
+    function editSession(id) {
+
+        fetch(apiUrl + "/" + id)
+
+            .then(response => {
+
+                if (!response.ok) {
+                    throw new Error("Training session not found");
+                }
+
+                return response.json();
+
+            })
+
+            .then(session => {
+
+                editingId = id;
 
 
+                document
+                    .getElementById("coach")
+                    .value = session.coach;
+
+
+                document
+                    .getElementById("ground")
+                    .value = session.ground;
+
+
+                document
+                    .getElementById("playerGroup")
+                    .value = session.playerGroup;
+
+
+                document
+                    .getElementById("sessionDate")
+                    .value = session.sessionDate;
+
+
+                document
+                    .getElementById("startTime")
+                    .value = session.startTime;
+
+
+                document
+                    .getElementById("endTime")
+                    .value = session.endTime;
+
+
+                document
+                    .getElementById("submitButton")
+                    .textContent = "Update Training Session";
+
+
+                document
+                    .getElementById("submitButton")
+                    .className = "update-button";
+
+
+                document
+                    .getElementById("cancelButton")
+                    .style.display = "block";
+
+
+                window.scrollTo({
+
+                    top: 0,
+
+                    behavior: "smooth"
+
+                });
+
+
+                showMessage("Edit mode enabled.");
+
+            })
+
+            .catch(error => {
+
+                console.error(error);
+
+                showMessage("Error loading training session.");
+
+            });
+
+    }
+
+
+    // Cancel Edit
+    function cancelEdit() {
+
+        editingId = null;
+
+
+        document
+            .getElementById("sessionForm")
+            .reset();
+
+
+        document
+            .getElementById("submitButton")
+            .textContent = "+ Add Training Session";
+
+
+        document
+            .getElementById("submitButton")
+            .className = "add-button";
+
+
+        document
+            .getElementById("cancelButton")
+            .style.display = "none";
+
+
+        showMessage("Edit cancelled.");
+
+    }
+
+
+    // Delete Training Session
     function deleteSession(id) {
 
         if (!confirm("Are you sure you want to delete this session?")) {
+
             return;
+
         }
+
 
         fetch(apiUrl + "/" + id, {
 
             method: "DELETE"
 
         })
-        .then(() => {
+
+        .then(response => {
+
+            if (!response.ok) {
+                throw new Error("Failed to delete training session");
+            }
 
             loadSessions();
+
+            showMessage("Training session deleted successfully.");
+
+        })
+
+        .catch(error => {
+
+            console.error(error);
+
+            showMessage("Error deleting training session.");
 
         });
 
     }
 
 
+    // Load sessions when page opens
     loadSessions();
 
 </script>
