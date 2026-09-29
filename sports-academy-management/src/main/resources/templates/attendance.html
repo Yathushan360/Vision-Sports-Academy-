@@ -947,7 +947,165 @@
             border-radius: 12px;
             cursor: pointer;
         }
-    </style>
+    
+/* =========================================
+   ATTENDANCE REPLACE CONFIRMATION MODAL
+========================================= */
+.attendance-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.62);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+}
+
+.attendance-modal-overlay.show {
+    display: flex;
+}
+
+.attendance-modal {
+    width: min(480px, 100%);
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.30);
+    overflow: hidden;
+    animation: attendanceModalIn 0.18s ease-out;
+}
+
+@keyframes attendanceModalIn {
+    from { transform: translateY(12px) scale(0.98); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.attendance-modal-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 22px 14px;
+}
+
+.attendance-warning-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff4d6;
+    color: #b77900;
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.attendance-modal-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+    color: #1f2937;
+}
+
+.attendance-modal-subtitle {
+    margin: 4px 0 0;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.attendance-modal-body {
+    padding: 4px 22px 20px;
+}
+
+.attendance-modal-message {
+    color: #374151;
+    line-height: 1.55;
+    font-size: 15px;
+    margin: 0 0 14px;
+}
+
+.attendance-status-change {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 10px;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 14px;
+}
+
+.attendance-status-box {
+    text-align: center;
+}
+
+.attendance-status-label {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #6b7280;
+    margin-bottom: 5px;
+}
+
+.attendance-status-value {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    background: #eef2ff;
+    color: #374151;
+}
+
+.attendance-status-arrow {
+    font-size: 20px;
+    color: #9ca3af;
+}
+
+.attendance-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 15px 22px 20px;
+    border-top: 1px solid #eef0f3;
+    background: #fafafa;
+}
+
+.attendance-modal-btn {
+    border: 0;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.attendance-modal-cancel {
+    background: #eef2f7;
+    color: #374151;
+}
+
+.attendance-modal-replace {
+    background: #dc2626;
+    color: #ffffff;
+}
+
+.attendance-modal-btn:hover {
+    filter: brightness(0.96);
+}
+
+@media (max-width: 520px) {
+    .attendance-status-change {
+        grid-template-columns: 1fr;
+    }
+    .attendance-status-arrow {
+        transform: rotate(90deg);
+        text-align: center;
+    }
+}
+</style>
 
 </head>
 
@@ -2461,6 +2619,114 @@
 
 
         /* =========================================
+           ATTENDANCE REPLACE MODAL
+        ========================================= */
+        function showAttendanceReplaceModal(
+            playerName,
+            sessionId,
+            currentStatus,
+            newStatus
+        ) {
+            return new Promise(function (resolve) {
+
+                const modal = document.getElementById(
+                    "attendanceReplaceModal"
+                );
+
+                const message = document.getElementById(
+                    "attendanceReplaceMessage"
+                );
+
+                const currentStatusElement =
+                    document.getElementById(
+                        "attendanceCurrentStatus"
+                    );
+
+                const newStatusElement =
+                    document.getElementById(
+                        "attendanceNewStatus"
+                    );
+
+                const cancelButton =
+                    document.getElementById(
+                        "attendanceCancelReplace"
+                    );
+
+                const confirmButton =
+                    document.getElementById(
+                        "attendanceConfirmReplace"
+                    );
+
+                message.textContent =
+                    "Attendance for " +
+                    playerName +
+                    " already exists in Training Session #" +
+                    sessionId +
+                    ". Do you want to replace the existing attendance record?";
+
+                currentStatusElement.textContent = currentStatus;
+                newStatusElement.textContent = newStatus;
+
+                modal.classList.add("show");
+                modal.setAttribute("aria-hidden", "false");
+
+                function close(result) {
+                    modal.classList.remove("show");
+                    modal.setAttribute("aria-hidden", "true");
+
+                    cancelButton.removeEventListener(
+                        "click",
+                        cancelHandler
+                    );
+
+                    confirmButton.removeEventListener(
+                        "click",
+                        confirmHandler
+                    );
+
+                    document.removeEventListener(
+                        "keydown",
+                        keyHandler
+                    );
+
+                    resolve(result);
+                }
+
+                function cancelHandler() {
+                    close(false);
+                }
+
+                function confirmHandler() {
+                    close(true);
+                }
+
+                function keyHandler(event) {
+                    if (event.key === "Escape") {
+                        close(false);
+                    }
+                }
+
+                cancelButton.addEventListener(
+                    "click",
+                    cancelHandler
+                );
+
+                confirmButton.addEventListener(
+                    "click",
+                    confirmHandler
+                );
+
+                document.addEventListener(
+                    "keydown",
+                    keyHandler
+                );
+
+                confirmButton.focus();
+            });
+        }
+
+
+        /* =========================================
            FORM SUBMIT
         ========================================= */
 
@@ -2580,18 +2846,11 @@
                             const newStatus =
                                 status || "UNKNOWN";
 
-                            const replaceRecord = window.confirm(
-                                "Attendance already exists for " +
-                                playerName +
-                                " in Training Session #" +
-                                sessionId +
-                                ".\\n\\n" +
-                                "Current status: " +
-                                currentStatus +
-                                "\\nNew status: " +
-                                newStatus +
-                                "\\n\\n" +
-                                "Do you want to replace the existing attendance record?"
+                            const replaceRecord = await showAttendanceReplaceModal(
+                                playerName,
+                                sessionId,
+                                currentStatus,
+                                newStatus
                             );
 
                             if (!replaceRecord) {
@@ -3510,6 +3769,44 @@
 
 
     </script>
+
+
+
+<!-- =========================================
+     ATTENDANCE REPLACE CONFIRMATION MODAL
+========================================= -->
+<div id="attendanceReplaceModal" class="attendance-modal-overlay" aria-hidden="true">
+    <div class="attendance-modal" role="dialog" aria-modal="true" aria-labelledby="attendanceReplaceTitle">
+        <div class="attendance-modal-header">
+            <div class="attendance-warning-icon">!</div>
+            <div>
+                <h3 id="attendanceReplaceTitle" class="attendance-modal-title">Attendance Already Exists</h3>
+                <p class="attendance-modal-subtitle">Please confirm before replacing the existing record.</p>
+            </div>
+        </div>
+
+        <div class="attendance-modal-body">
+            <p id="attendanceReplaceMessage" class="attendance-modal-message"></p>
+
+            <div class="attendance-status-change">
+                <div class="attendance-status-box">
+                    <span class="attendance-status-label">Current Status</span>
+                    <span id="attendanceCurrentStatus" class="attendance-status-value">-</span>
+                </div>
+                <div class="attendance-status-arrow">→</div>
+                <div class="attendance-status-box">
+                    <span class="attendance-status-label">New Status</span>
+                    <span id="attendanceNewStatus" class="attendance-status-value">-</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="attendance-modal-footer">
+            <button type="button" id="attendanceCancelReplace" class="attendance-modal-btn attendance-modal-cancel">Cancel</button>
+            <button type="button" id="attendanceConfirmReplace" class="attendance-modal-btn attendance-modal-replace">Replace Attendance</button>
+        </div>
+    </div>
+</div>
 
 </body>
 
