@@ -1,7 +1,9 @@
 package lk.sliit.visionacademy.service;
 
+import lk.sliit.visionacademy.dto.PaymentProcessRequest;
 import lk.sliit.visionacademy.entity.Payment;
 import lk.sliit.visionacademy.entity.PaymentStatus;
+import lk.sliit.visionacademy.exception.InvalidPaymentStateException;
 import lk.sliit.visionacademy.exception.PaymentProcessingException;
 
 import java.math.BigDecimal;
@@ -15,6 +17,12 @@ public interface IPaymentService {
 
     // Overloaded: Generate monthly fee with custom due date
     Payment generateMonthlyFee(Integer playerId, Integer feeId, LocalDate dueDate) throws PaymentProcessingException;
+
+    // Process fee payment using structured request DTO
+    Payment processPayment(PaymentProcessRequest request) throws PaymentProcessingException, InvalidPaymentStateException;
+
+    // Overloaded: Process fee payment by payment ID (defaults to CASH and current date)
+    Payment processPayment(Integer paymentId) throws PaymentProcessingException, InvalidPaymentStateException;
 
     // Overloaded: Track / retrieve payments
     List<Payment> getPayments();

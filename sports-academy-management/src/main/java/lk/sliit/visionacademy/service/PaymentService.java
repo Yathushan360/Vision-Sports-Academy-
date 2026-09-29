@@ -1,8 +1,10 @@
 package lk.sliit.visionacademy.service;
 
+import lk.sliit.visionacademy.dto.PaymentProcessRequest;
 import lk.sliit.visionacademy.entity.FeeStructure;
 import lk.sliit.visionacademy.entity.Payment;
 import lk.sliit.visionacademy.entity.PaymentStatus;
+import lk.sliit.visionacademy.exception.InvalidPaymentStateException;
 import lk.sliit.visionacademy.exception.PaymentProcessingException;
 import lk.sliit.visionacademy.repository.FeeStructureRepository;
 import lk.sliit.visionacademy.repository.PaymentRepository;
@@ -17,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * Control Class for the Billing & Payments module.
  * Encapsulates financial business logic, tracks payment statuses,
- * and coordinates between entities and repository access.
+ * enforces finite state transitions, and coordinates between entities and repository access.
  */
 @Service
 public class PaymentService implements IPaymentService {
@@ -56,6 +58,71 @@ public class PaymentService implements IPaymentService {
         payment.setStatus(PaymentStatus.PENDING);
 
         return paymentRepository.save(payment);
+    }
+
+    /**
+     * Processes a payment transaction using PaymentProcessRequest DTO.
+     * Enforces finite state management (preventing re-payment of PAID records)
+     * and validates domain business invariants.
+     */
+    @Override
+    public Payment processPayment(PaymentProcessRequest request) throws PaymentProcessingException, InvalidPaymentStateException {
+        if (request == null || request.getPaymentId() == null) {
+            throw new PaymentProcessingException("Payment request and Payment ID must not be null");
+        }
+
+        Payment payment = paymentRepository.findById(request.getPaymentId())
+                .orElseThrow(() -> new PaymentProcessingException("Payment record not found with ID: " + request.getPaymentId()));
+
+        // Finite State Management & Domain Invariant:
+        // An invoice that has already reached the PAID state cannot be re-settled.
+        if (payment.getStatus() == PaymentStatus.PAID) {
+            throw new InvalidPaymentStateException(
+                    "Payment #" + payment.getPaymentId() + " has already been settled and marked as PAID on " + payment.getPaidDate()
+            );
+        }
+
+        // Domain Invariant: Payment amount validation
+        if (request.getAmount() != null && request.getAmount().compareTo(payment.getAmount()) < 0) {
+            throw new PaymentProcessingException(
+                    "Insufficient payment amount for Payment #" + payment.getPaymentId() +
+                    ". Outstanding: Rs. " + payment.getAmount() + ", Provided: Rs. " + request.getAmount()
+            );
+        }
+
+        // State Transition: PENDING / OVERDUE -> PAID
+        payment.setStatus(PaymentStatus.PAID);
+        payment.setPaidDate(request.getPaidDate() != null ? request.getPaidDate() : LocalDate.now());
+
+        if (request.getPaymentMethod() != null && !request.getPaymentMethod().isBlank()) {
+            payment.setPaymentMethod(request.getPaymentMethod());
+        } else {
+            payment.setPaymentMethod("CASH");
+        }
+
+        if (request.getTransactionReference() != null && !request.getTransactionReference().isBlank()) {
+            payment.setTransactionReference(request.getTransactionReference());
+        }
+
+        return paymentRepository.save(payment);
+    }
+
+    /**
+     * Overloaded method: Processes a payment directly by paymentId with default settings.
+     * Demonstrates Method Overloading (compile-time polymorphism).
+     */
+    @Override
+    public Payment processPayment(Integer paymentId) throws PaymentProcessingException, InvalidPaymentStateException {
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new PaymentProcessingException("Payment record not found with ID: " + paymentId));
+
+        PaymentProcessRequest request = new PaymentProcessRequest();
+        request.setPaymentId(paymentId);
+        request.setAmount(payment.getAmount());
+        request.setPaymentMethod("CASH");
+        request.setPaidDate(LocalDate.now());
+
+        return processPayment(request);
     }
 
     /**
