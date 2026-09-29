@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Attendance Management | Vision Sports Academy</title>
 
     <style>
-
         * {
             margin: 0;
             padding: 0;
@@ -27,18 +29,19 @@
             font-family: inherit;
         }
 
-        /* =========================
-           LAYOUT
-        ========================= */
+        /* =========================================
+           MAIN LAYOUT
+        ========================================= */
 
         .app {
             display: flex;
             min-height: 100vh;
         }
 
-        /* =========================
+
+        /* =========================================
            SIDEBAR
-        ========================= */
+        ========================================= */
 
         .sidebar {
             width: 250px;
@@ -119,9 +122,10 @@
             font-size: 16px;
         }
 
-        /* =========================
+
+        /* =========================================
            MAIN
-        ========================= */
+        ========================================= */
 
         .main {
             margin-left: 250px;
@@ -129,9 +133,10 @@
             min-height: 100vh;
         }
 
-        /* =========================
-           TOPBAR
-        ========================= */
+
+        /* =========================================
+           TOP BAR
+        ========================================= */
 
         .topbar {
             height: 72px;
@@ -182,9 +187,10 @@
             color: #667085;
         }
 
-        /* =========================
+
+        /* =========================================
            CONTENT
-        ========================= */
+        ========================================= */
 
         .content {
             padding: 28px 32px 40px;
@@ -208,9 +214,10 @@
             margin-top: 5px;
         }
 
-        /* =========================
-           STAT CARDS
-        ========================= */
+
+        /* =========================================
+           STATISTICS
+        ========================================= */
 
         .stats-grid {
             display: grid;
@@ -271,9 +278,10 @@
             color: #101828;
         }
 
-        /* =========================
-           FORM CARD
-        ========================= */
+
+        /* =========================================
+           CARD
+        ========================================= */
 
         .card {
             background: white;
@@ -305,6 +313,11 @@
         .card-body {
             padding: 22px;
         }
+
+
+        /* =========================================
+           FORM
+        ========================================= */
 
         .form-grid {
             display: grid;
@@ -354,9 +367,50 @@
             min-height: 80px;
         }
 
-        /* =========================
+
+        /* =========================================
+           AUTOMATIC TIME
+        ========================================= */
+
+        .auto-time-box {
+            min-height: 45px;
+            border: 1px solid #d0d5dd;
+            background: #f9fafb;
+            border-radius: 9px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .auto-time-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: #eff6ff;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auto-time-box strong {
+            display: block;
+            font-size: 13px;
+            color: #344054;
+        }
+
+        .auto-time-box small {
+            display: block;
+            font-size: 10px;
+            color: #667085;
+            margin-top: 2px;
+        }
+
+
+        /* =========================================
            STATUS BUTTONS
-        ========================= */
+        ========================================= */
 
         .status-buttons {
             display: grid;
@@ -409,6 +463,7 @@
             margin-top: 2px;
         }
 
+
         /* PRESENT */
 
         .status-btn.present.selected {
@@ -420,6 +475,7 @@
             background: #22c55e;
             color: white;
         }
+
 
         /* ABSENT */
 
@@ -433,6 +489,7 @@
             color: white;
         }
 
+
         /* LATE */
 
         .status-btn.late.selected {
@@ -444,6 +501,7 @@
             background: #f59e0b;
             color: white;
         }
+
 
         /* EXCUSED */
 
@@ -457,9 +515,10 @@
             color: white;
         }
 
-        /* =========================
+
+        /* =========================================
            FORM BUTTONS
-        ========================= */
+        ========================================= */
 
         .form-actions {
             display: flex;
@@ -509,13 +568,10 @@
             background: #fecdca;
         }
 
-        .hidden {
-            display: none !important;
-        }
 
-        /* =========================
-           TABLE TOOLBAR
-        ========================= */
+        /* =========================================
+           TOOLBAR
+        ========================================= */
 
         .toolbar {
             padding: 16px 22px;
@@ -545,9 +601,10 @@
             width: 170px;
         }
 
-        /* =========================
+
+        /* =========================================
            TABLE
-        ========================= */
+        ========================================= */
 
         .table-container {
             overflow-x: auto;
@@ -587,9 +644,10 @@
             font-weight: 600;
         }
 
-        /* =========================
+
+        /* =========================================
            STATUS BADGES
-        ========================= */
+        ========================================= */
 
         .badge {
             display: inline-flex;
@@ -621,9 +679,10 @@
             color: #4338ca;
         }
 
-        /* =========================
+
+        /* =========================================
            ACTION BUTTONS
-        ========================= */
+        ========================================= */
 
         .actions {
             display: flex;
@@ -652,9 +711,10 @@
             background: #f9fafb;
         }
 
-        /* =========================
+
+        /* =========================================
            EMPTY STATE
-        ========================= */
+        ========================================= */
 
         .empty-state {
             text-align: center;
@@ -683,9 +743,10 @@
             font-size: 12px;
         }
 
-        /* =========================
+
+        /* =========================================
            TOAST
-        ========================= */
+        ========================================= */
 
         .toast {
             position: fixed;
@@ -696,7 +757,7 @@
             padding: 14px 18px;
             border-radius: 10px;
             min-width: 260px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
             transform: translateY(100px);
             opacity: 0;
             transition: 0.3s;
@@ -717,9 +778,10 @@
             border-left: 4px solid #ef4444;
         }
 
-        /* =========================
+
+        /* =========================================
            DELETE MODAL
-        ========================= */
+        ========================================= */
 
         .modal-overlay {
             position: fixed;
@@ -742,7 +804,7 @@
             max-width: 420px;
             border-radius: 16px;
             padding: 25px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
         }
 
         .modal-icon {
@@ -776,9 +838,10 @@
             margin-top: 22px;
         }
 
-        /* =========================
+
+        /* =========================================
            RESPONSIVE
-        ========================= */
+        ========================================= */
 
         @media (max-width: 1100px) {
 
@@ -789,7 +852,9 @@
             .status-buttons {
                 grid-template-columns: repeat(2, 1fr);
             }
+
         }
+
 
         @media (max-width: 800px) {
 
@@ -838,7 +903,9 @@
             .filter-select {
                 width: 100%;
             }
+
         }
+
 
         @media (max-width: 600px) {
 
@@ -865,1444 +932,2585 @@
             .content {
                 padding: 16px;
             }
+
         }
 
+        /* =========================================
+                  PLAYER DROPDOWN
+           ========================================= */
+
+        #playerId {
+            width: 100%;
+            min-height: 48px;
+            max-height: 180px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+        }
     </style>
+
 </head>
+
 
 <body>
 
-<div class="app">
+    <div class="app">
 
-    <!-- =========================
+
+        <!-- =========================================
          SIDEBAR
-    ========================= -->
+    ========================================= -->
 
-    <aside class="sidebar">
+        <aside class="sidebar">
 
-        <div class="brand">
+            <div class="brand">
 
-            <div class="brand-logo">
-                ⚽
+                <div class="brand-logo">
+                    ⚽
+                </div>
+
+                <div class="brand-text">
+
+                    <h2>
+                        Vision Sports
+                    </h2>
+
+                    <span>
+                        Academy Management
+                    </span>
+
+                </div>
+
             </div>
 
-            <div class="brand-text">
-                <h2>Vision Sports</h2>
-                <span>Academy Management</span>
+
+            <div class="menu-title">
+                MAIN
             </div>
 
-        </div>
+
+            <a href="#" class="nav-item">
+
+                <span class="nav-icon">
+                    ⌂
+                </span>
+
+                <span>
+                    Dashboard
+                </span>
+
+            </a>
 
 
-        <div class="menu-title">
-            MAIN
-        </div>
-
-        <a href="#" class="nav-item">
-            <span class="nav-icon">⌂</span>
-            <span>Dashboard</span>
-        </a>
+            <div class="menu-title">
+                TRAINING
+            </div>
 
 
-        <div class="menu-title">
-            TRAINING
-        </div>
+            <a href="#" class="nav-item">
 
-        <a href="#" class="nav-item">
-            <span class="nav-icon">▣</span>
-            <span>Training Sessions</span>
-        </a>
+                <span class="nav-icon">
+                    ▣
+                </span>
 
-        <a href="/attendance" class="nav-item active">
-            <span class="nav-icon">✓</span>
-            <span>Attendance</span>
-        </a>
+                <span>
+                    Training Sessions
+                </span>
+
+            </a>
 
 
-        <div class="menu-title">
-            MANAGEMENT
-        </div>
+            <a href="/attendance" class="nav-item active">
 
-        <a href="#" class="nav-item">
-            <span class="nav-icon">♙</span>
-            <span>Players</span>
-        </a>
+                <span class="nav-icon">
+                    ✓
+                </span>
 
-        <a href="#" class="nav-item">
-            <span class="nav-icon">★</span>
-            <span>Performance</span>
-        </a>
+                <span>
+                    Attendance
+                </span>
 
-    </aside>
+            </a>
 
 
-    <!-- =========================
+            <div class="menu-title">
+                MANAGEMENT
+            </div>
+
+
+            <a href="#" class="nav-item">
+
+                <span class="nav-icon">
+                    ♙
+                </span>
+
+                <span>
+                    Players
+                </span>
+
+            </a>
+
+
+            <a href="#" class="nav-item">
+
+                <span class="nav-icon">
+                    ★
+                </span>
+
+                <span>
+                    Performance
+                </span>
+
+            </a>
+
+        </aside>
+
+
+
+        <!-- =========================================
          MAIN
-    ========================= -->
+    ========================================= -->
 
-    <main class="main">
-
-        <!-- TOP BAR -->
-
-        <header class="topbar">
-
-            <div class="topbar-title">
-                <h1>Attendance Management</h1>
-                <p>Track and manage player attendance</p>
-            </div>
-
-            <div class="profile">
-
-                <div class="profile-avatar">
-                    C
-                </div>
-
-                <div class="profile-info">
-                    <strong>Coach</strong>
-                    <span>Vision Sports Academy</span>
-                </div>
-
-            </div>
-
-        </header>
+        <main class="main">
 
 
-        <!-- CONTENT -->
+            <!-- TOP BAR -->
 
-        <section class="content">
+            <header class="topbar">
 
-            <div class="page-heading">
+                <div class="topbar-title">
 
-                <div>
-                    <h2>Attendance</h2>
-                    <p>Record and monitor player attendance for training sessions.</p>
-                </div>
+                    <h1>
+                        Attendance Management
+                    </h1>
 
-            </div>
-
-
-            <!-- =========================
-                 STATISTICS
-            ========================= -->
-
-            <div class="stats-grid">
-
-                <div class="stat-card">
-
-                    <div class="stat-icon blue-icon">
-                        #
-                    </div>
-
-                    <div class="stat-info">
-                        <span>Total Records</span>
-                        <strong id="totalRecords">0</strong>
-                    </div>
+                    <p>
+                        Track and manage player attendance
+                    </p>
 
                 </div>
 
 
-                <div class="stat-card">
+                <div class="profile">
 
-                    <div class="stat-icon green-icon">
-                        ✓
+                    <div class="profile-avatar">
+                        C
                     </div>
 
-                    <div class="stat-info">
-                        <span>Present</span>
-                        <strong id="presentCount">0</strong>
-                    </div>
+                    <div class="profile-info">
 
-                </div>
+                        <strong>
+                            Coach
+                        </strong>
 
-
-                <div class="stat-card">
-
-                    <div class="stat-icon red-icon">
-                        ✕
-                    </div>
-
-                    <div class="stat-info">
-                        <span>Absent</span>
-                        <strong id="absentCount">0</strong>
-                    </div>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <div class="stat-icon orange-icon">
-                        %
-                    </div>
-
-                    <div class="stat-info">
-                        <span>Attendance Rate</span>
-                        <strong id="attendanceRate">0%</strong>
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- =========================
-                 MARK ATTENDANCE
-            ========================= -->
-
-            <div class="card">
-
-                <div class="card-header">
-
-                    <div>
-                        <h3 id="formTitle">Mark Attendance</h3>
-                        <p>Select a player and choose their attendance status.</p>
-                    </div>
-
-                </div>
-
-
-                <div class="card-body">
-
-                    <form id="attendanceForm">
-
-                        <div class="form-grid">
-
-
-                            <!-- SESSION -->
-
-                            <div class="form-group">
-
-                                <label for="sessionId">
-                                    Training Session
-                                </label>
-
-                                <input
-                                    type="number"
-                                    id="sessionId"
-                                    placeholder="Enter session ID"
-                                    required
-                                >
-
-                            </div>
-
-
-                            <!-- PLAYER -->
-
-                            <div class="form-group">
-
-                                <label for="playerId">
-                                    Player ID
-                                </label>
-
-                                <input
-                                    type="number"
-                                    id="playerId"
-                                    placeholder="Enter player ID"
-                                    required
-                                >
-
-                            </div>
-
-
-                            <!-- STATUS -->
-
-                            <div class="form-group full">
-
-                                <label>
-                                    Attendance Status
-                                </label>
-
-
-                                <div class="status-buttons">
-
-
-                                    <!-- PRESENT -->
-
-                                    <button
-                                        type="button"
-                                        class="status-btn present"
-                                        onclick="selectStatus('PRESENT', this)"
-                                    >
-
-                                        <span class="status-icon">
-                                            ✓
-                                        </span>
-
-                                        <span class="status-text">
-
-                                            <strong>Present</strong>
-
-                                            <small>
-                                                Player attended
-                                            </small>
-
-                                        </span>
-
-                                    </button>
-
-
-                                    <!-- ABSENT -->
-
-                                    <button
-                                        type="button"
-                                        class="status-btn absent"
-                                        onclick="selectStatus('ABSENT', this)"
-                                    >
-
-                                        <span class="status-icon">
-                                            ✕
-                                        </span>
-
-                                        <span class="status-text">
-
-                                            <strong>Absent</strong>
-
-                                            <small>
-                                                Did not attend
-                                            </small>
-
-                                        </span>
-
-                                    </button>
-
-
-                                    <!-- LATE -->
-
-                                    <button
-                                        type="button"
-                                        class="status-btn late"
-                                        onclick="selectStatus('LATE', this)"
-                                    >
-
-                                        <span class="status-icon">
-                                            ◷
-                                        </span>
-
-                                        <span class="status-text">
-
-                                            <strong>Late</strong>
-
-                                            <small>
-                                                Arrived late
-                                            </small>
-
-                                        </span>
-
-                                    </button>
-
-
-                                    <!-- EXCUSED -->
-
-                                    <button
-                                        type="button"
-                                        class="status-btn excused"
-                                        onclick="selectStatus('EXCUSED', this)"
-                                    >
-
-                                        <span class="status-icon">
-                                            !
-                                        </span>
-
-                                        <span class="status-text">
-
-                                            <strong>Excused</strong>
-
-                                            <small>
-                                                Approved absence
-                                            </small>
-
-                                        </span>
-
-                                    </button>
-
-                                </div>
-
-
-                                <!-- Hidden status value -->
-
-                                <input
-                                    type="hidden"
-                                    id="status"
-                                    required
-                                >
-
-                            </div>
-
-
-                            <!-- REMARKS -->
-
-                            <div class="form-group">
-
-                                <label for="remarks">
-                                    Remarks
-                                </label>
-
-                                <textarea
-                                    id="remarks"
-                                    placeholder="Add any notes about this attendance..."
-                                ></textarea>
-
-                            </div>
-
-
-                            <!-- MARKED BY -->
-
-                            <div class="form-group">
-
-                                <label for="markedBy">
-                                    Marked By
-                                </label>
-
-                                <input
-                                    type="text"
-                                    id="markedBy"
-                                    placeholder="Coach name"
-                                    value="Coach"
-                                >
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- BUTTONS -->
-
-                        <div class="form-actions">
-
-                            <button
-                                type="button"
-                                class="btn btn-secondary"
-                                id="cancelBtn"
-                                onclick="resetForm()"
-                            >
-                                Clear
-                            </button>
-
-                            <button
-                                type="submit"
-                                class="btn btn-primary"
-                                id="submitBtn"
-                            >
-                                ✓ Mark Attendance
-                            </button>
-
-                        </div>
-
-                    </form>
-
-                </div>
-
-            </div>
-
-
-            <!-- =========================
-                 ATTENDANCE RECORDS
-            ========================= -->
-
-            <div class="card">
-
-                <div class="card-header">
-
-                    <div>
-                        <h3>Attendance Records</h3>
-                        <p>View, edit and manage recorded attendance.</p>
-                    </div>
-
-                </div>
-
-
-                <!-- TOOLBAR -->
-
-                <div class="toolbar">
-
-                    <div class="search-box">
-
-                        <span class="search-icon">
-                            🔍
+                        <span>
+                            Vision Sports Academy
                         </span>
 
-                        <input
-                            type="text"
-                            id="searchInput"
-                            placeholder="Search session, player or coach..."
-                            oninput="filterRecords()"
-                        >
-
                     </div>
-
-
-                    <select
-                        id="statusFilter"
-                        class="filter-select"
-                        onchange="filterRecords()"
-                    >
-
-                        <option value="ALL">
-                            All Status
-                        </option>
-
-                        <option value="PRESENT">
-                            Present
-                        </option>
-
-                        <option value="ABSENT">
-                            Absent
-                        </option>
-
-                        <option value="LATE">
-                            Late
-                        </option>
-
-                        <option value="EXCUSED">
-                            Excused
-                        </option>
-
-                    </select>
 
                 </div>
 
-
-                <!-- TABLE -->
-
-                <div class="table-container">
-
-                    <table>
-
-                        <thead>
-
-                        <tr>
-
-                            <th>ID</th>
-
-                            <th>Session</th>
-
-                            <th>Player</th>
-
-                            <th>Status</th>
-
-                            <th>Remarks</th>
-
-                            <th>Marked By</th>
-
-                            <th>Marked At</th>
-
-                            <th>Actions</th>
-
-                        </tr>
-
-                        </thead>
+            </header>
 
 
-                        <tbody id="attendanceTableBody">
 
-                        </tbody>
+            <!-- =========================================
+             CONTENT
+        ========================================= -->
 
-                    </table>
+            <section class="content">
 
 
-                    <!-- EMPTY STATE -->
+                <div class="page-heading">
 
-                    <div
-                        id="emptyState"
-                        class="empty-state"
-                    >
+                    <div>
 
-                        <div class="empty-icon">
-                            ✓
-                        </div>
-
-                        <h4>No attendance records</h4>
+                        <h2>
+                            Attendance
+                        </h2>
 
                         <p>
-                            Attendance records will appear here after you mark them.
+                            Record and monitor player attendance for training sessions.
                         </p>
 
                     </div>
 
                 </div>
 
+
+
+                <!-- =========================================
+                 STATISTICS
+            ========================================= -->
+
+                <div class="stats-grid">
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon blue-icon">
+                            #
+                        </div>
+
+                        <div class="stat-info">
+
+                            <span>
+                                Total Records
+                            </span>
+
+                            <strong id="totalRecords">
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon green-icon">
+                            ✓
+                        </div>
+
+                        <div class="stat-info">
+
+                            <span>
+                                Present
+                            </span>
+
+                            <strong id="presentCount">
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon red-icon">
+                            ✕
+                        </div>
+
+                        <div class="stat-info">
+
+                            <span>
+                                Absent
+                            </span>
+
+                            <strong id="absentCount">
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon orange-icon">
+                            %
+                        </div>
+
+                        <div class="stat-info">
+
+                            <span>
+                                Attendance Rate
+                            </span>
+
+                            <strong id="attendanceRate">
+                                0%
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =========================================
+                 MARK ATTENDANCE
+            ========================================= -->
+
+                <div class="card">
+
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h3 id="formTitle">
+                                Mark Attendance
+                            </h3>
+
+                            <p>
+                                Select a player and choose their attendance status.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="card-body">
+
+
+                        <form id="attendanceForm">
+
+
+                            <div class="form-grid">
+
+
+                                <!-- SESSION -->
+
+                                <div class="form-group">
+
+                                    <label for="sessionId">
+                                        Training Session
+                                    </label>
+
+                                    <select id="sessionId" required>
+
+                                        <option value="">
+                                            Select a training session
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+
+                                <!-- AGE GROUP -->
+
+                                <div class="form-group">
+
+                                    <label for="playerGroup">
+                                        Age Group
+                                    </label>
+
+                                    <select id="playerGroup" required>
+
+                                        <option value="">
+                                            Select age group
+                                        </option>
+
+                                        <option value="U8">
+                                            U8
+                                        </option>
+
+                                        <option value="U10">
+                                            U10
+                                        </option>
+
+                                        <option value="U12">
+                                            U12
+                                        </option>
+
+                                        <option value="U14">
+                                            U14
+                                        </option>
+
+                                        <option value="U16">
+                                            U16
+                                        </option>
+
+                                        <option value="U18">
+                                            U18
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+
+                                <!-- PLAYER -->
+
+                                <div class="form-group">
+
+                                    <label for="playerId">
+                                        Player
+                                    </label>
+
+                                    <div style="display: flex; gap: 10px; align-items: center;">
+
+                                        <div style="width: 150px;">
+
+                                            <input
+                                                type="number"
+                                                id="playerIdInput"
+                                                placeholder="Student ID"
+                                                min="1"
+                                                style="width: 100%; box-sizing: border-box;"
+                                                disabled
+                                            >
+
+                                        </div>
+
+                                        <select
+                                            id="playerId"
+                                            required
+                                            disabled
+                                            style="flex: 1;"
+                                        >
+
+                                            <option value="">
+                                                Select player name
+                                            </option>
+
+                                        </select>
+
+                                    </div>
+
+                                    <small style="display:block; margin-top:6px; opacity:0.7;">
+                                        Type the Student ID or scroll and select the player name.
+                                    </small>
+
+                                </div>
+
+
+
+                                <!-- STATUS -->
+
+                                <div class="form-group full">
+
+                                    <label>
+                                        Attendance Status
+                                    </label>
+
+
+                                    <div class="status-buttons">
+
+
+                                        <!-- PRESENT -->
+
+                                        <button type="button" class="status-btn present"
+                                            onclick="selectStatus('PRESENT', this)">
+
+                                            <span class="status-icon">
+                                                ✓
+                                            </span>
+
+                                            <span class="status-text">
+
+                                                <strong>
+                                                    Present
+                                                </strong>
+
+                                                <small>
+                                                    Player attended
+                                                </small>
+
+                                            </span>
+
+                                        </button>
+
+
+
+                                        <!-- ABSENT -->
+
+                                        <button type="button" class="status-btn absent"
+                                            onclick="selectStatus('ABSENT', this)">
+
+                                            <span class="status-icon">
+                                                ✕
+                                            </span>
+
+                                            <span class="status-text">
+
+                                                <strong>
+                                                    Absent
+                                                </strong>
+
+                                                <small>
+                                                    Did not attend
+                                                </small>
+
+                                            </span>
+
+                                        </button>
+
+
+
+                                        <!-- LATE -->
+
+                                        <button type="button" class="status-btn late"
+                                            onclick="selectStatus('LATE', this)">
+
+                                            <span class="status-icon">
+                                                ◷
+                                            </span>
+
+                                            <span class="status-text">
+
+                                                <strong>
+                                                    Late
+                                                </strong>
+
+                                                <small>
+                                                    Arrived late
+                                                </small>
+
+                                            </span>
+
+                                        </button>
+
+
+
+                                        <!-- EXCUSED -->
+
+                                        <button type="button" class="status-btn excused"
+                                            onclick="selectStatus('EXCUSED', this)">
+
+                                            <span class="status-icon">
+                                                !
+                                            </span>
+
+                                            <span class="status-text">
+
+                                                <strong>
+                                                    Excused
+                                                </strong>
+
+                                                <small>
+                                                    Approved absence
+                                                </small>
+
+                                            </span>
+
+                                        </button>
+
+                                    </div>
+
+
+                                    <input type="hidden" id="status" required>
+
+                                </div>
+
+
+
+                                <!-- REMARKS -->
+
+                                <div class="form-group">
+
+                                    <label for="remarks">
+                                        Remarks
+                                    </label>
+
+                                    <textarea id="remarks"
+                                        placeholder="Add any notes about this attendance..."></textarea>
+
+                                </div>
+
+
+
+                                <!-- MARKED BY -->
+
+                                <div class="form-group">
+
+                                    <label for="markedBy">
+                                        Marked By
+                                    </label>
+
+                                    <input type="text" id="markedBy" placeholder="Coach name" value="Coach">
+
+                                </div>
+
+
+
+                                <!-- AUTOMATIC MARKING TIME -->
+
+                                <div class="form-group">
+
+                                    <label>
+                                        Marking Time
+                                    </label>
+
+
+                                    <div class="auto-time-box">
+
+                                        <span class="auto-time-icon">
+                                            🕐
+                                        </span>
+
+
+                                        <div>
+
+                                            <strong id="currentTime">
+                                                Loading...
+                                            </strong>
+
+                                            <small>
+                                                Automatically recorded
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+
+
+                            <!-- FORM BUTTONS -->
+
+                            <div class="form-actions">
+
+
+                                <button type="button" class="btn btn-secondary" id="cancelBtn" onclick="resetForm()">
+                                    Clear
+                                </button>
+
+
+                                <button type="submit" class="btn btn-primary" id="submitBtn">
+                                    ✓ Mark Attendance
+                                </button>
+
+
+                            </div>
+
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =========================================
+                 ATTENDANCE RECORDS
+            ========================================= -->
+
+                <div class="card">
+
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h3>
+                                Attendance Records
+                            </h3>
+
+                            <p>
+                                View, edit and manage recorded attendance.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- SEARCH AND FILTER -->
+
+                    <div class="toolbar">
+
+
+                        <div class="search-box">
+
+                            <span class="search-icon">
+                                🔍
+                            </span>
+
+                            <input type="text" id="searchInput" placeholder="Search session, player or coach..."
+                                oninput="filterRecords()">
+
+                        </div>
+
+
+                        <select id="statusFilter" class="filter-select" onchange="filterRecords()">
+
+                            <option value="ALL">
+                                All Status
+                            </option>
+
+                            <option value="PRESENT">
+                                Present
+                            </option>
+
+                            <option value="ABSENT">
+                                Absent
+                            </option>
+
+                            <option value="LATE">
+                                Late
+                            </option>
+
+                            <option value="EXCUSED">
+                                Excused
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- TABLE -->
+
+                    <div class="table-container">
+
+
+                        <table>
+
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        ID
+                                    </th>
+
+                                    <th>
+                                        Session
+                                    </th>
+
+                                    <th>
+                                        Player
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                    <th>
+                                        Remarks
+                                    </th>
+
+                                    <th>
+                                        Marked By
+                                    </th>
+
+                                    <th>
+                                        Marked At
+                                    </th>
+
+                                    <th>
+                                        Actions
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+
+                            <tbody id="attendanceTableBody">
+                            </tbody>
+
+
+                        </table>
+
+
+
+                        <!-- EMPTY STATE -->
+
+                        <div id="emptyState" class="empty-state">
+
+                            <div class="empty-icon">
+                                ✓
+                            </div>
+
+                            <h4>
+                                No attendance records
+                            </h4>
+
+                            <p>
+                                Attendance records will appear here after you mark them.
+                            </p>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+
+    <!-- =========================================
+     DELETE MODAL
+========================================= -->
+
+    <div id="deleteModal" class="modal-overlay">
+
+
+        <div class="modal">
+
+
+            <div class="modal-icon">
+                !
             </div>
 
-        </section>
 
-    </main>
+            <h3>
+                Delete Attendance?
+            </h3>
 
-</div>
+
+            <p>
+                Are you sure you want to delete this attendance record?
+                This action cannot be undone.
+            </p>
 
 
-<!-- =========================
-     DELETE MODAL
-========================= -->
+            <div class="modal-actions">
 
-<div
-    id="deleteModal"
-    class="modal-overlay"
->
 
-    <div class="modal">
+                <button class="btn btn-secondary" onclick="closeDeleteModal()">
+                    Cancel
+                </button>
 
-        <div class="modal-icon">
-            !
-        </div>
 
-        <h3>Delete Attendance?</h3>
+                <button class="btn btn-danger" onclick="confirmDelete()">
+                    Delete
+                </button>
 
-        <p>
-            Are you sure you want to delete this attendance record?
-            This action cannot be undone.
-        </p>
 
-        <div class="modal-actions">
+            </div>
 
-            <button
-                class="btn btn-secondary"
-                onclick="closeDeleteModal()"
-            >
-                Cancel
-            </button>
-
-            <button
-                class="btn btn-danger"
-                onclick="confirmDelete()"
-            >
-                Delete
-            </button>
 
         </div>
 
     </div>
 
-</div>
 
 
-<!-- =========================
+    <!-- =========================================
      TOAST
-========================= -->
+========================================= -->
 
-<div
-    id="toast"
-    class="toast"
-></div>
+    <div id="toast" class="toast">
+    </div>
 
 
-<script>
 
-    const apiUrl = "/api/attendance";
+    <script>
 
-    let attendanceRecords = [];
 
-    let editingId = null;
+        /* =========================================
+           API
+        ========================================= */
 
-    let deleteId = null;
+        const apiUrl = "/api/attendance";
 
+        const sessionApiUrl = "/api/training-sessions";
 
-    /* =========================
-       LOAD RECORDS
-    ========================= */
+        const playerApiUrl = "/api/players";
 
-    async function loadAttendance() {
+        let trainingSessions = [];
 
-        try {
+        let players = [];
 
-            const response = await fetch(apiUrl);
 
-            if (!response.ok) {
-                throw new Error("Unable to load attendance records.");
-            }
+        let attendanceRecords = [];
 
-            attendanceRecords = await response.json();
+        let editingId = null;
 
-            displayRecords(attendanceRecords);
+        let deleteId = null;
 
-            updateStatistics();
 
-        } catch (error) {
 
-            console.error(error);
+        /* =========================================
+           AUTOMATIC CURRENT TIME
+        ========================================= */
 
-            showToast(
-                "Unable to load attendance records.",
-                "error"
-            );
+        function updateCurrentTime() {
 
-        }
 
-    }
+            const now = new Date();
 
 
-    /* =========================
-       SELECT STATUS
-    ========================= */
-
-    function selectStatus(status, button) {
-
-        document.getElementById("status").value = status;
-
-
-        document
-            .querySelectorAll(".status-btn")
-            .forEach(btn => {
-
-                btn.classList.remove("selected");
-
-            });
-
-
-        button.classList.add("selected");
-
-    }
-
-
-    /* =========================
-       DISPLAY RECORDS
-    ========================= */
-
-    function displayRecords(records) {
-
-        const tableBody =
-            document.getElementById("attendanceTableBody");
-
-        const emptyState =
-            document.getElementById("emptyState");
-
-
-        tableBody.innerHTML = "";
-
-
-        if (!records || records.length === 0) {
-
-            emptyState.style.display = "block";
-
-            return;
-
-        }
-
-
-        emptyState.style.display = "none";
-
-
-        records.forEach(attendance => {
-
-            const row =
-                document.createElement("tr");
-
-
-            row.innerHTML = `
-
-                <td>
-                    <span class="record-id">
-                        #${attendance.id ?? "-"}
-                    </span>
-                </td>
-
-                <td>
-                    Session ${attendance.sessionId ?? "-"}
-                </td>
-
-                <td>
-                    Player ${attendance.playerId ?? "-"}
-                </td>
-
-                <td>
-                    ${getStatusBadge(attendance.status)}
-                </td>
-
-                <td>
-                    ${escapeHtml(attendance.remarks || "-")}
-                </td>
-
-                <td>
-                    ${escapeHtml(attendance.markedBy || "-")}
-                </td>
-
-                <td>
-                    ${formatDate(attendance.markedAt)}
-                </td>
-
-                <td>
-
-                    <div class="actions">
-
-                        <button
-                            class="action-btn edit"
-                            onclick="editAttendance(${attendance.id})"
-                        >
-                            Edit
-                        </button>
-
-                        <button
-                            class="action-btn delete"
-                            onclick="openDeleteModal(${attendance.id})"
-                        >
-                            Delete
-                        </button>
-
-                    </div>
-
-                </td>
-
-            `;
-
-
-            tableBody.appendChild(row);
-
-        });
-
-    }
-
-
-    /* =========================
-       STATUS BADGE
-    ========================= */
-
-    function getStatusBadge(status) {
-
-        if (!status) {
-            return "-";
-        }
-
-
-        const statusClass =
-            "badge-" + status.toLowerCase();
-
-
-        let icon = "";
-
-        if (status === "PRESENT") {
-            icon = "✓";
-        }
-
-        if (status === "ABSENT") {
-            icon = "✕";
-        }
-
-        if (status === "LATE") {
-            icon = "◷";
-        }
-
-        if (status === "EXCUSED") {
-            icon = "!";
-        }
-
-
-        return `
-
-            <span class="badge ${statusClass}">
-                ${icon} ${status}
-            </span>
-
-        `;
-
-    }
-
-
-    /* =========================
-       FORM SUBMIT
-    ========================= */
-
-    document
-        .getElementById("attendanceForm")
-        .addEventListener("submit", async function(event) {
-
-            event.preventDefault();
-
-
-            const sessionId =
-                document.getElementById("sessionId").value;
-
-            const playerId =
-                document.getElementById("playerId").value;
-
-            const status =
-                document.getElementById("status").value;
-
-            const remarks =
-                document.getElementById("remarks").value;
-
-            const markedBy =
-                document.getElementById("markedBy").value;
-
-
-            if (!status) {
-
-                showToast(
-                    "Please select an attendance status.",
-                    "error"
+            const formattedTime =
+                now.toLocaleString(
+                    "en-GB",
+                    {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit"
+                    }
                 );
 
-                return;
+
+            const timeElement =
+                document.getElementById("currentTime");
+
+
+            if (timeElement) {
+
+                timeElement.innerText =
+                    formattedTime;
 
             }
 
+        }
 
-            const attendance = {
 
-                sessionId: Number(sessionId),
+        /* Update live clock every second */
 
-                playerId: Number(playerId),
+        setInterval(
+            updateCurrentTime,
+            1000
+        );
 
-                status: status,
 
-                remarks: remarks,
+        /* Show immediately */
 
-                markedBy: markedBy
+        updateCurrentTime();
 
-            };
+
+
+        /* =========================================
+           LOAD ATTENDANCE
+        ========================================= */
+
+        async function loadAttendance() {
 
 
             try {
 
-                let response;
 
-
-                if (editingId === null) {
-
-                    /* CREATE */
-
-                    response = await fetch(apiUrl, {
-
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-
-                        body: JSON.stringify(attendance)
-
-                    });
-
-                } else {
-
-                    /* UPDATE */
-
-                    response = await fetch(
-                        `${apiUrl}/${editingId}`,
-                        {
-
-                            method: "PUT",
-
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-
-                            body: JSON.stringify(attendance)
-
-                        }
-                    );
-
-                }
+                const response =
+                    await fetch(apiUrl);
 
 
                 if (!response.ok) {
 
                     throw new Error(
-                        "Failed to save attendance."
+                        "Unable to load attendance records."
                     );
 
                 }
 
 
-                if (editingId === null) {
+                attendanceRecords =
+                    await response.json();
 
-                    showToast(
-                        "Attendance marked successfully.",
-                        "success"
-                    );
 
-                } else {
+                displayRecords(
+                    attendanceRecords
+                );
 
-                    showToast(
-                        "Attendance updated successfully.",
-                        "success"
+
+                updateStatistics();
+
+
+            } catch (error) {
+
+
+                console.error(error);
+
+
+                showToast(
+                    "Unable to load attendance records.",
+                    "error"
+                );
+
+            }
+
+        }
+
+        /* =========================================
+           LOAD TRAINING SESSIONS
+        ========================================= */
+
+        async function loadTrainingSessions() {
+
+            try {
+
+                const response =
+                    await fetch(sessionApiUrl);
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Unable to load training sessions."
                     );
 
                 }
 
+                trainingSessions =
+                    await response.json();
 
-                resetForm();
+                const sessionSelect =
+                    document.getElementById("sessionId");
 
-                await loadAttendance();
+                sessionSelect.innerHTML = `
+                    <option value="">
+                        Select a training session
+                    </option>
+                `;
 
+                trainingSessions.forEach(session => {
+
+                    const option =
+                        document.createElement("option");
+
+                    option.value = session.id;
+
+                    option.textContent =
+                        `Training Session #${session.id}`;
+
+                    sessionSelect.appendChild(option);
+
+                });
 
             } catch (error) {
 
                 console.error(error);
 
                 showToast(
-                    "Unable to save attendance.",
+                    "Unable to load training sessions.",
                     "error"
                 );
 
             }
 
-        });
+        }
 
 
-    /* =========================
-       EDIT
-    ========================= */
 
-    async function editAttendance(id) {
+        /* =========================================
+           LOAD PLAYERS
+        ========================================= */
 
-        try {
+        async function loadPlayers() {
 
-            const response =
-                await fetch(`${apiUrl}/${id}`);
+            try {
 
+                const response =
+                    await fetch(playerApiUrl);
 
-            if (!response.ok) {
+                if (!response.ok) {
 
-                throw new Error(
-                    "Attendance record not found."
+                    throw new Error(
+                        "Unable to load players."
+                    );
+
+                }
+
+                players =
+                    await response.json();
+
+                updatePlayerDropdown();
+
+            } catch (error) {
+
+                console.error(error);
+
+                showToast(
+                    "Unable to load players.",
+                    "error"
                 );
 
             }
 
-
-            const attendance =
-                await response.json();
-
-
-            editingId = id;
-
-
-            document.getElementById("sessionId").value =
-                attendance.sessionId ?? "";
-
-            document.getElementById("playerId").value =
-                attendance.playerId ?? "";
-
-            document.getElementById("remarks").value =
-                attendance.remarks ?? "";
-
-            document.getElementById("markedBy").value =
-                attendance.markedBy ?? "";
-
-
-            document.getElementById("status").value =
-                attendance.status ?? "";
-
-
-            /* Select matching button */
-
-            document
-                .querySelectorAll(".status-btn")
-                .forEach(button => {
-
-                    button.classList.remove("selected");
-
-                    const buttonStatus =
-                        button
-                            .classList
-                            .contains("present")
-                            ? "PRESENT"
-                            :
-                            button
-                                .classList
-                                .contains("absent")
-                                ? "ABSENT"
-                                :
-                                button
-                                    .classList
-                                    .contains("late")
-                                    ? "LATE"
-                                    :
-                                    "EXCUSED";
-
-
-                    if (
-                        buttonStatus === attendance.status
-                    ) {
-
-                        button.classList.add("selected");
-
-                    }
-
-                });
-
-
-            document.getElementById("formTitle").innerText =
-                "Edit Attendance";
-
-
-            document.getElementById("submitBtn").innerText =
-                "✓ Update Attendance";
-
-
-            document.getElementById("cancelBtn").innerText =
-                "Cancel Edit";
-
-
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-
-
-        } catch (error) {
-
-            console.error(error);
-
-            showToast(
-                "Unable to load attendance record.",
-                "error"
-            );
-
-        }
-
-    }
-
-
-    /* =========================
-       RESET FORM
-    ========================= */
-
-    function resetForm() {
-
-        editingId = null;
-
-
-        document
-            .getElementById("attendanceForm")
-            .reset();
-
-
-        document.getElementById("markedBy").value =
-            "Coach";
-
-
-        document.getElementById("status").value =
-            "";
-
-
-        document
-            .querySelectorAll(".status-btn")
-            .forEach(button => {
-
-                button.classList.remove("selected");
-
-            });
-
-
-        document.getElementById("formTitle").innerText =
-            "Mark Attendance";
-
-
-        document.getElementById("submitBtn").innerText =
-            "✓ Mark Attendance";
-
-
-        document.getElementById("cancelBtn").innerText =
-            "Clear";
-
-    }
-
-
-    /* =========================
-       DELETE MODAL
-    ========================= */
-
-    function openDeleteModal(id) {
-
-        deleteId = id;
-
-        document
-            .getElementById("deleteModal")
-            .classList.add("show");
-
-    }
-
-
-    function closeDeleteModal() {
-
-        deleteId = null;
-
-        document
-            .getElementById("deleteModal")
-            .classList.remove("show");
-
-    }
-
-
-    async function confirmDelete() {
-
-        if (deleteId === null) {
-            return;
         }
 
 
-        try {
 
-            const response =
-                await fetch(
-                    `${apiUrl}/${deleteId}`,
-                    {
-                        method: "DELETE"
-                    }
-                );
+        /* =========================================
+           FILTER PLAYERS BY AGE GROUP
+        ========================================= */
 
+        function updatePlayerDropdown() {
 
-            if (!response.ok) {
+            const groupSelect =
+                document.getElementById("playerGroup");
 
-                throw new Error(
-                    "Failed to delete attendance."
-                );
+            const playerSelect =
+                document.getElementById("playerId");
+
+            const playerIdInput =
+                document.getElementById("playerIdInput");
+
+            const selectedGroup =
+                groupSelect.value;
+
+            playerSelect.innerHTML = `
+                <option value="">
+                    Select a player
+                </option>
+            `;
+
+            if (!selectedGroup) {
+
+                playerSelect.disabled = true;
+                playerIdInput.disabled = true;
+                playerIdInput.value = "";
+
+                playerSelect.innerHTML = `
+                    <option value="">
+                        Select age group first
+                    </option>
+                `;
+
+                return;
 
             }
 
-
-            closeDeleteModal();
-
-
-            showToast(
-                "Attendance deleted successfully.",
-                "success"
-            );
-
-
-            await loadAttendance();
-
-
-        } catch (error) {
-
-            console.error(error);
-
-            showToast(
-                "Unable to delete attendance.",
-                "error"
-            );
-
-        }
-
-    }
-
-
-    /* =========================
-       SEARCH + FILTER
-    ========================= */
-
-    function filterRecords() {
-
-        const search =
-            document
-                .getElementById("searchInput")
-                .value
-                .toLowerCase()
-                .trim();
-
-
-        const statusFilter =
-            document
-                .getElementById("statusFilter")
-                .value;
-
-
-        const filtered =
-            attendanceRecords.filter(record => {
-
-                const searchText = `
-
-                    ${record.id || ""}
-
-                    ${record.sessionId || ""}
-
-                    ${record.playerId || ""}
-
-                    ${record.status || ""}
-
-                    ${record.remarks || ""}
-
-                    ${record.markedBy || ""}
-
-                `.toLowerCase();
-
-
-                const matchesSearch =
-                    searchText.includes(search);
-
-
-                const matchesStatus =
-                    statusFilter === "ALL" ||
-                    record.status === statusFilter;
-
-
-                return (
-                    matchesSearch &&
-                    matchesStatus
+            const filteredPlayers =
+                players.filter(player =>
+                    player.playerGroup === selectedGroup
                 );
+
+            if (filteredPlayers.length === 0) {
+
+                playerSelect.disabled = true;
+                playerIdInput.disabled = true;
+                playerIdInput.value = "";
+
+                playerSelect.innerHTML = `
+                    <option value="">
+                        No players in this age group
+                    </option>
+                `;
+
+                return;
+
+            }
+
+            filteredPlayers.forEach(player => {
+
+                const option =
+                    document.createElement("option");
+
+                option.value = player.id;
+
+                option.textContent =
+                    `${player.name} • Age ${player.age}`;
+
+                playerSelect.appendChild(option);
 
             });
 
-
-        displayRecords(filtered);
-
-    }
-
-
-    /* =========================
-       STATISTICS
-    ========================= */
-
-    function updateStatistics() {
-
-        const total =
-            attendanceRecords.length;
-
-
-        const present =
-            attendanceRecords.filter(
-                record =>
-                    record.status === "PRESENT"
-            ).length;
-
-
-        const absent =
-            attendanceRecords.filter(
-                record =>
-                    record.status === "ABSENT"
-            ).length;
-
-
-        const late =
-            attendanceRecords.filter(
-                record =>
-                    record.status === "LATE"
-            ).length;
-
-
-        /*
-         * Attendance Rate
-         *
-         * Present + Late = attended
-         */
-
-        let rate = 0;
-
-
-        if (total > 0) {
-
-            rate =
-                ((present + late) / total) * 100;
+            playerSelect.disabled = false;
+            playerIdInput.disabled = false;
 
         }
 
 
-        document.getElementById("totalRecords")
-            .innerText = total;
 
+        /* =========================================
+           PLAYER ID INPUT
+        ========================================= */
 
-        document.getElementById("presentCount")
-            .innerText = present;
+        document
+            .getElementById("playerIdInput")
+            .addEventListener(
+                "input",
+                function () {
 
+                    const typedId =
+                        this.value.trim();
 
-        document.getElementById("absentCount")
-            .innerText = absent;
+                    if (!typedId) {
+                        document.getElementById("playerId").value = "";
+                        return;
+                    }
 
+                    const selectedGroup =
+                        document.getElementById("playerGroup").value;
 
-        document.getElementById("attendanceRate")
-            .innerText =
-                rate.toFixed(1) + "%";
+                    if (!selectedGroup) {
+                        return;
+                    }
 
-    }
+                    const player =
+                        players.find(
+                            p =>
+                                String(p.id) === typedId &&
+                                p.playerGroup === selectedGroup
+                        );
 
-
-    /* =========================
-       DATE FORMAT
-    ========================= */
-
-    function formatDate(dateValue) {
-
-        if (!dateValue) {
-            return "-";
-        }
-
-
-        try {
-
-            const date =
-                new Date(dateValue);
-
-
-            return date.toLocaleString(
-                "en-GB",
-                {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit"
+                    if (player) {
+                        document.getElementById("playerId").value =
+                            String(player.id);
+                    } else {
+                        document.getElementById("playerId").value = "";
+                    }
                 }
             );
 
-        } catch {
 
-            return dateValue;
+
+        /* =========================================
+           PLAYER DROPDOWN CHANGE
+        ========================================= */
+
+        document
+            .getElementById("playerId")
+            .addEventListener(
+                "change",
+                function () {
+
+                    document.getElementById("playerIdInput").value =
+                        this.value || "";
+                }
+            );
+
+
+
+        /* =========================================
+           AGE GROUP CHANGE
+        ========================================= */
+
+        document
+            .getElementById("playerGroup")
+            .addEventListener(
+                "change",
+                function () {
+
+                    updatePlayerDropdown();
+
+                }
+            );
+
+
+
+        /* =========================================
+           SELECT STATUS
+        ========================================= */
+
+        function selectStatus(
+            status,
+            button
+        ) {
+
+
+            document
+                .getElementById("status")
+                .value = status;
+
+
+            document
+                .querySelectorAll(".status-btn")
+                .forEach(
+                    btn => {
+
+                        btn.classList.remove(
+                            "selected"
+                        );
+
+                    }
+                );
+
+
+            button.classList.add(
+                "selected"
+            );
 
         }
 
-    }
 
 
-    /* =========================
-       HTML ESCAPE
-    ========================= */
+        /* =========================================
+           DISPLAY RECORDS
+        ========================================= */
 
-    function escapeHtml(value) {
+        function displayRecords(
+            records
+        ) {
 
-        if (value === null || value === undefined) {
-            return "";
+
+            const tableBody =
+                document.getElementById(
+                    "attendanceTableBody"
+                );
+
+
+            const emptyState =
+                document.getElementById(
+                    "emptyState"
+                );
+
+
+            tableBody.innerHTML = "";
+
+
+            if (
+                !records ||
+                records.length === 0
+            ) {
+
+                emptyState.style.display =
+                    "block";
+
+                return;
+
+            }
+
+
+            emptyState.style.display =
+                "none";
+
+
+            records.forEach(
+                attendance => {
+
+
+                    const row =
+                        document.createElement(
+                            "tr"
+                        );
+
+
+                    row.innerHTML = `
+
+                    <td>
+
+                        <span class="record-id">
+
+                            #${attendance.id ?? "-"}
+
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        Session
+                        ${attendance.sessionId ?? "-"}
+
+                    </td>
+
+
+                    <td>
+
+                        Player
+                        ${attendance.playerId ?? "-"}
+
+                    </td>
+
+
+                    <td>
+
+                        ${getStatusBadge(
+                        attendance.status
+                    )}
+
+                    </td>
+
+
+                    <td>
+
+                        ${escapeHtml(
+                        attendance.remarks || "-"
+                    )}
+
+                    </td>
+
+
+                    <td>
+
+                        ${escapeHtml(
+                        attendance.markedBy || "-"
+                    )}
+
+                    </td>
+
+
+                    <td>
+
+                        ${formatDate(
+                        attendance.markedAt
+                    )}
+
+                    </td>
+
+
+                    <td>
+
+                        <div class="actions">
+
+
+                            <button
+                                class="action-btn edit"
+                                onclick="editAttendance(
+                                    ${attendance.id}
+                                )"
+                            >
+                                Edit
+                            </button>
+
+
+                            <button
+                                class="action-btn delete"
+                                onclick="openDeleteModal(
+                                    ${attendance.id}
+                                )"
+                            >
+                                Delete
+                            </button>
+
+
+                        </div>
+
+                    </td>
+
+                `;
+
+
+                    tableBody.appendChild(
+                        row
+                    );
+
+
+                }
+            );
+
         }
 
 
-        return String(value)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
 
-    }
+        /* =========================================
+           STATUS BADGE
+        ========================================= */
 
-
-    /* =========================
-       TOAST
-    ========================= */
-
-    function showToast(message, type) {
-
-        const toast =
-            document.getElementById("toast");
+        function getStatusBadge(
+            status
+        ) {
 
 
-        toast.innerText = message;
+            if (!status) {
 
-        toast.className =
-            "toast " + type + " show";
+                return "-";
 
-
-        setTimeout(() => {
-
-            toast.classList.remove("show");
-
-        }, 3000);
-
-    }
+            }
 
 
-    /* =========================
-       START APPLICATION
-    ========================= */
+            const statusClass =
+                "badge-" +
+                status.toLowerCase();
 
-    document.addEventListener(
-        "DOMContentLoaded",
-        function() {
 
-            loadAttendance();
+            let icon = "";
+
+
+            if (status === "PRESENT") {
+
+                icon = "✓";
+
+            }
+
+
+            if (status === "ABSENT") {
+
+                icon = "✕";
+
+            }
+
+
+            if (status === "LATE") {
+
+                icon = "◷";
+
+            }
+
+
+            if (status === "EXCUSED") {
+
+                icon = "!";
+
+            }
+
+
+            return `
+
+            <span
+                class="badge ${statusClass}"
+            >
+
+                ${icon}
+                ${status}
+
+            </span>
+
+        `;
 
         }
-    );
 
-</script>
+
+
+        /* =========================================
+           FORM SUBMIT
+        ========================================= */
+
+        document
+            .getElementById(
+                "attendanceForm"
+            )
+            .addEventListener(
+                "submit",
+                async function (event) {
+
+
+                    event.preventDefault();
+
+
+                    const sessionId =
+                        document.getElementById(
+                            "sessionId"
+                        ).value;
+
+
+                    const playerId =
+                        document.getElementById(
+                            "playerId"
+                        ).value;
+
+
+                    const status =
+                        document.getElementById(
+                            "status"
+                        ).value;
+
+
+                    const remarks =
+                        document.getElementById(
+                            "remarks"
+                        ).value;
+
+
+                    const markedBy =
+                        document.getElementById(
+                            "markedBy"
+                        ).value;
+
+
+
+                    /* Validate status */
+
+                    if (!status) {
+
+
+                        showToast(
+                            "Please select an attendance status.",
+                            "error"
+                        );
+
+
+                        return;
+
+                    }
+
+
+
+                    /* Create attendance object */
+
+                    const attendance = {
+
+
+                        sessionId:
+                            Number(sessionId),
+
+
+                        playerId:
+                            Number(playerId),
+
+
+                        status:
+                            status,
+
+
+                        remarks:
+                            remarks,
+
+
+                        markedBy:
+                            markedBy
+
+                    };
+
+
+
+                    /* =================================
+                       CHECK EXISTING ATTENDANCE
+                    ================================= */
+
+                    if (editingId === null) {
+
+                        const existingAttendance =
+                            attendanceRecords.find(record =>
+                                Number(record.sessionId) === Number(sessionId) &&
+                                Number(record.playerId) === Number(playerId)
+                            );
+
+                        if (existingAttendance) {
+
+                            const player = players.find(
+                                p => Number(p.id) === Number(playerId)
+                            );
+
+                            const playerName = player
+                                ? player.name
+                                : "Selected player";
+
+                            const currentStatus =
+                                existingAttendance.status || "UNKNOWN";
+
+                            const newStatus =
+                                status || "UNKNOWN";
+
+                            const replaceRecord = window.confirm(
+                                "Attendance already exists for " +
+                                playerName +
+                                " in Training Session #" +
+                                sessionId +
+                                ".\\n\\n" +
+                                "Current status: " +
+                                currentStatus +
+                                "\\nNew status: " +
+                                newStatus +
+                                "\\n\\n" +
+                                "Do you want to replace the existing attendance record?"
+                            );
+
+                            if (!replaceRecord) {
+
+                                showToast(
+                                    "Existing attendance was kept unchanged.",
+                                    "info"
+                                );
+
+                                return;
+                            }
+                        }
+                    }
+
+
+                    try {
+
+
+                        let response;
+
+
+
+                        /* =================================
+                           CREATE
+                        ================================= */
+
+                        if (
+                            editingId === null
+                        ) {
+
+
+                            response =
+                                await fetch(
+                                    apiUrl,
+                                    {
+
+                                        method: "POST",
+
+                                        headers: {
+
+                                            "Content-Type":
+                                                "application/json"
+
+                                        },
+
+                                        body:
+                                            JSON.stringify(
+                                                attendance
+                                            )
+
+                                    }
+                                );
+
+                        }
+
+
+
+                        /* =================================
+                           UPDATE
+                        ================================= */
+
+                        else {
+
+
+                            response =
+                                await fetch(
+                                    `${apiUrl}/${editingId}`,
+                                    {
+
+                                        method: "PUT",
+
+                                        headers: {
+
+                                            "Content-Type":
+                                                "application/json"
+
+                                        },
+
+                                        body:
+                                            JSON.stringify(
+                                                attendance
+                                            )
+
+                                    }
+                                );
+
+                        }
+
+
+
+                        if (!response.ok) {
+
+
+                            throw new Error(
+                                "Failed to save attendance."
+                            );
+
+                        }
+
+
+
+                        /* Success message */
+
+                        if (
+                            editingId === null
+                        ) {
+
+
+                            showToast(
+                                "Attendance marked successfully.",
+                                "success"
+                            );
+
+
+                        } else {
+
+
+                            showToast(
+                                "Attendance updated successfully.",
+                                "success"
+                            );
+
+                        }
+
+
+
+                        resetForm();
+
+
+                        await loadAttendance();
+
+
+                    } catch (error) {
+
+
+                        console.error(
+                            error
+                        );
+
+
+                        showToast(
+                            "Unable to save attendance.",
+                            "error"
+                        );
+
+                    }
+
+                }
+            );
+
+
+
+        /* =========================================
+           EDIT ATTENDANCE
+        ========================================= */
+
+        async function editAttendance(
+            id
+        ) {
+
+
+            try {
+
+
+                const response =
+                    await fetch(
+                        `${apiUrl}/${id}`
+                    );
+
+
+                if (!response.ok) {
+
+
+                    throw new Error(
+                        "Attendance record not found."
+                    );
+
+                }
+
+
+                const attendance =
+                    await response.json();
+
+
+                editingId = id;
+
+
+
+                document.getElementById(
+                    "sessionId"
+                ).value =
+                    attendance.sessionId ?? "";
+
+
+                /* Set age group before selecting player */
+
+                const selectedPlayer =
+                    players.find(
+                        player =>
+                            Number(player.id) ===
+                            Number(attendance.playerId)
+                    );
+
+                if (selectedPlayer) {
+
+                    document.getElementById(
+                        "playerGroup"
+                    ).value =
+                        selectedPlayer.playerGroup ?? "";
+
+                    updatePlayerDropdown();
+
+                    document.getElementById(
+                        "playerId"
+                    ).value =
+                        attendance.playerId ?? "";
+
+                    document.getElementById(
+                        "playerIdInput"
+                    ).value =
+                        attendance.playerId ?? "";
+
+                } else {
+
+                    document.getElementById(
+                        "playerGroup"
+                    ).value =
+                        "";
+
+                    updatePlayerDropdown();
+
+                }
+
+
+
+                document.getElementById(
+                    "remarks"
+                ).value =
+                    attendance.remarks ?? "";
+
+
+
+                document.getElementById(
+                    "markedBy"
+                ).value =
+                    attendance.markedBy ?? "";
+
+
+
+                document.getElementById(
+                    "status"
+                ).value =
+                    attendance.status ?? "";
+
+
+
+                /* Select correct status button */
+
+                document
+                    .querySelectorAll(
+                        ".status-btn"
+                    )
+                    .forEach(
+                        button => {
+
+
+                            button.classList.remove(
+                                "selected"
+                            );
+
+
+                            let buttonStatus;
+
+
+
+                            if (
+                                button.classList.contains(
+                                    "present"
+                                )
+                            ) {
+
+                                buttonStatus =
+                                    "PRESENT";
+
+                            }
+
+                            else if (
+                                button.classList.contains(
+                                    "absent"
+                                )
+                            ) {
+
+                                buttonStatus =
+                                    "ABSENT";
+
+                            }
+
+                            else if (
+                                button.classList.contains(
+                                    "late"
+                                )
+                            ) {
+
+                                buttonStatus =
+                                    "LATE";
+
+                            }
+
+                            else {
+
+                                buttonStatus =
+                                    "EXCUSED";
+
+                            }
+
+
+
+                            if (
+                                buttonStatus ===
+                                attendance.status
+                            ) {
+
+                                button.classList.add(
+                                    "selected"
+                                );
+
+                            }
+
+                        }
+                    );
+
+
+
+                document.getElementById(
+                    "formTitle"
+                ).innerText =
+                    "Edit Attendance";
+
+
+
+                document.getElementById(
+                    "submitBtn"
+                ).innerText =
+                    "✓ Update Attendance";
+
+
+
+                document.getElementById(
+                    "cancelBtn"
+                ).innerText =
+                    "Cancel Edit";
+
+
+
+                window.scrollTo(
+                    {
+                        top: 0,
+                        behavior: "smooth"
+                    }
+                );
+
+
+            } catch (error) {
+
+
+                console.error(
+                    error
+                );
+
+
+                showToast(
+                    "Unable to load attendance record.",
+                    "error"
+                );
+
+            }
+
+        }
+
+
+
+        /* =========================================
+           RESET FORM
+        ========================================= */
+
+        function resetForm() {
+
+
+            editingId = null;
+
+
+            document
+                .getElementById(
+                    "attendanceForm"
+                )
+                .reset();
+
+
+            document.getElementById(
+                "markedBy"
+            ).value =
+                "Coach";
+
+
+            document.getElementById(
+                "playerGroup"
+            ).value =
+                "";
+
+
+            updatePlayerDropdown();
+
+            document.getElementById(
+                "playerIdInput"
+            ).value = "";
+
+
+            document.getElementById(
+                "status"
+            ).value =
+                "";
+
+
+            document
+                .querySelectorAll(
+                    ".status-btn"
+                )
+                .forEach(
+                    button => {
+
+                        button.classList.remove(
+                            "selected"
+                        );
+
+                    }
+                );
+
+
+            document.getElementById(
+                "formTitle"
+            ).innerText =
+                "Mark Attendance";
+
+
+            document.getElementById(
+                "submitBtn"
+            ).innerText =
+                "✓ Mark Attendance";
+
+
+            document.getElementById(
+                "cancelBtn"
+            ).innerText =
+                "Clear";
+
+
+            /* Keep live time running */
+
+            updateCurrentTime();
+
+        }
+
+
+
+        /* =========================================
+           DELETE MODAL
+        ========================================= */
+
+        function openDeleteModal(
+            id
+        ) {
+
+
+            deleteId = id;
+
+
+            document
+                .getElementById(
+                    "deleteModal"
+                )
+                .classList.add(
+                    "show"
+                );
+
+        }
+
+
+
+        function closeDeleteModal() {
+
+
+            deleteId = null;
+
+
+            document
+                .getElementById(
+                    "deleteModal"
+                )
+                .classList.remove(
+                    "show"
+                );
+
+        }
+
+
+
+        /* =========================================
+           CONFIRM DELETE
+        ========================================= */
+
+        async function confirmDelete() {
+
+
+            if (
+                deleteId === null
+            ) {
+
+                return;
+
+            }
+
+
+            try {
+
+
+                const response =
+                    await fetch(
+                        `${apiUrl}/${deleteId}`,
+                        {
+                            method: "DELETE"
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+
+                    throw new Error(
+                        "Failed to delete attendance."
+                    );
+
+                }
+
+
+                closeDeleteModal();
+
+
+                showToast(
+                    "Attendance deleted successfully.",
+                    "success"
+                );
+
+
+                await loadAttendance();
+
+
+            } catch (error) {
+
+
+                console.error(
+                    error
+                );
+
+
+                showToast(
+                    "Unable to delete attendance.",
+                    "error"
+                );
+
+            }
+
+        }
+
+
+
+        /* =========================================
+           SEARCH + FILTER
+        ========================================= */
+
+        function filterRecords() {
+
+
+            const search =
+                document
+                    .getElementById(
+                        "searchInput"
+                    )
+                    .value
+                    .toLowerCase()
+                    .trim();
+
+
+
+            const statusFilter =
+                document
+                    .getElementById(
+                        "statusFilter"
+                    )
+                    .value;
+
+
+
+            const filtered =
+                attendanceRecords.filter(
+                    record => {
+
+
+                        const searchText = `
+
+                        ${record.id || ""}
+
+                        ${record.sessionId || ""}
+
+                        ${record.playerId || ""}
+
+                        ${record.status || ""}
+
+                        ${record.remarks || ""}
+
+                        ${record.markedBy || ""}
+
+                    `.toLowerCase();
+
+
+
+                        const matchesSearch =
+                            searchText.includes(
+                                search
+                            );
+
+
+
+                        const matchesStatus =
+                            statusFilter === "ALL" ||
+                            record.status ===
+                            statusFilter;
+
+
+
+                        return (
+                            matchesSearch &&
+                            matchesStatus
+                        );
+
+                    }
+                );
+
+
+
+            displayRecords(
+                filtered
+            );
+
+        }
+
+
+
+        /* =========================================
+           STATISTICS
+        ========================================= */
+
+        function updateStatistics() {
+
+
+            const total =
+                attendanceRecords.length;
+
+
+
+            const present =
+                attendanceRecords.filter(
+                    record =>
+                        record.status ===
+                        "PRESENT"
+                ).length;
+
+
+
+            const absent =
+                attendanceRecords.filter(
+                    record =>
+                        record.status ===
+                        "ABSENT"
+                ).length;
+
+
+
+            const late =
+                attendanceRecords.filter(
+                    record =>
+                        record.status ===
+                        "LATE"
+                ).length;
+
+
+
+            let rate = 0;
+
+
+
+            if (
+                total > 0
+            ) {
+
+
+                rate =
+                    (
+                        (
+                            present +
+                            late
+                        )
+                        /
+                        total
+                    )
+                    *
+                    100;
+
+            }
+
+
+
+            document.getElementById(
+                "totalRecords"
+            ).innerText =
+                total;
+
+
+
+            document.getElementById(
+                "presentCount"
+            ).innerText =
+                present;
+
+
+
+            document.getElementById(
+                "absentCount"
+            ).innerText =
+                absent;
+
+
+
+            document.getElementById(
+                "attendanceRate"
+            ).innerText =
+                rate.toFixed(1) +
+                "%";
+
+        }
+
+
+
+        /* =========================================
+           DATE FORMAT
+        ========================================= */
+
+        function formatDate(
+            dateValue
+        ) {
+
+
+            if (!dateValue) {
+
+                return "-";
+
+            }
+
+
+            try {
+
+
+                const date =
+                    new Date(
+                        dateValue
+                    );
+
+
+                return date.toLocaleString(
+                    "en-GB",
+                    {
+
+                        day: "2-digit",
+
+                        month: "short",
+
+                        year: "numeric",
+
+                        hour: "2-digit",
+
+                        minute: "2-digit"
+
+                    }
+                );
+
+
+            } catch {
+
+
+                return dateValue;
+
+            }
+
+        }
+
+
+
+        /* =========================================
+           ESCAPE HTML
+        ========================================= */
+
+        function escapeHtml(
+            value
+        ) {
+
+
+            if (
+                value === null ||
+                value === undefined
+            ) {
+
+                return "";
+
+            }
+
+
+            return String(value)
+
+                .replace(
+                    /&/g,
+                    "&amp;"
+                )
+
+                .replace(
+                    /</g,
+                    "&lt;"
+                )
+
+                .replace(
+                    />/g,
+                    "&gt;"
+                )
+
+                .replace(
+                    /"/g,
+                    "&quot;"
+                )
+
+                .replace(
+                    /'/g,
+                    "&#039;"
+                );
+
+        }
+
+
+
+        /* =========================================
+           TOAST
+        ========================================= */
+
+        function showToast(
+            message,
+            type
+        ) {
+
+
+            const toast =
+                document.getElementById(
+                    "toast"
+                );
+
+
+            toast.innerText =
+                message;
+
+
+            toast.className =
+                "toast " +
+                type +
+                " show";
+
+
+            setTimeout(
+                () => {
+
+                    toast.classList.remove(
+                        "show"
+                    );
+
+                },
+                3000
+            );
+
+        }
+
+
+
+        /* =========================================
+           START APPLICATION
+        ========================================= */
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                loadAttendance();
+
+                loadTrainingSessions();
+
+                loadPlayers();
+
+                updateCurrentTime();
+
+            }
+        );
+
+
+    </script>
 
 </body>
+
 </html>

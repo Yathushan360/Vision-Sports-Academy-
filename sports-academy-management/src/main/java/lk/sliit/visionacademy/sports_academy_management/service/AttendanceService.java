@@ -34,8 +34,51 @@ public class AttendanceService {
 
     public Attendance saveAttendance(Attendance attendance) {
 
+        /*
+         * Check whether this player already has
+         * attendance for this training session.
+         */
+        Attendance existingAttendance =
+                repository.findBySessionIdAndPlayerId(
+                        attendance.getSessionId(),
+                        attendance.getPlayerId()
+                );
+
+        /*
+         * If attendance already exists,
+         * update the existing record instead
+         * of creating a duplicate.
+         */
+        if (existingAttendance != null) {
+
+            existingAttendance.setStatus(
+                    attendance.getStatus()
+            );
+
+            existingAttendance.setRemarks(
+                    attendance.getRemarks()
+            );
+
+            existingAttendance.setMarkedBy(
+                    attendance.getMarkedBy()
+            );
+
+            existingAttendance.setMarkedAt(
+                    java.time.LocalDateTime.now()
+            );
+
+            return repository.save(existingAttendance);
+        }
+
+        /*
+         * If no attendance exists,
+         * create a new record.
+         */
         if (attendance.getMarkedAt() == null) {
-            attendance.setMarkedAt(java.time.LocalDateTime.now());
+
+            attendance.setMarkedAt(
+                    java.time.LocalDateTime.now()
+            );
         }
 
         return repository.save(attendance);
