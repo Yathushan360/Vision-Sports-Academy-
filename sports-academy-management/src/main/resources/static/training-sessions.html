@@ -1,715 +1,2506 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
 
-    <title>Sports Academy - Training Sessions</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Training Sessions | Vision Sports Academy</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            margin: 0;
-            padding: 30px;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+            min-height: 100vh;
         }
 
-        .container {
-            max-width: 1100px;
-            margin: auto;
-            background: white;
-            padding: 30px;
+        /* ==============================
+           LAYOUT
+        ============================== */
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ==============================
+           SIDEBAR
+        ============================== */
+
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg,
+                    #0b1220,
+                    #111b31);
+            color: white;
+            padding: 25px 18px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 5px 10px 30px;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 13px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
+
+            background: linear-gradient(135deg,
+                    #2563eb,
+                    #7c3aed);
+
+            box-shadow:
+                0 8px 25px rgba(37, 99, 235, 0.35);
+        }
+
+        .logo-text h2 {
+            font-size: 16px;
+        }
+
+        .logo-text span {
+            font-size: 11px;
+            color: #8d9ab5;
+        }
+
+        .nav-title {
+            font-size: 10px;
+            color: #64718d;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin: 10px 12px 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            padding: 13px 14px;
+            margin-bottom: 6px;
+
+            color: #aeb9cf;
+            text-decoration: none;
+
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+
+            transition: 0.25s;
         }
 
-        h1 {
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: white;
+        }
+
+        .nav-item.active {
+            color: white;
+
+            background: linear-gradient(135deg,
+                    rgba(37, 99, 235, 0.9),
+                    rgba(124, 58, 237, 0.9));
+
+            box-shadow:
+                0 8px 25px rgba(37, 99, 235, 0.22);
+        }
+
+        .nav-icon {
+            width: 22px;
             text-align: center;
-            margin-bottom: 30px;
+            font-size: 17px;
         }
 
-        form {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 30px;
+        /* ==============================
+           MAIN
+        ============================== */
+
+        .main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            padding: 28px 35px 50px;
         }
 
-        input {
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
+        /* ==============================
+           HEADER
+        ============================== */
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 28px;
+        }
+
+        .page-title h1 {
+            font-size: 28px;
+            color: #101828;
+            margin-bottom: 6px;
+        }
+
+        .page-title p {
+            color: #667085;
             font-size: 14px;
         }
 
-        input:focus {
+        .header-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 10px 15px;
+
+            background: white;
+            border: 1px solid #e5e9f2;
+
+            border-radius: 12px;
+
+            font-size: 13px;
+            color: #475467;
+        }
+
+        .online-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.7);
+        }
+
+        /* ==============================
+           STATS
+        ============================== */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid #e8ecf3;
+            border-radius: 17px;
+
+            padding: 20px;
+
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            box-shadow:
+                0 5px 20px rgba(16, 24, 40, 0.04);
+
+            transition: 0.25s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 12px 30px rgba(16, 24, 40, 0.08);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+
+            border-radius: 14px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 21px;
+
+            background: #eef4ff;
+        }
+
+        .stat-info span {
+            display: block;
+            font-size: 12px;
+            color: #667085;
+            margin-bottom: 5px;
+        }
+
+        .stat-info strong {
+            font-size: 25px;
+            color: #101828;
+        }
+
+        /* ==============================
+           FORM CARD
+        ============================== */
+
+        .form-card {
+            background: white;
+            border: 1px solid #e8ecf3;
+
+            border-radius: 18px;
+
+            padding: 24px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 5px 20px rgba(16, 24, 40, 0.04);
+        }
+
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+        .form-header h2 {
+            font-size: 18px;
+            color: #101828;
+        }
+
+        .form-header p {
+            font-size: 12px;
+            color: #667085;
+            margin-top: 5px;
+        }
+
+        .edit-badge {
+            display: none;
+
+            padding: 7px 12px;
+
+            background: #fff7ed;
+            color: #c2410c;
+
+            border-radius: 20px;
+
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .edit-badge.show {
+            display: inline-block;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 17px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .field label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #344054;
+
+            margin-bottom: 7px;
+        }
+
+        .field input,
+        .field select {
+            width: 100%;
+
+            padding: 12px 13px;
+
+            border: 1px solid #d9dee8;
+            border-radius: 10px;
+
+            background: #fbfcfe;
+
+            font-size: 13px;
+            color: #101828;
+
             outline: none;
-            border-color: #2563eb;
+
+            transition: 0.2s;
         }
 
-        .add-button {
-            grid-column: span 2;
-            padding: 12px;
+        .field input:focus,
+        .field select:focus {
+            border-color: #3b82f6;
+
+            background: white;
+
+            box-shadow:
+                0 0 0 3px rgba(59, 130, 246, 0.10);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+
+            margin-top: 20px;
+        }
+
+        button {
             border: none;
-            border-radius: 6px;
-            background: #2563eb;
-            color: white;
-            font-size: 15px;
             cursor: pointer;
+            font-family: inherit;
         }
 
-        .add-button:hover {
-            background: #1d4ed8;
-        }
+        .btn-primary {
+            padding: 12px 20px;
 
-        .update-button {
-            grid-column: span 2;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            background: #16a34a;
+            border-radius: 10px;
+
             color: white;
-            font-size: 15px;
-            cursor: pointer;
+
+            background: linear-gradient(135deg,
+                    #2563eb,
+                    #4f46e5);
+
+            font-size: 13px;
+            font-weight: 600;
+
+            box-shadow:
+                0 7px 18px rgba(37, 99, 235, 0.20);
+
+            transition: 0.2s;
         }
 
-        .update-button:hover {
-            background: #15803d;
+        .btn-primary:hover {
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 10px 25px rgba(37, 99, 235, 0.30);
         }
 
-        .cancel-button {
-            grid-column: span 2;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            background: #6b7280;
-            color: white;
-            font-size: 15px;
-            cursor: pointer;
+        .btn-secondary {
+            padding: 12px 20px;
+
+            border-radius: 10px;
+
+            background: #f2f4f7;
+            color: #344054;
+
+            font-size: 13px;
+            font-weight: 600;
         }
 
-        .cancel-button:hover {
-            background: #4b5563;
+        .btn-secondary:hover {
+            background: #e4e7ec;
+        }
+
+        /* ==============================
+           MESSAGE
+        ============================== */
+
+        .message {
+            display: none;
+
+            padding: 13px 16px;
+
+            border-radius: 12px;
+
+            margin-bottom: 20px;
+
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message.success {
+            background: #ecfdf3;
+            color: #027a48;
+            border: 1px solid #abefc6;
+        }
+
+        .message.error {
+            background: #fef3f2;
+            color: #b42318;
+            border: 1px solid #fecdca;
+        }
+
+        .message.warning {
+            background: #fffaeb;
+            color: #b54708;
+            border: 1px solid #fedf89;
+        }
+
+        /* ==============================
+           SESSION SECTION
+        ============================== */
+
+        .sessions-card {
+            background: white;
+            border: 1px solid #e8ecf3;
+
+            border-radius: 18px;
+
+            padding: 24px;
+
+            box-shadow:
+                0 5px 20px rgba(16, 24, 40, 0.04);
+        }
+
+        .sessions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+        .sessions-header h2 {
+            font-size: 18px;
+        }
+
+        .sessions-header p {
+            font-size: 12px;
+            color: #667085;
+            margin-top: 5px;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-box,
+        .filter-select {
+            border: 1px solid #d9dee8;
+            border-radius: 10px;
+
+            padding: 11px 13px;
+
+            background: #fbfcfe;
+
+            outline: none;
+
+            font-size: 13px;
+        }
+
+        .search-box:focus,
+        .filter-select:focus {
+            border-color: #3b82f6;
+
+            box-shadow:
+                0 0 0 3px rgba(59, 130, 246, 0.10);
+        }
+
+        /* ==============================
+           TABLE
+        ============================== */
+
+        .table-container {
+            overflow-x: auto;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            min-width: 850px;
         }
 
-        th,
-        td {
-            padding: 12px;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
-
-        th {
-            background: #2563eb;
-            color: white;
-        }
-
-        tr:nth-child(even) {
+        thead {
             background: #f8fafc;
         }
 
-        tr:hover {
+        th {
+            padding: 13px 12px;
+
+            text-align: left;
+
+            font-size: 11px;
+
+            color: #667085;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+
+            border-bottom: 1px solid #eaecf0;
+        }
+
+        td {
+            padding: 15px 12px;
+
+            border-bottom: 1px solid #f0f2f5;
+
+            font-size: 13px;
+
+            color: #344054;
+        }
+
+        tbody tr {
+            transition: 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #f8fbff;
+        }
+
+        .session-id {
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        .coach {
+            font-weight: 600;
+            color: #101828;
+        }
+
+        .date-main {
+            font-weight: 600;
+            color: #344054;
+        }
+
+        .time-text {
+            font-size: 12px;
+            color: #667085;
+            margin-top: 3px;
+        }
+
+        .group-badge {
+            display: inline-block;
+
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
             background: #eef4ff;
+
+            color: #3538cd;
+
+            font-size: 11px;
+
+            font-weight: 600;
+        }
+
+        .status-badge {
+            display: inline-block;
+
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+        }
+
+        .status-upcoming {
+            background: #ecfdf3;
+            color: #027a48;
+        }
+
+        .status-today {
+            background: #eff8ff;
+            color: #175cd3;
+        }
+
+        .status-completed {
+            background: #f2f4f7;
+            color: #475467;
+        }
+
+        .actions {
+            display: flex;
+            gap: 7px;
+        }
+
+        .action-btn {
+            width: 34px;
+            height: 34px;
+
+            border-radius: 9px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 14px;
+
+            transition: 0.2s;
         }
 
         .edit-btn {
-            background: #16a34a;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-right: 5px;
+            background: #eff8ff;
+            color: #175cd3;
         }
 
         .edit-btn:hover {
-            background: #15803d;
+            background: #dbeafe;
         }
 
         .delete-btn {
-            background: #dc2626;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
-            cursor: pointer;
+            background: #fef3f2;
+            color: #d92d20;
         }
 
         .delete-btn:hover {
-            background: #b91c1c;
+            background: #fee4e2;
         }
 
-        .message {
+        /* ==============================
+           EMPTY STATE
+        ============================== */
+
+        .empty-state {
             text-align: center;
-            margin: 15px 0;
-            font-size: 14px;
-            font-weight: bold;
+            padding: 55px 20px;
+            display: none;
         }
 
-        .empty-message {
-            text-align: center;
-            padding: 20px;
-            color: #777;
+        .empty-icon {
+            width: 60px;
+            height: 60px;
+
+            margin: 0 auto 15px;
+
+            border-radius: 18px;
+
+            background: #f2f4f7;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 25px;
         }
 
-        @media (max-width: 700px) {
+        .empty-state h3 {
+            font-size: 16px;
+            margin-bottom: 7px;
+        }
 
-            body {
-                padding: 15px;
+        .empty-state p {
+            font-size: 12px;
+            color: #667085;
+        }
+
+        /* ==============================
+           MODAL
+        ============================== */
+
+        .modal-overlay {
+            position: fixed;
+
+            inset: 0;
+
+            background: rgba(15, 23, 42, 0.55);
+
+            backdrop-filter: blur(5px);
+
+            display: none;
+
+            align-items: center;
+            justify-content: center;
+
+            z-index: 999;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            width: 420px;
+            max-width: 90%;
+
+            background: white;
+
+            border-radius: 20px;
+
+            padding: 25px;
+
+            box-shadow:
+                0 25px 70px rgba(0, 0, 0, 0.25);
+
+            animation: modalIn 0.2s ease;
+        }
+
+        @keyframes modalIn {
+
+            from {
+                opacity: 0;
+                transform: translateY(10px) scale(0.98);
             }
 
-            .container {
-                padding: 20px;
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-icon {
+            width: 50px;
+            height: 50px;
+
+            border-radius: 14px;
+
+            background: #fef3f2;
+
+            color: #d92d20;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
+
+            margin-bottom: 15px;
+        }
+
+        .modal h3 {
+            font-size: 18px;
+            margin-bottom: 7px;
+        }
+
+        .modal p {
+            color: #667085;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+
+            margin-top: 22px;
+        }
+
+        .btn-danger {
+            padding: 11px 18px;
+
+            border-radius: 10px;
+
+            background: #d92d20;
+
+            color: white;
+
+            font-size: 13px;
+
+            font-weight: 600;
+        }
+
+        .btn-danger:hover {
+            background: #b42318;
+        }
+
+        /* ==============================
+           RESPONSIVE
+        ============================== */
+
+        @media (max-width: 1100px) {
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
             }
 
-            form {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                width: 70px;
+                padding: 20px 10px;
+            }
+
+            .logo-text,
+            .nav-title,
+            .nav-item span:not(.nav-icon) {
+                display: none;
+            }
+
+            .logo {
+                justify-content: center;
+                padding-bottom: 25px;
+            }
+
+            .nav-item {
+                justify-content: center;
+                padding: 13px 5px;
+            }
+
+            .main {
+                margin-left: 70px;
+                width: calc(100% - 70px);
+                padding: 22px 18px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .header-badge {
+                display: none;
+            }
+
+            .filters {
                 grid-template-columns: 1fr;
             }
 
-            .add-button,
-            .update-button,
-            .cancel-button {
-                grid-column: span 1;
+        }
+
+        @media (max-width: 600px) {
+
+            .stats {
+                grid-template-columns: 1fr;
             }
 
-            table {
-                font-size: 12px;
+            .form-grid {
+                grid-template-columns: 1fr;
             }
 
-            th,
-            td {
-                padding: 8px;
+            .page-title h1 {
+                font-size: 23px;
+            }
+
+            .sessions-card,
+            .form-card {
+                padding: 17px;
+            }
+
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="app">
+
+        <!-- ==============================
+         SIDEBAR
+    =============================== -->
+
+        <aside class="sidebar">
+
+            <div class="logo">
+
+                <div class="logo-icon">
+                    ⚽
+                </div>
+
+                <div class="logo-text">
+
+                    <h2>Vision Academy</h2>
+
+                    <span>Sports Management</span>
+
+                </div>
+
+            </div>
+
+
+            <div class="nav-title">
+                Management
+            </div>
+
+
+            <a href="#" class="nav-item">
+
+                <span class="nav-icon">⌂</span>
+
+                <span>Dashboard</span>
+
+            </a>
+
+
+            <a href="training-sessions.html" class="nav-item active">
+
+                <span class="nav-icon">📅</span>
+
+                <span>Training Sessions</span>
+
+            </a>
+
+
+            <a href="/attendance" class="nav-item">
+
+                <span class="nav-icon">✓</span>
+
+                <span>Attendance</span>
+
+            </a>
+
+
+            <a href="players.html" class="nav-item">
+
+                <span class="nav-icon">👥</span>
+
+                <span>Players</span>
+
+            </a>
+
+
+            <a href="#" class="nav-item">
+
+                <span class="nav-icon">📊</span>
+
+                <span>Performance</span>
+
+            </a>
+
+
+            <div class="nav-title" style="margin-top:25px;">
+
+                Reports
+
+            </div>
+
+
+            <a href="attendance-report" class="nav-item">
+
+                <span class="nav-icon">📈</span>
+
+                <span>Attendance Report</span>
+
+            </a>
+
+        </aside>
+
+
+        <!-- ==============================
+         MAIN CONTENT
+    =============================== -->
+
+        <main class="main">
+
+
+            <!-- HEADER -->
+
+            <div class="topbar">
+
+                <div class="page-title">
+
+                    <h1>Training Sessions</h1>
+
+                    <p>
+                        Schedule and manage academy training sessions.
+                    </p>
+
+                </div>
+
+
+                <div class="header-badge">
+
+                    <span class="online-dot"></span>
+
+                    System Connected
+
+                </div>
+
+            </div>
+
+
+            <!-- ==============================
+             STATS
+        =============================== -->
+
+            <div class="stats">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        📅
+                    </div>
+
+                    <div class="stat-info">
+
+                        <span>Total Sessions</span>
+
+                        <strong id="totalSessions">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        📌
+                    </div>
+
+                    <div class="stat-info">
+
+                        <span>Today's Sessions</span>
+
+                        <strong id="todaySessions">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        🚀
+                    </div>
+
+                    <div class="stat-info">
+
+                        <span>Upcoming</span>
+
+                        <strong id="upcomingSessions">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        👥
+                    </div>
+
+                    <div class="stat-info">
+
+                        <span>Player Groups</span>
+
+                        <strong id="playerGroups">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- MESSAGE -->
+
+            <div id="message" class="message">
+            </div>
+
+
+            <!-- ==============================
+             CREATE / EDIT FORM
+        =============================== -->
+
+            <div class="form-card">
+
+                <div class="form-header">
+
+                    <div>
+
+                        <h2 id="formTitle">
+                            Create Training Session
+                        </h2>
+
+                        <p>
+                            Enter the details for the training session.
+                        </p>
+
+                    </div>
+
+                    <span id="editBadge" class="edit-badge">
+
+                        EDITING SESSION
+
+                    </span>
+
+                </div>
+
+
+                <form id="sessionForm">
+
+                    <div class="form-grid">
+
+
+                        <!-- COACH -->
+
+                        <div class="field">
+
+                            <label for="coach">
+                                Coach Name
+                            </label>
+
+                            <input type="text" id="coach" placeholder="Enter coach name" required>
+
+                        </div>
+
+
+                        <!-- GROUND -->
+
+                        <div class="field">
+
+                            <label for="ground">
+                                Training Ground
+                            </label>
+
+                            <input type="text" id="ground" placeholder="e.g. Main Ground" required>
+
+                        </div>
+
+
+                        <!-- PLAYER GROUP -->
+
+                        <div class="field">
+
+                            <label for="playerGroup">
+                                Player Group
+                            </label>
+
+                            <select id="playerGroup" required>
+
+                                <option value="">
+                                    Select player group
+                                </option>
+
+                                <option value="U8">
+                                    U8
+                                </option>
+
+                                <option value="U10">
+                                    U10
+                                </option>
+
+                                <option value="U12">
+                                    U12
+                                </option>
+
+                                <option value="U14">
+                                    U14
+                                </option>
+
+                                <option value="U16">
+                                    U16
+                                </option>
+
+                                <option value="U18">
+                                    U18
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- DATE -->
+
+                        <div class="field">
+
+                            <label for="sessionDate">
+                                Session Date
+                            </label>
+
+                            <input type="date" id="sessionDate" required>
+
+                        </div>
+
+
+                        <!-- START -->
+
+                        <div class="field">
+
+                            <label for="startTime">
+                                Start Time
+                            </label>
+
+                            <input type="time" id="startTime" required>
+
+                        </div>
+
+
+                        <!-- END -->
+
+                        <div class="field">
+
+                            <label for="endTime">
+                                End Time
+                            </label>
+
+                            <input type="time" id="endTime" required>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-actions">
+
+                        <button type="submit" class="btn-primary" id="submitButton">
+
+                            + Add Training Session
+
+                        </button>
+
+
+                        <button type="button" class="btn-secondary" id="cancelButton" onclick="cancelEdit()"
+                            style="display:none;">
+
+                            Cancel
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <!-- ==============================
+             SESSION LIST
+        =============================== -->
+
+            <div class="sessions-card">
+
+
+                <div class="sessions-header">
+
+                    <div>
+
+                        <h2>Training Session Schedule</h2>
+
+                        <p>
+                            View, search and manage all training sessions.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FILTERS -->
+
+                <div class="filters">
+
+                    <input type="text" id="searchInput" class="search-box"
+                        placeholder="🔍 Search coach, ground, group or ID...">
+
+
+                    <select id="groupFilter" class="filter-select">
+
+                        <option value="">
+                            All Player Groups
+                        </option>
+
+                    </select>
+
+
+                    <select id="statusFilter" class="filter-select">
+
+                        <option value="">
+                            All Status
+                        </option>
+
+                        <option value="UPCOMING">
+                            Upcoming
+                        </option>
+
+                        <option value="TODAY">
+                            Today
+                        </option>
+
+                        <option value="COMPLETED">
+                            Completed
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- TABLE -->
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>ID</th>
+
+                                <th>Coach</th>
+
+                                <th>Ground</th>
+
+                                <th>Player Group</th>
+
+                                <th>Date & Time</th>
+
+                                <th>Status</th>
+
+                                <th>Actions</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="sessionTableBody">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <!-- EMPTY -->
+
+                <div id="emptyState" class="empty-state">
+
+                    <div class="empty-icon">
+                        📅
+                    </div>
+
+                    <h3>
+                        No training sessions found
+                    </h3>
+
+                    <p>
+                        Create a training session or change your filters.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <!-- ==============================
+     DELETE MODAL
+================================ -->
+
+    <div id="deleteModal" class="modal-overlay">
+
+        <div class="modal">
+
+            <div class="modal-icon">
+                🗑
+            </div>
+
+            <h3>
+                Delete Training Session?
+            </h3>
+
+            <p id="deleteMessage">
+                Are you sure you want to delete this training session?
+            </p>
+
+
+            <div class="modal-actions">
+
+                <button class="btn-secondary" onclick="closeDeleteModal()">
+
+                    Cancel
+
+                </button>
+
+
+                <button class="btn-danger" onclick="confirmDelete()">
+
+                    Delete Session
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        /* =========================================
+           API
+        ========================================= */
+
+        const apiUrl = "/api/training-sessions";
+
+
+        let sessions = [];
+
+        let editingId = null;
+
+        let deleteId = null;
+
+
+        /* =========================================
+           ELEMENTS
+        ========================================= */
+
+        const form =
+            document.getElementById("sessionForm");
+
+        const message =
+            document.getElementById("message");
+
+        const tableBody =
+            document.getElementById("sessionTableBody");
+
+        const emptyState =
+            document.getElementById("emptyState");
+
+        const searchInput =
+            document.getElementById("searchInput");
+
+        const groupFilter =
+            document.getElementById("groupFilter");
+
+        const statusFilter =
+            document.getElementById("statusFilter");
+
+
+        /* =========================================
+           LOCAL DATE
+        ========================================= */
+
+        function getToday() {
+
+            const today = new Date();
+
+            const year =
+                today.getFullYear();
+
+            const month =
+                String(today.getMonth() + 1)
+                    .padStart(2, "0");
+
+            const day =
+                String(today.getDate())
+                    .padStart(2, "0");
+
+            return `${year}-${month}-${day}`;
+        }
+
+
+        /* =========================================
+           MESSAGE
+        ========================================= */
+
+        function showMessage(
+            text,
+            type = "success"
+        ) {
+
+            message.textContent = text;
+
+            message.className =
+                "message show " + type;
+
+            setTimeout(() => {
+
+                message.classList.remove("show");
+
+            }, 4500);
+        }
+
+
+        /* =========================================
+           ESCAPE HTML
+        ========================================= */
+
+        function escapeHtml(value) {
+
+            if (value === null ||
+                value === undefined) {
+
+                return "";
+            }
+
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+
+        /* =========================================
+           FORMAT DATE
+        ========================================= */
+
+        function formatDate(dateString) {
+
+            if (!dateString) {
+                return "-";
+            }
+
+            const date =
+                new Date(
+                    dateString + "T00:00:00"
+                );
+
+            return date.toLocaleDateString(
+                "en-GB",
+                {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric"
+                }
+            );
+        }
+
+
+        /* =========================================
+           FORMAT TIME
+        ========================================= */
+
+        function formatTime(timeString) {
+
+            if (!timeString) {
+                return "-";
+            }
+
+            const parts =
+                timeString.split(":");
+
+            const hour =
+                parseInt(parts[0]);
+
+            const minute =
+                parts[1];
+
+            const suffix =
+                hour >= 12 ? "PM" : "AM";
+
+            const displayHour =
+                hour % 12 || 12;
+
+            return `${displayHour}:${minute} ${suffix}`;
+        }
+
+
+        /* =========================================
+           SESSION STATUS
+        ========================================= */
+
+        function getSessionStatus(session) {
+
+            const today = getToday();
+
+            if (session.sessionDate > today) {
+
+                return "UPCOMING";
+
+            }
+
+            if (session.sessionDate < today) {
+
+                return "COMPLETED";
+
+            }
+
+            return "TODAY";
+        }
+
+
+        /* =========================================
+           LOAD SESSIONS
+        ========================================= */
+
+        async function loadSessions() {
+
+            try {
+
+                const response =
+                    await fetch(apiUrl);
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Unable to load training sessions."
+                    );
+
+                }
+
+                sessions =
+                    await response.json();
+
+                updateStats();
+
+                updateGroupFilter();
+
+                renderSessions();
+
+            } catch (error) {
+
+                console.error(error);
+
+                showMessage(
+                    "Unable to load training sessions. Please check the server.",
+                    "error"
+                );
+
             }
 
         }
 
-    </style>
-</head>
 
-<body>
+        /* =========================================
+           UPDATE STATISTICS
+        ========================================= */
 
-<div class="container">
+        function updateStats() {
 
-    <h1>🏟️ Training Sessions</h1>
+            const today =
+                getToday();
 
-    <div id="message" class="message"></div>
+            const todayCount =
+                sessions.filter(
+                    session =>
+                        session.sessionDate === today
+                ).length;
 
-    <form id="sessionForm">
 
-        <input
-            type="text"
-            id="coach"
-            placeholder="Coach Name"
-            required
-        >
+            const upcomingCount =
+                sessions.filter(
+                    session =>
+                        session.sessionDate > today
+                ).length;
 
-        <input
-            type="text"
-            id="ground"
-            placeholder="Ground"
-            required
-        >
 
-        <input
-            type="text"
-            id="playerGroup"
-            placeholder="Player Group"
-            required
-        >
+            const groups =
+                new Set(
+                    sessions
+                        .map(session => session.playerGroup)
+                        .filter(group => group)
+                );
 
-        <input
-            type="date"
-            id="sessionDate"
-            required
-        >
 
-        <input
-            type="time"
-            id="startTime"
-            required
-        >
+            document.getElementById(
+                "totalSessions"
+            ).textContent =
+                sessions.length;
 
-        <input
-            type="time"
-            id="endTime"
-            required
-        >
 
-        <button
-            class="add-button"
-            id="submitButton"
-            type="submit"
-        >
-            + Add Training Session
-        </button>
+            document.getElementById(
+                "todaySessions"
+            ).textContent =
+                todayCount;
 
-        <button
-            class="cancel-button"
-            id="cancelButton"
-            type="button"
-            style="display: none;"
-            onclick="cancelEdit()"
-        >
-            Cancel Edit
-        </button>
 
-    </form>
+            document.getElementById(
+                "upcomingSessions"
+            ).textContent =
+                upcomingCount;
 
 
-    <table>
+            document.getElementById(
+                "playerGroups"
+            ).textContent =
+                groups.size;
 
-        <thead>
+        }
 
-            <tr>
-                <th>ID</th>
-                <th>Coach</th>
-                <th>Ground</th>
-                <th>Player Group</th>
-                <th>Date</th>
-                <th>Start</th>
-                <th>End</th>
-                <th>Action</th>
-            </tr>
 
-        </thead>
+        /* =========================================
+           GROUP FILTER
+        ========================================= */
 
-        <tbody id="sessionTable">
+        function updateGroupFilter() {
 
-        </tbody>
+            const currentValue =
+                groupFilter.value;
 
-    </table>
 
-</div>
+            const groups =
+                [...new Set(
+                    sessions
+                        .map(session => session.playerGroup)
+                        .filter(group => group)
+                )]
+                    .sort();
 
 
-<script>
+            groupFilter.innerHTML =
+                `<option value="">
+                All Player Groups
+             </option>`;
 
-    const apiUrl = "/api/training-sessions";
 
-    let editingId = null;
+            groups.forEach(group => {
 
+                const option =
+                    document.createElement("option");
 
-    // Show message
-    function showMessage(message) {
+                option.value = group;
 
-        const messageBox = document.getElementById("message");
+                option.textContent = group;
 
-        messageBox.textContent = message;
-
-        setTimeout(function() {
-
-            messageBox.textContent = "";
-
-        }, 3000);
-
-    }
-
-
-    // Load all training sessions
-    function loadSessions() {
-
-        fetch(apiUrl)
-
-            .then(response => {
-
-                if (!response.ok) {
-                    throw new Error("Failed to load training sessions");
-                }
-
-                return response.json();
-
-            })
-
-            .then(data => {
-
-                const table = document.getElementById("sessionTable");
-
-                table.innerHTML = "";
-
-
-                if (data.length === 0) {
-
-                    table.innerHTML = `
-                        <tr>
-                            <td colspan="8" class="empty-message">
-                                No training sessions available.
-                            </td>
-                        </tr>
-                    `;
-
-                    return;
-                }
-
-
-                data.forEach(session => {
-
-                    const row = document.createElement("tr");
-
-
-                    row.innerHTML = `
-
-                        <td>${session.id}</td>
-
-                        <td>${session.coach}</td>
-
-                        <td>${session.ground}</td>
-
-                        <td>${session.playerGroup}</td>
-
-                        <td>${session.sessionDate}</td>
-
-                        <td>${session.startTime}</td>
-
-                        <td>${session.endTime}</td>
-
-                        <td>
-
-                            <button
-                                class="edit-btn"
-                                onclick="editSession(${session.id})"
-                            >
-                                Edit
-                            </button>
-
-                            <button
-                                class="delete-btn"
-                                onclick="deleteSession(${session.id})"
-                            >
-                                Delete
-                            </button>
-
-                        </td>
-
-                    `;
-
-
-                    table.appendChild(row);
-
-                });
-
-            })
-
-            .catch(error => {
-
-                console.error(error);
-
-                showMessage("Error loading training sessions.");
+                groupFilter.appendChild(option);
 
             });
 
-    }
+
+            if (groups.includes(currentValue)) {
+
+                groupFilter.value =
+                    currentValue;
+
+            }
+
+        }
 
 
-    // Add or Update Training Session
-    document
-        .getElementById("sessionForm")
-        .addEventListener("submit", function(event) {
+        /* =========================================
+           RENDER SESSIONS
+        ========================================= */
 
-            event.preventDefault();
+        function renderSessions() {
 
-
-            const session = {
-
-                coach: document.getElementById("coach").value,
-
-                ground: document.getElementById("ground").value,
-
-                playerGroup: document.getElementById("playerGroup").value,
-
-                sessionDate: document.getElementById("sessionDate").value,
-
-                startTime: document.getElementById("startTime").value,
-
-                endTime: document.getElementById("endTime").value
-
-            };
+            const search =
+                searchInput.value
+                    .trim()
+                    .toLowerCase();
 
 
-            // ADD
-            if (editingId === null) {
+            const group =
+                groupFilter.value;
 
-                fetch(apiUrl, {
 
-                    method: "POST",
+            const status =
+                statusFilter.value;
 
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
 
-                    body: JSON.stringify(session)
+            const filtered =
+                sessions.filter(session => {
 
-                })
+                    const searchText =
+                        `${session.id}
+                     ${session.coach}
+                     ${session.ground}
+                     ${session.playerGroup}
+                     ${session.sessionDate}`
+                            .toLowerCase();
 
-                .then(response => {
 
-                    if (!response.ok) {
-                        throw new Error("Failed to add training session");
-                    }
+                    const matchesSearch =
+                        searchText.includes(search);
 
-                    return response.json();
 
-                })
+                    const matchesGroup =
+                        !group ||
+                        session.playerGroup === group;
 
-                .then(() => {
 
-                    document
-                        .getElementById("sessionForm")
-                        .reset();
+                    const matchesStatus =
+                        !status ||
+                        getSessionStatus(session) === status;
 
-                    loadSessions();
 
-                    showMessage("Training session added successfully.");
-
-                })
-
-                .catch(error => {
-
-                    console.error(error);
-
-                    showMessage("Error adding training session.");
+                    return matchesSearch &&
+                        matchesGroup &&
+                        matchesStatus;
 
                 });
+
+
+            tableBody.innerHTML = "";
+
+
+            if (filtered.length === 0) {
+
+                emptyState.style.display =
+                    "block";
+
+                return;
 
             }
 
 
-            // UPDATE
-            else {
-
-                fetch(apiUrl + "/" + editingId, {
-
-                    method: "PUT",
-
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-
-                    body: JSON.stringify(session)
-
-                })
-
-                .then(response => {
-
-                    if (!response.ok) {
-                        throw new Error("Failed to update training session");
-                    }
-
-                    return response.json();
-
-                })
-
-                .then(() => {
-
-                    document
-                        .getElementById("sessionForm")
-                        .reset();
-
-                    editingId = null;
+            emptyState.style.display =
+                "none";
 
 
-                    document
-                        .getElementById("submitButton")
-                        .textContent = "+ Add Training Session";
+            filtered.forEach(session => {
+
+                const status =
+                    getSessionStatus(session);
 
 
-                    document
-                        .getElementById("submitButton")
-                        .className = "add-button";
+                let statusClass =
+                    "status-completed";
 
 
-                    document
-                        .getElementById("cancelButton")
-                        .style.display = "none";
+                if (status === "UPCOMING") {
 
+                    statusClass =
+                        "status-upcoming";
 
-                    loadSessions();
-
-                    showMessage("Training session updated successfully.");
-
-                })
-
-                .catch(error => {
-
-                    console.error(error);
-
-                    showMessage("Error updating training session.");
-
-                });
-
-            }
-
-        });
-
-
-    // Edit Training Session
-    function editSession(id) {
-
-        fetch(apiUrl + "/" + id)
-
-            .then(response => {
-
-                if (!response.ok) {
-                    throw new Error("Training session not found");
                 }
 
-                return response.json();
+                if (status === "TODAY") {
 
-            })
+                    statusClass =
+                        "status-today";
 
-            .then(session => {
+                }
+
+
+                const row =
+                    document.createElement("tr");
+
+
+                row.innerHTML = `
+
+                <td>
+
+                    <span class="session-id">
+
+                        #${escapeHtml(session.id)}
+
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <span class="coach">
+
+                        ${escapeHtml(session.coach)}
+
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    📍
+                    ${escapeHtml(session.ground)}
+
+                </td>
+
+
+                <td>
+
+                    <span class="group-badge">
+
+                        ${escapeHtml(session.playerGroup)}
+
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <div class="date-main">
+
+                        ${formatDate(session.sessionDate)}
+
+                    </div>
+
+                    <div class="time-text">
+
+                        ${formatTime(session.startTime)}
+                        -
+                        ${formatTime(session.endTime)}
+
+                    </div>
+
+                </td>
+
+
+                <td>
+
+                    <span class="status-badge ${statusClass}">
+
+                        ${status}
+
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <div class="actions">
+
+                        <button
+                            class="action-btn edit-btn"
+                            title="Edit Session"
+                            onclick="editSession(${session.id})">
+
+                            ✎
+
+                        </button>
+
+
+                        <button
+                            class="action-btn delete-btn"
+                            title="Delete Session"
+                            onclick="openDeleteModal(${session.id})">
+
+                            🗑
+
+                        </button>
+
+                    </div>
+
+                </td>
+
+            `;
+
+
+                tableBody.appendChild(row);
+
+            });
+
+        }
+
+
+        /* =========================================
+           CREATE / UPDATE
+        ========================================= */
+
+        form.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                const coach =
+                    document.getElementById(
+                        "coach"
+                    ).value.trim();
+
+
+                const ground =
+                    document.getElementById(
+                        "ground"
+                    ).value.trim();
+
+
+                const playerGroup =
+                    document.getElementById(
+                        "playerGroup"
+                    ).value;
+
+
+                const sessionDate =
+                    document.getElementById(
+                        "sessionDate"
+                    ).value;
+
+
+                const startTime =
+                    document.getElementById(
+                        "startTime"
+                    ).value;
+
+
+                const endTime =
+                    document.getElementById(
+                        "endTime"
+                    ).value;
+
+
+                /* ==============================
+                   VALIDATION
+                =============================== */
+
+                if (!coach ||
+                    !ground ||
+                    !playerGroup ||
+                    !sessionDate ||
+                    !startTime ||
+                    !endTime) {
+
+                    showMessage(
+                        "Please fill in all training session fields.",
+                        "warning"
+                    );
+
+                    return;
+
+                }
+
+
+                if (startTime >= endTime) {
+
+                    showMessage(
+                        "End time must be later than the start time.",
+                        "warning"
+                    );
+
+                    return;
+
+                }
+
+
+                const sessionData = {
+
+                    coach: coach,
+
+                    ground: ground,
+
+                    playerGroup: playerGroup,
+
+                    sessionDate: sessionDate,
+
+                    startTime: startTime,
+
+                    endTime: endTime
+
+                };
+
+
+                try {
+
+                    let response;
+
+
+                    /* ==============================
+                       UPDATE
+                    =============================== */
+
+                    if (editingId !== null) {
+
+                        response =
+                            await fetch(
+                                `${apiUrl}/${editingId}`,
+                                {
+                                    method: "PUT",
+
+                                    headers: {
+                                        "Content-Type":
+                                            "application/json"
+                                    },
+
+                                    body:
+                                        JSON.stringify(
+                                            sessionData
+                                        )
+                                }
+                            );
+
+                    }
+
+
+                    /* ==============================
+                       CREATE
+                    =============================== */
+
+                    else {
+
+                        response =
+                            await fetch(
+                                apiUrl,
+                                {
+                                    method: "POST",
+
+                                    headers: {
+                                        "Content-Type":
+                                            "application/json"
+                                    },
+
+                                    body:
+                                        JSON.stringify(
+                                            sessionData
+                                        )
+                                }
+                            );
+
+                    }
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            "Request failed."
+                        );
+
+                    }
+
+
+                    if (editingId !== null) {
+
+                        showMessage(
+                            `Training Session #${editingId} updated successfully.`,
+                            "success"
+                        );
+
+                    } else {
+
+                        showMessage(
+                            "Training session created successfully.",
+                            "success"
+                        );
+
+                    }
+
+
+                    resetForm();
+
+                    await loadSessions();
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    showMessage(
+                        "Something went wrong while saving the training session.",
+                        "error"
+                    );
+
+                }
+
+            }
+        );
+
+
+        /* =========================================
+           EDIT SESSION
+        ========================================= */
+
+        async function editSession(id) {
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${apiUrl}/${id}`
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Unable to load session."
+                    );
+
+                }
+
+
+                const session =
+                    await response.json();
+
+
+                document.getElementById(
+                    "coach"
+                ).value =
+                    session.coach || "";
+
+
+                document.getElementById(
+                    "ground"
+                ).value =
+                    session.ground || "";
+
+
+                document.getElementById(
+                    "playerGroup"
+                ).value =
+                    session.playerGroup || "";
+
+
+                document.getElementById(
+                    "sessionDate"
+                ).value =
+                    session.sessionDate || "";
+
+
+                document.getElementById(
+                    "startTime"
+                ).value =
+                    session.startTime
+                        ? session.startTime.substring(0, 5)
+                        : "";
+
+
+                document.getElementById(
+                    "endTime"
+                ).value =
+                    session.endTime
+                        ? session.endTime.substring(0, 5)
+                        : "";
+
 
                 editingId = id;
 
 
-                document
-                    .getElementById("coach")
-                    .value = session.coach;
+                document.getElementById(
+                    "formTitle"
+                ).textContent =
+                    `Edit Training Session #${id}`;
 
 
-                document
-                    .getElementById("ground")
-                    .value = session.ground;
+                document.getElementById(
+                    "submitButton"
+                ).textContent =
+                    "✓ Update Training Session";
 
 
-                document
-                    .getElementById("playerGroup")
-                    .value = session.playerGroup;
+                document.getElementById(
+                    "cancelButton"
+                ).style.display =
+                    "inline-block";
 
 
-                document
-                    .getElementById("sessionDate")
-                    .value = session.sessionDate;
-
-
-                document
-                    .getElementById("startTime")
-                    .value = session.startTime;
-
-
-                document
-                    .getElementById("endTime")
-                    .value = session.endTime;
-
-
-                document
-                    .getElementById("submitButton")
-                    .textContent = "Update Training Session";
-
-
-                document
-                    .getElementById("submitButton")
-                    .className = "update-button";
-
-
-                document
-                    .getElementById("cancelButton")
-                    .style.display = "block";
+                document.getElementById(
+                    "editBadge"
+                ).classList.add("show");
 
 
                 window.scrollTo({
-
                     top: 0,
-
                     behavior: "smooth"
-
                 });
 
 
-                showMessage("Edit mode enabled.");
-
-            })
-
-            .catch(error => {
+            } catch (error) {
 
                 console.error(error);
 
-                showMessage("Error loading training session.");
+                showMessage(
+                    "Unable to load the training session.",
+                    "error"
+                );
 
-            });
-
-    }
-
-
-    // Cancel Edit
-    function cancelEdit() {
-
-        editingId = null;
-
-
-        document
-            .getElementById("sessionForm")
-            .reset();
-
-
-        document
-            .getElementById("submitButton")
-            .textContent = "+ Add Training Session";
-
-
-        document
-            .getElementById("submitButton")
-            .className = "add-button";
-
-
-        document
-            .getElementById("cancelButton")
-            .style.display = "none";
-
-
-        showMessage("Edit cancelled.");
-
-    }
-
-
-    // Delete Training Session
-    function deleteSession(id) {
-
-        if (!confirm("Are you sure you want to delete this session?")) {
-
-            return;
+            }
 
         }
 
 
-        fetch(apiUrl + "/" + id, {
+        /* =========================================
+           CANCEL EDIT
+        ========================================= */
 
-            method: "DELETE"
+        function cancelEdit() {
 
-        })
+            resetForm();
 
-        .then(response => {
+        }
 
-            if (!response.ok) {
-                throw new Error("Failed to delete training session");
+
+        /* =========================================
+           RESET FORM
+        ========================================= */
+
+        function resetForm() {
+
+            form.reset();
+
+            editingId = null;
+
+
+            document.getElementById(
+                "formTitle"
+            ).textContent =
+                "Create Training Session";
+
+
+            document.getElementById(
+                "submitButton"
+            ).textContent =
+                "+ Add Training Session";
+
+
+            document.getElementById(
+                "cancelButton"
+            ).style.display =
+                "none";
+
+
+            document.getElementById(
+                "editBadge"
+            ).classList.remove("show");
+
+        }
+
+
+        /* =========================================
+           DELETE MODAL
+        ========================================= */
+
+        function openDeleteModal(id) {
+
+            deleteId = id;
+
+
+            const session =
+                sessions.find(
+                    session =>
+                        session.id === id
+                );
+
+
+            if (session) {
+
+                document.getElementById(
+                    "deleteMessage"
+                ).textContent =
+                    `Are you sure you want to delete Training Session #${id} for ${session.playerGroup} at ${session.ground}? This action cannot be undone.`;
+
             }
 
-            loadSessions();
 
-            showMessage("Training session deleted successfully.");
+            document.getElementById(
+                "deleteModal"
+            ).classList.add("show");
 
-        })
-
-        .catch(error => {
-
-            console.error(error);
-
-            showMessage("Error deleting training session.");
-
-        });
-
-    }
+        }
 
 
-    // Load sessions when page opens
-    loadSessions();
+        /* =========================================
+           CLOSE DELETE MODAL
+        ========================================= */
 
-</script>
+        function closeDeleteModal() {
+
+            deleteId = null;
+
+
+            document.getElementById(
+                "deleteModal"
+            ).classList.remove("show");
+
+        }
+
+
+        /* =========================================
+           CONFIRM DELETE
+        ========================================= */
+
+        async function confirmDelete() {
+
+            if (deleteId === null) {
+                return;
+            }
+
+
+            const id =
+                deleteId;
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${apiUrl}/${id}`,
+                        {
+                            method: "DELETE"
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Delete failed."
+                    );
+
+                }
+
+
+                closeDeleteModal();
+
+
+                showMessage(
+                    `Training Session #${id} deleted successfully.`,
+                    "success"
+                );
+
+
+                await loadSessions();
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                closeDeleteModal();
+
+
+                showMessage(
+                    `Unable to delete Training Session #${id}.`,
+                    "error"
+                );
+
+            }
+
+        }
+
+
+        /* =========================================
+           FILTER EVENTS
+        ========================================= */
+
+        searchInput.addEventListener(
+            "input",
+            renderSessions
+        );
+
+
+        groupFilter.addEventListener(
+            "change",
+            renderSessions
+        );
+
+
+        statusFilter.addEventListener(
+            "change",
+            renderSessions
+        );
+
+
+        /* =========================================
+           INITIAL LOAD
+        ========================================= */
+
+        loadSessions();
+
+    </script>
+
 
 </body>
+
 </html>
