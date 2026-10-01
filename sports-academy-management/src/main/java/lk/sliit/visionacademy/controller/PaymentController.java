@@ -146,17 +146,4 @@ public class PaymentController {
      */
     @PostMapping("/api/pay")
     @ResponseBody
-    public ResponseEntity<?> processPaymentApi(@Valid @RequestBody PaymentProcessRequest request) {
-        try {
-            Payment payment = paymentService.processPayment(request);
-            return ResponseEntity.ok(PaymentResponseDTO.fromEntity(payment));
-        } catch (InvalidPaymentStateException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        } catch (PaymentProcessingException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Unexpected error processing payment: " + e.getMessage());
-        }
-    }
-}
+   
