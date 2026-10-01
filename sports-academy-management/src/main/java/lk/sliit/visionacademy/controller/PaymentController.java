@@ -1,7 +1,12 @@
 package lk.sliit.visionacademy.controller;
 
+import jakarta.validation.Valid;
+import lk.sliit.visionacademy.dto.PaymentProcessRequest;
+import lk.sliit.visionacademy.dto.PaymentResponseDTO;
 import lk.sliit.visionacademy.entity.Payment;
 import lk.sliit.visionacademy.entity.PaymentStatus;
+import lk.sliit.visionacademy.exception.InvalidPaymentStateException;
+import lk.sliit.visionacademy.exception.PaymentProcessingException;
 import lk.sliit.visionacademy.service.IPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +19,8 @@ import java.util.List;
 
 /**
  * Boundary Class for Billing and Payments.
- * Exposes REST API endpoints and web UI controller methods for parents and players.
+ * Exposes REST API endpoints and web UI controller methods for parents, players, and administrators.
+ * Fulfills Single Responsibility Principle for payment viewing, processing, and receipt generation.
  */
 @Controller
 @RequestMapping("/payments")
@@ -25,7 +31,7 @@ public class PaymentController {
     private IPaymentService paymentService;
 
     // =========================================================================
-    // UI ENDPOINTS (Thymeleaf View)
+    // UI ENDPOINTS (Thymeleaf Views)
     // =========================================================================
 
     /**
@@ -33,7 +39,9 @@ public class PaymentController {
      * URL: GET /payments/view or GET /payments/view?playerId=1024
      */
     @GetMapping("/view")
-    public String viewPayments(@RequestParam(required = false) Integer playerId, Model model) {
+    public String viewPayments(@RequestParam(required = false) Integer playerId,
+                               @RequestParam(required = false) String error,
+                               Model model) {
         try {
             // Trigger overdue updates before display
             paymentService.calculateOverduePayments();
@@ -46,6 +54,9 @@ public class PaymentController {
             }
             model.addAttribute("payments", payments);
             model.addAttribute("selectedPlayerId", playerId);
+            if (error != null) {
+                model.addAttribute("error", error);
+            }
 
         } catch (Exception e) {
             model.addAttribute("error", "An error occurred while fetching payments: " + e.getMessage());
@@ -54,6 +65,36 @@ public class PaymentController {
         }
 
         return "view-payments";
+    }
+
+    /**
+     * Web page displaying official payment receipt and statement.
+     * URL: GET /payments/receipt/{id}
+     */
+    @GetMapping("/receipt/{id}")
+    public String viewReceipt(@PathVariable("id") Integer id, Model model) {
+        try {
+            Payment payment = paymentService.getPaymentById(id);
+            model.addAttribute("payment", payment);
+            return "payment-receipt";
+        } catch (Exception e) {
+            return "redirect:/payments/view?error=" + e.getMessage();
+        }
+    }
+
+    /**
+     * Web action to process an outstanding fee payment and redirect directly to receipt.
+     * URL: POST /payments/pay/{id}
+     */
+    @PostMapping("/pay/{id}")
+    public String processPaymentDirect(@PathVariable("id") Integer id,
+                                       @RequestParam(defaultValue = "ONLINE") String paymentMethod) {
+        try {
+            paymentService.processPayment(id);
+            return "redirect:/payments/receipt/" + id;
+        } catch (Exception e) {
+            return "redirect:/payments/view?error=" + e.getMessage();
+        }
     }
 
     // =========================================================================
@@ -96,6 +137,26 @@ public class PaymentController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error retrieving payments by status: " + e.getMessage());
+        }
+    }
+
+    /**
+     * REST Endpoint: Process payment with validated DTO payload.
+     * URL: POST /payments/api/pay
+     */
+    @PostMapping("/api/pay")
+    @ResponseBody
+    public ResponseEntity<?> processPaymentApi(@Valid @RequestBody PaymentProcessRequest request) {
+        try {
+            Payment payment = paymentService.processPayment(request);
+            return ResponseEntity.ok(PaymentResponseDTO.fromEntity(payment));
+        } catch (InvalidPaymentStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (PaymentProcessingException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Unexpected error processing payment: " + e.getMessage());
         }
     }
 }

@@ -156,6 +156,12 @@ public class PaymentService implements IPaymentService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public Payment getPaymentById(Integer paymentId) throws PaymentProcessingException {
+        return paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new PaymentProcessingException("Payment record not found with ID: " + paymentId));
+    }
+
     /**
      * Triggers overdue calculations using the default static penalty.
      */
