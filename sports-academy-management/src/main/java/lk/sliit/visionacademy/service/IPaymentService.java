@@ -29,5 +29,15 @@ public interface IPaymentService {
     Payment processPayment(Integer paymentId) throws PaymentProcessingException, InvalidPaymentStateException;
 
     // Overloaded: Track / retrieve payments
-   
+    List<Payment> getPayments();
+    List<Payment> getPayments(PaymentStatus status);
+    List<Payment> getPayments(Integer playerId);
+    List<Payment> getPaymentsByPlayer(Integer playerId);
+    Payment getPaymentById(Integer paymentId) throws PaymentProcessingException;
+
+    // Overloaded: Calculate overdue payments with default penalty
+    void calculateOverduePayments();
+
+    // Overloaded: Calculate overdue payments with custom penalty
+    void calculateOverduePayments(BigDecimal penalty);
 }
