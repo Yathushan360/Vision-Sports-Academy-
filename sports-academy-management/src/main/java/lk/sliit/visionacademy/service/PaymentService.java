@@ -33,6 +33,11 @@ public class PaymentService implements IPaymentService {
     @Autowired
     private FeeStructureRepository feeStructureRepository;
 
+    @Override
+    public List<FeeStructure> getAllFeeStructures() {
+        return feeStructureRepository.findAll();
+    }
+
     /**
      * Generates monthly training fee for a player with default 7-day grace period.
      * Demonstrates Method Overloading (compile-time polymorphism).

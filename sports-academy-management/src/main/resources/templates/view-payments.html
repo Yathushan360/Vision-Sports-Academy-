@@ -114,6 +114,17 @@
             font-size: 0.95rem;
         }
 
+        .success-banner {
+            background-color: #def7ec;
+            color: #03543f;
+            border-left: 4px solid #31c48d;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -185,9 +196,15 @@
                 <h1>Vision Sports Academy</h1>
                 <p style="margin: 4px 0 0; color: var(--text-muted); font-size: 0.9rem;">Parent & Player Payment Portal</p>
             </div>
-            <span class="badge-portal">Billing & Payments</span>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <a th:href="@{/payments/generate}" class="btn" style="padding: 8px 14px; font-size: 0.88rem; background-color: #047857;">
+                    + Issue Fee
+                </a>
+                <span class="badge-portal">Billing & Payments</span>
+            </div>
         </div>
 
+        <div th:if="${success}" class="success-banner" th:text="${success}"></div>
         <div th:if="${error}" class="error-banner" th:text="${error}"></div>
 
         <!-- Filter / Search Form -->

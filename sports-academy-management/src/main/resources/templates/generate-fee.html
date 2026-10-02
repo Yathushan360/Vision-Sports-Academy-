@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Issue Fee - Vision Sports Academy</title>
+    <style>
+        :root {
+            --primary: #1a56db;
+            --primary-hover: #1e429f;
+            --bg-light: #f9fafb;
+            --text-dark: #111827;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+            --error-red: #ef4444;
+            --error-bg: #fde8e8;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 36px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin: 0;
+        }
+
+        .badge-admin {
+            background-color: #fef3c7;
+            color: #92400e;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #374151;
+        }
+
+        input[type="number"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            background-color: #ffffff;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.15);
+        }
+
+        .form-hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .field-error {
+            color: var(--error-red);
+            font-size: 0.82rem;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .alert-error {
+            background-color: var(--error-bg);
+            color: #9b1c1c;
+            border-left: 4px solid #f98080;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.92rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: #ffffff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.95rem;
+            flex: 1;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-cancel {
+            background-color: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            text-decoration: none;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-cancel:hover {
+            background-color: #f3f4f6;
+            color: var(--text-dark);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>Issue Training Fee</h1>
+                <p style="margin: 4px 0 0; color: var(--text-muted); font-size: 0.88rem;">Administrator Billing Assignment</p>
+            </div>
+            <span class="badge-admin">Admin Action</span>
+        </div>
+
+        <div th:if="${error}" class="alert-error" th:text="${error}"></div>
+
+        <form th:action="@{/payments/generate}" th:object="${feeRequest}" method="post">
+            
+            <!-- Player ID -->
+            <div class="form-group">
+                <label for="playerId">Player ID *</label>
+                <input type="number" id="playerId" th:field="*{playerId}" placeholder="e.g. 1024" required />
+                <div class="form-hint">Enter the unique student/player identification number.</div>
+                <div th:if="${#fields.hasErrors('playerId')}" th:errors="*{playerId}" class="field-error"></div>
+            </div>
+
+            <!-- Fee Tier / Structure -->
+            <div class="form-group">
+                <label for="feeId">Fee Structure Tier *</label>
+                <select id="feeId" th:field="*{feeId}" required>
+                    <option value="" disabled selected>-- Select Fee Category --</option>
+                    <option th:each="fee : ${feeStructures}"
+                            th:value="${fee.feeId}"
+                            th:text="${fee.feeType + ' (' + (fee.ageGroup != null ? fee.ageGroup : 'All Ages') + ') - Rs. ' + #numbers.formatDecimal(fee.amount, 1, 2)}">
+                        MONTHLY_TRAINING (U16) - Rs. 2,500.00
+                    </option>
+                </select>
+                <div class="form-hint">Select the fee rate defined in the academy fee structure.</div>
+                <div th:if="${#fields.hasErrors('feeId')}" th:errors="*{feeId}" class="field-error"></div>
+            </div>
+
+            <!-- Due Date -->
+            <div class="form-group">
+                <label for="dueDate">Payment Due Date *</label>
+                <input type="date" id="dueDate" th:field="*{dueDate}" required />
+                <div class="form-hint">Defaults to 7 days from today. Overdue penalties apply after this date.</div>
+                <div th:if="${#fields.hasErrors('dueDate')}" th:errors="*{dueDate}" class="field-error"></div>
+            </div>
+
+            <div class="btn-group">
+                <a th:href="@{/payments/view}" class="btn btn-cancel">Cancel</a>
+                <button type="submit" class="btn">&#10003; Issue Fee</button>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>

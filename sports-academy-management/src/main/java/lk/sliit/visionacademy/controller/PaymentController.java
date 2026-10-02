@@ -1,8 +1,10 @@
 package lk.sliit.visionacademy.controller;
 
 import jakarta.validation.Valid;
+import lk.sliit.visionacademy.dto.FeeGenerationRequest;
 import lk.sliit.visionacademy.dto.PaymentProcessRequest;
 import lk.sliit.visionacademy.dto.PaymentResponseDTO;
+import lk.sliit.visionacademy.entity.FeeStructure;
 import lk.sliit.visionacademy.entity.Payment;
 import lk.sliit.visionacademy.entity.PaymentStatus;
 import lk.sliit.visionacademy.exception.InvalidPaymentStateException;
@@ -13,14 +15,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
  * Boundary Class for Billing and Payments.
  * Exposes REST API endpoints and web UI controller methods for parents, players, and administrators.
- * Fulfills Single Responsibility Principle for payment viewing, processing, and receipt generation.
+ * Fulfills Single Responsibility Principle for payment viewing, processing, fee generation, and receipt generation.
  */
 @Controller
 @RequestMapping("/payments")
@@ -97,6 +102,54 @@ public class PaymentController {
         }
     }
 
+    /**
+     * Web form for Administrator to generate and assign fees to players.
+     * URL: GET /payments/generate
+     */
+    @GetMapping("/generate")
+    public String showGenerateFeeForm(Model model) {
+        try {
+            List<FeeStructure> feeStructures = paymentService.getAllFeeStructures();
+            model.addAttribute("feeStructures", feeStructures);
+            FeeGenerationRequest request = new FeeGenerationRequest();
+            request.setDueDate(LocalDate.now().plusDays(7));
+            model.addAttribute("feeRequest", request);
+        } catch (Exception e) {
+            model.addAttribute("error", "Error loading fee tiers: " + e.getMessage());
+        }
+        return "generate-fee";
+    }
+
+    /**
+     * Web action to process fee generation submission.
+     * URL: POST /payments/generate
+     */
+    @PostMapping("/generate")
+    public String generateFee(@Valid @ModelAttribute("feeRequest") FeeGenerationRequest request,
+                              BindingResult bindingResult,
+                              Model model,
+                              RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("feeStructures", paymentService.getAllFeeStructures());
+            return "generate-fee";
+        }
+
+        try {
+            LocalDate dueDate = (request.getDueDate() != null) ? request.getDueDate() : LocalDate.now().plusDays(7);
+            paymentService.generateMonthlyFee(request.getPlayerId(), request.getFeeId(), dueDate);
+            redirectAttributes.addFlashAttribute("success", "Fee successfully generated and assigned to Player #" + request.getPlayerId());
+            return "redirect:/payments/view";
+        } catch (PaymentProcessingException e) {
+            model.addAttribute("feeStructures", paymentService.getAllFeeStructures());
+            model.addAttribute("error", e.getMessage());
+            return "generate-fee";
+        } catch (Exception e) {
+            model.addAttribute("feeStructures", paymentService.getAllFeeStructures());
+            model.addAttribute("error", "An unexpected error occurred: " + e.getMessage());
+            return "generate-fee";
+        }
+    }
+
     // =========================================================================
     // REST API ENDPOINTS (JSON)
     // =========================================================================
@@ -157,6 +210,25 @@ public class PaymentController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Unexpected error processing payment: " + e.getMessage());
+        }
+    }
+
+    /**
+     * REST Endpoint: Generate fee for a player.
+     * URL: POST /payments/api/generate
+     */
+    @PostMapping("/api/generate")
+    @ResponseBody
+    public ResponseEntity<?> generateFeeApi(@Valid @RequestBody FeeGenerationRequest request) {
+        try {
+            LocalDate dueDate = (request.getDueDate() != null) ? request.getDueDate() : LocalDate.now().plusDays(7);
+            Payment payment = paymentService.generateMonthlyFee(request.getPlayerId(), request.getFeeId(), dueDate);
+            return ResponseEntity.status(HttpStatus.CREATED).body(PaymentResponseDTO.fromEntity(payment));
+        } catch (PaymentProcessingException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Unexpected error generating fee: " + e.getMessage());
         }
     }
 }
