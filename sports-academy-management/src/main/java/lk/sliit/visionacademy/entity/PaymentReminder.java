@@ -51,5 +51,19 @@ public class PaymentReminder {
         this.payment = payment;
     }
 
-  
+    public LocalDateTime getSentAt() {
+        return sentAt;
+    }
+
+    public void setSentAt(LocalDateTime sentAt) {
+        this.sentAt = sentAt;
+    }
+
+    public ReminderChannel getChannel() {
+        return channel;
+    }
+
+    public void setChannel(ReminderChannel channel) {
+        this.channel = channel;
+    }
 }
