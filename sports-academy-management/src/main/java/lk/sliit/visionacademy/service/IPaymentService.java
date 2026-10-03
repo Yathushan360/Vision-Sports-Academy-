@@ -3,7 +3,9 @@ package lk.sliit.visionacademy.service;
 import lk.sliit.visionacademy.dto.PaymentProcessRequest;
 import lk.sliit.visionacademy.entity.FeeStructure;
 import lk.sliit.visionacademy.entity.Payment;
+import lk.sliit.visionacademy.entity.PaymentReminder;
 import lk.sliit.visionacademy.entity.PaymentStatus;
+import lk.sliit.visionacademy.entity.ReminderChannel;
 import lk.sliit.visionacademy.exception.InvalidPaymentStateException;
 import lk.sliit.visionacademy.exception.PaymentProcessingException;
 
@@ -40,4 +42,9 @@ public interface IPaymentService {
 
     // Overloaded: Calculate overdue payments with custom penalty
     void calculateOverduePayments(BigDecimal penalty);
+
+    // Reminders & Notification Auditing
+    int sendOverdueReminders();
+    PaymentReminder sendReminder(Integer paymentId, ReminderChannel channel) throws PaymentProcessingException;
+    List<PaymentReminder> getReminderLogs(Integer paymentId);
 }

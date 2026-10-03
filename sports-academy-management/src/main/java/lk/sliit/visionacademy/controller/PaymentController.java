@@ -7,6 +7,7 @@ import lk.sliit.visionacademy.dto.PaymentResponseDTO;
 import lk.sliit.visionacademy.entity.FeeStructure;
 import lk.sliit.visionacademy.entity.Payment;
 import lk.sliit.visionacademy.entity.PaymentStatus;
+import lk.sliit.visionacademy.entity.ReminderChannel;
 import lk.sliit.visionacademy.exception.InvalidPaymentStateException;
 import lk.sliit.visionacademy.exception.PaymentProcessingException;
 import lk.sliit.visionacademy.service.IPaymentService;
@@ -21,11 +22,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Boundary Class for Billing and Payments.
  * Exposes REST API endpoints and web UI controller methods for parents, players, and administrators.
- * Fulfills Single Responsibility Principle for payment viewing, processing, fee generation, and receipt generation.
+ * Fulfills Single Responsibility Principle for payment viewing, processing, fee generation,
+ * receipt generation, and overdue reminder dispatching.
  */
 @Controller
 @RequestMapping("/payments")
@@ -150,6 +153,38 @@ public class PaymentController {
         }
     }
 
+    /**
+     * Web action for Admin to batch-trigger overdue payment reminders.
+     * URL: POST /payments/reminders/trigger
+     */
+    @PostMapping("/reminders/trigger")
+    public String triggerOverdueReminders(RedirectAttributes redirectAttributes) {
+        try {
+            int count = paymentService.sendOverdueReminders();
+            redirectAttributes.addFlashAttribute("success", "Successfully triggered " + count + " overdue reminder(s) via SMS notification.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error triggering reminders: " + e.getMessage());
+        }
+        return "redirect:/payments/view";
+    }
+
+    /**
+     * Web action to dispatch an immediate reminder for a specific overdue payment.
+     * URL: POST /payments/reminders/send/{paymentId}
+     */
+    @PostMapping("/reminders/send/{paymentId}")
+    public String sendIndividualReminder(@PathVariable Integer paymentId,
+                                         @RequestParam(defaultValue = "SMS") ReminderChannel channel,
+                                         RedirectAttributes redirectAttributes) {
+        try {
+            paymentService.sendReminder(paymentId, channel);
+            redirectAttributes.addFlashAttribute("success", "Reminder dispatched via " + channel + " for Payment #" + paymentId);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to dispatch reminder: " + e.getMessage());
+        }
+        return "redirect:/payments/view";
+    }
+
     // =========================================================================
     // REST API ENDPOINTS (JSON)
     // =========================================================================
@@ -229,6 +264,37 @@ public class PaymentController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Unexpected error generating fee: " + e.getMessage());
+        }
+    }
+
+    /**
+     * REST Endpoint: Trigger overdue reminders batch.
+     * URL: POST /payments/api/reminders/trigger
+     */
+    @PostMapping("/api/reminders/trigger")
+    @ResponseBody
+    public ResponseEntity<?> triggerOverdueRemindersApi() {
+        try {
+            int count = paymentService.sendOverdueReminders();
+            return ResponseEntity.ok(Map.of("message", "Reminders dispatched successfully", "dispatchedCount", count));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error triggering reminders: " + e.getMessage());
+        }
+    }
+
+    /**
+     * REST Endpoint: Retrieve reminder logs for a specific payment.
+     * URL: GET /payments/api/reminders/{paymentId}
+     */
+    @GetMapping("/api/reminders/{paymentId}")
+    @ResponseBody
+    public ResponseEntity<?> getReminderLogsApi(@PathVariable Integer paymentId) {
+        try {
+            return ResponseEntity.ok(paymentService.getReminderLogs(paymentId));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error retrieving reminder logs: " + e.getMessage());
         }
     }
 }

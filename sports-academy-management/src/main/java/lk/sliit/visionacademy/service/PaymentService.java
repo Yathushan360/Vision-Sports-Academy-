@@ -3,10 +3,13 @@ package lk.sliit.visionacademy.service;
 import lk.sliit.visionacademy.dto.PaymentProcessRequest;
 import lk.sliit.visionacademy.entity.FeeStructure;
 import lk.sliit.visionacademy.entity.Payment;
+import lk.sliit.visionacademy.entity.PaymentReminder;
 import lk.sliit.visionacademy.entity.PaymentStatus;
+import lk.sliit.visionacademy.entity.ReminderChannel;
 import lk.sliit.visionacademy.exception.InvalidPaymentStateException;
 import lk.sliit.visionacademy.exception.PaymentProcessingException;
 import lk.sliit.visionacademy.repository.FeeStructureRepository;
+import lk.sliit.visionacademy.repository.PaymentReminderRepository;
 import lk.sliit.visionacademy.repository.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +22,8 @@ import java.util.stream.Collectors;
 /**
  * Control Class for the Billing & Payments module.
  * Encapsulates financial business logic, tracks payment statuses,
- * enforces finite state transitions, and coordinates between entities and repository access.
+ * enforces finite state transitions, coordinates between entities,
+ * and manages notification dispatch & reminder auditing.
  */
 @Service
 public class PaymentService implements IPaymentService {
@@ -32,6 +36,9 @@ public class PaymentService implements IPaymentService {
 
     @Autowired
     private FeeStructureRepository feeStructureRepository;
+
+    @Autowired
+    private PaymentReminderRepository paymentReminderRepository;
 
     @Override
     public List<FeeStructure> getAllFeeStructures() {
@@ -188,5 +195,50 @@ public class PaymentService implements IPaymentService {
                 paymentRepository.save(payment);
             }
         }
+    }
+
+    /**
+     * Batch triggers payment reminder notifications for all currently OVERDUE fee records.
+     * Records each notification attempt in the database for auditing and history tracking.
+     */
+    @Override
+    public int sendOverdueReminders() {
+        // Ensure overdue checks are updated first
+        calculateOverduePayments();
+
+        List<Payment> overduePayments = paymentRepository.findByStatus(PaymentStatus.OVERDUE);
+        int dispatchedCount = 0;
+
+        for (Payment payment : overduePayments) {
+            PaymentReminder reminder = new PaymentReminder(payment, ReminderChannel.SMS);
+            paymentReminderRepository.save(reminder);
+            dispatchedCount++;
+            System.out.println("Dispatched automated SMS reminder to Player #" + payment.getPlayerId() + " for Payment #" + payment.getPaymentId());
+        }
+
+        return dispatchedCount;
+    }
+
+    /**
+     * Dispatches a single reminder notification for a given payment record.
+     */
+    @Override
+    public PaymentReminder sendReminder(Integer paymentId, ReminderChannel channel) throws PaymentProcessingException {
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new PaymentProcessingException("Payment not found with ID: " + paymentId));
+
+        ReminderChannel selectedChannel = (channel != null) ? channel : ReminderChannel.SMS;
+        PaymentReminder reminder = new PaymentReminder(payment, selectedChannel);
+        PaymentReminder saved = paymentReminderRepository.save(reminder);
+        System.out.println("Dispatched " + selectedChannel + " reminder to Player #" + payment.getPlayerId() + " for Payment #" + paymentId);
+        return saved;
+    }
+
+    /**
+     * Retrieves the history of reminder notifications sent for a specific payment.
+     */
+    @Override
+    public List<PaymentReminder> getReminderLogs(Integer paymentId) {
+        return paymentReminderRepository.findByPayment_PaymentId(paymentId);
     }
 }
