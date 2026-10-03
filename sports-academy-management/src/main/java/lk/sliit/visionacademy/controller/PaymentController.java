@@ -274,7 +274,13 @@ public class PaymentController {
     @PostMapping("/api/reminders/trigger")
     @ResponseBody
     public ResponseEntity<?> triggerOverdueRemindersApi() {
-       
+        try {
+            int count = paymentService.sendOverdueReminders();
+            return ResponseEntity.ok(Map.of("message", "Reminders dispatched successfully", "dispatchedCount", count));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error triggering reminders: " + e.getMessage());
+        }
     }
 
     /**
