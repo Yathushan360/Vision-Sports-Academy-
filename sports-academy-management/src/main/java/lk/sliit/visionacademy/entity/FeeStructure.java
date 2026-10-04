@@ -11,6 +11,7 @@ import java.time.LocalDate;
 public class FeeStructure {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "fee_id")
     private Integer feeId;
 
