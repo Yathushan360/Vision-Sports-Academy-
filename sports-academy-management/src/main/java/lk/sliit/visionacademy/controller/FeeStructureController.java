@@ -83,5 +83,21 @@ public class FeeStructureController {
     // REST API ENDPOINTS (JSON)
     // =========================================================================
 
+    @GetMapping("/api")
+    @ResponseBody
+    public ResponseEntity<List<FeeStructure>> getAllApi() {
+        return ResponseEntity.ok(feeStructureService.getAllFeeStructures());
+    }
+
+    @PostMapping("/api")
+    @ResponseBody
+    public ResponseEntity<?> createApi(@RequestBody FeeStructure feeStructure) {
+        try {
+            FeeStructure created = feeStructureService.createFeeStructure(feeStructure);
+            return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 
 }
