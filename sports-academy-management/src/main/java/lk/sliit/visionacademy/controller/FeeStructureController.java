@@ -100,4 +100,16 @@ public class FeeStructureController {
         }
     }
 
+    @DeleteMapping("/api/{id}")
+    @ResponseBody
+    public ResponseEntity<?> deleteApi(@PathVariable Integer id) {
+        try {
+            feeStructureService.deleteFeeStructure(id);
+            return ResponseEntity.ok("Fee tier deleted successfully");
+        } catch (PaymentProcessingException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 }
