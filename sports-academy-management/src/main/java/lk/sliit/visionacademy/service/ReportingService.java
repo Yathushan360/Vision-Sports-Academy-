@@ -83,5 +83,26 @@ public class ReportingService implements IReportingService {
                 .collect(Collectors.toList());
     }
 
-  
+    @Override
+    public Map<String, BigDecimal> getRevenueByFeeType() {
+        List<Payment> paidPayments = paymentRepository.findByStatus(PaymentStatus.PAID);
+        Map<String, BigDecimal> revenueByType = new HashMap<>();
+
+        for (Payment payment : paidPayments) {
+            String feeTypeName = (payment.getFeeStructure() != null && payment.getFeeStructure().getFeeType() != null)
+                    ? payment.getFeeStructure().getFeeType().name()
+                    : "GENERAL_TRAINING";
+
+            BigDecimal currentSum = revenueByType.getOrDefault(feeTypeName, BigDecimal.ZERO);
+            revenueByType.put(feeTypeName, currentSum.add(payment.getAmount()));
+        }
+
+        return revenueByType;
+    }
+
+    @Override
+    public Map<String, Long> getStatusDistribution() {
+        return paymentRepository.findAll().stream()
+                .collect(Collectors.groupingBy(p -> p.getStatus().name(), Collectors.counting()));
+    }
 }
