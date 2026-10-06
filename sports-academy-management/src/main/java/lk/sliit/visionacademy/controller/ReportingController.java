@@ -34,4 +34,24 @@ public class ReportingController {
         FinancialSummaryDTO summary = reportingService.getFinancialSummary();
         List<Payment> outstandingPayments = reportingService.generateOutstandingReport();
 
+        model.addAttribute("summary", summary);
+        model.addAttribute("outstandingPayments", outstandingPayments);
+        model.addAttribute("revenueByType", reportingService.getRevenueByFeeType());
+        model.addAttribute("statusDistribution", reportingService.getStatusDistribution());
+
+        return "financial-report";
+    }
+
+    /**
+     * Shortcut redirect from /reports to /reports/financial-summary.
+     */
+    @GetMapping
+    public String defaultReportsRedirect() {
+        return "redirect:/reports/financial-summary";
+    }
+
+    // =========================================================================
+    // REST API ENDPOINTS (JSON)
+    // =========================================================================
+
 }
