@@ -54,4 +54,15 @@ public class ReportingController {
     // REST API ENDPOINTS (JSON)
     // =========================================================================
 
+    @GetMapping("/api/summary")
+    @ResponseBody
+    public ResponseEntity<FinancialSummaryDTO> getSummaryApi() {
+        return ResponseEntity.ok(reportingService.getFinancialSummary());
+    }
+
+    @GetMapping("/api/outstanding")
+    @ResponseBody
+    public ResponseEntity<List<Payment>> getOutstandingReportApi() {
+        return ResponseEntity.ok(reportingService.generateOutstandingReport());
+    }
 }
