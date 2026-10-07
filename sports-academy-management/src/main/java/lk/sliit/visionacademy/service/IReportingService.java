@@ -34,4 +34,10 @@ public interface IReportingService {
      * Calculates the breakdown count of payments by their status.
      */
     Map<String, Long> getStatusDistribution();
+
+    /**
+     * Serializes outstanding (PENDING and OVERDUE) payments into CSV bytes for file download.
+     * Fulfills Open-Closed Principle and Data Serialization requirements.
+     */
+    byte[] generateOutstandingReportCsv();
 }

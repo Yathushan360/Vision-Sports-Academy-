@@ -4,6 +4,7 @@ import lk.sliit.visionacademy.dto.FinancialSummaryDTO;
 import lk.sliit.visionacademy.entity.Payment;
 import lk.sliit.visionacademy.service.IReportingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -40,6 +42,22 @@ public class ReportingController {
         model.addAttribute("statusDistribution", reportingService.getStatusDistribution());
 
         return "financial-report";
+    }
+
+    /**
+     * Downloadable CSV export of all outstanding (PENDING and OVERDUE) payments.
+     * URL: GET /reports/export/csv
+     * Fulfills Use Case: Generate & Download Reports.
+     */
+    @GetMapping("/export/csv")
+    public ResponseEntity<byte[]> exportOutstandingCsv() {
+        byte[] csvData = reportingService.generateOutstandingReportCsv();
+        String filename = "vision_academy_outstanding_report_" + LocalDate.now() + ".csv";
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                .header(HttpHeaders.CONTENT_TYPE, "text/csv; charset=UTF-8")
+                .body(csvData);
     }
 
     /**

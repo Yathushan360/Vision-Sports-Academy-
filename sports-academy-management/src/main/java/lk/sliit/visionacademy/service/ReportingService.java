@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -104,5 +105,53 @@ public class ReportingService implements IReportingService {
     public Map<String, Long> getStatusDistribution() {
         return paymentRepository.findAll().stream()
                 .collect(Collectors.groupingBy(p -> p.getStatus().name(), Collectors.counting()));
+    }
+
+    @Override
+    public byte[] generateOutstandingReportCsv() {
+        List<Payment> outstandingList = generateOutstandingReport();
+        StringBuilder csv = new StringBuilder();
+
+        // CSV Header
+        csv.append("Payment ID,Player ID,Fee Category,Age Group,Due Date,Amount (LKR),Status,Transaction Ref,Billing Date\n");
+
+        // CSV Records
+        for (Payment payment : outstandingList) {
+            String feeCategory = (payment.getFeeStructure() != null && payment.getFeeStructure().getFeeType() != null)
+                    ? payment.getFeeStructure().getFeeType().name()
+                    : "GENERAL_TRAINING";
+
+            String ageGroup = (payment.getFeeStructure() != null && payment.getFeeStructure().getAgeGroup() != null)
+                    ? payment.getFeeStructure().getAgeGroup()
+                    : "All Ages";
+
+            String dueDate = payment.getDueDate() != null ? payment.getDueDate().toString() : "N/A";
+            String amount = payment.getAmount() != null ? payment.getAmount().toPlainString() : "0.00";
+            String status = payment.getStatus() != null ? payment.getStatus().name() : "UNKNOWN";
+            String txnRef = payment.getTransactionReference() != null ? payment.getTransactionReference() : "NONE";
+            String createdAt = payment.getCreatedAt() != null ? payment.getCreatedAt().toString() : "N/A";
+
+            csv.append(payment.getPaymentId()).append(",")
+               .append(payment.getPlayerId()).append(",")
+               .append(escapeCsv(feeCategory)).append(",")
+               .append(escapeCsv(ageGroup)).append(",")
+               .append(dueDate).append(",")
+               .append(amount).append(",")
+               .append(status).append(",")
+               .append(escapeCsv(txnRef)).append(",")
+               .append(createdAt).append("\n");
+        }
+
+        return csv.toString().getBytes(StandardCharsets.UTF_8);
+    }
+
+    private String escapeCsv(String value) {
+        if (value == null) {
+            return "";
+        }
+        if (value.contains(",") || value.contains("\"") || value.contains("\n")) {
+            return "\"" + value.replace("\"", "\"\"") + "\"";
+        }
+        return value;
     }
 }
