@@ -1,0 +1,4391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Player Performance | Vision Sports Academy</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        /* ==============================
+           SIDEBAR
+        ============================== */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 245px;
+            height: 100vh;
+            background: linear-gradient(180deg, #111827, #1e3a8a);
+            color: white;
+            padding: 22px 15px;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .academy-logo {
+            text-align: center;
+            padding: 10px 5px 25px;
+        }
+
+        .academy-logo .ball {
+            font-size: 42px;
+        }
+
+        .academy-logo h2 {
+            margin-top: 7px;
+            font-size: 20px;
+        }
+
+        .academy-logo p {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 4px;
+        }
+
+        .nav-menu {
+            margin-top: 10px;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #dbeafe;
+            padding: 13px 14px;
+            border-radius: 10px;
+            margin-bottom: 7px;
+            transition: 0.2s;
+            font-size: 14px;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(255,255,255,0.12);
+            color: white;
+            transform: translateX(3px);
+        }
+
+        .nav-menu a.active {
+            background: linear-gradient(90deg, #2563eb, #7c3aed);
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 6px 18px rgba(37,99,235,0.3);
+        }
+
+        .nav-icon {
+            width: 22px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        /* ==============================
+           MAIN
+        ============================== */
+
+        .main {
+            margin-left: 245px;
+            padding: 30px;
+            min-height: 100vh;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            font-size: 30px;
+            color: #111827;
+        }
+
+        .page-header p {
+            color: #6b7280;
+            margin-top: 5px;
+        }
+
+        .header-badge {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 30px;
+            font-weight: bold;
+            box-shadow: 0 7px 20px rgba(37,99,235,0.25);
+        }
+
+        /* ==============================
+           CARDS
+        ============================== */
+
+        .card {
+            background: white;
+            border-radius: 18px;
+            padding: 25px;
+            margin-bottom: 22px;
+            box-shadow: 0 8px 30px rgba(15,23,42,0.07);
+            border: 1px solid #e5e7eb;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #111827;
+        }
+
+        .card-title span {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: #eff6ff;
+            font-size: 20px;
+        }
+
+        /* ==============================
+           FORM
+        ============================== */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: bold;
+            color: #374151;
+            margin-bottom: 7px;
+        }
+
+        select,
+        textarea {
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 14px;
+            outline: none;
+            background: white;
+            transition: 0.2s;
+        }
+
+        select:focus,
+        textarea:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 110px;
+        }
+
+        /* ==============================
+           SCORE SUMMARY
+        ============================== */
+
+        .score-summary {
+            background: linear-gradient(135deg, #172554, #4c1d95);
+            color: white;
+            border-radius: 18px;
+            padding: 25px;
+            margin-bottom: 22px;
+            box-shadow: 0 10px 30px rgba(30,41,59,0.25);
+        }
+
+        .score-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .score-title {
+            font-size: 15px;
+            opacity: 0.8;
+        }
+
+        .big-score {
+            font-size: 48px;
+            font-weight: bold;
+            line-height: 1;
+            margin-top: 6px;
+        }
+
+        .big-score small {
+            font-size: 20px;
+            opacity: 0.7;
+        }
+
+        .score-percent {
+            text-align: center;
+            min-width: 110px;
+        }
+
+        .score-percent strong {
+            display: block;
+            font-size: 32px;
+        }
+
+        .score-percent span {
+            font-size: 12px;
+            opacity: 0.75;
+        }
+
+        .progress {
+            height: 12px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 10%;
+            border-radius: 20px;
+            background: linear-gradient(90deg, #22c55e, #facc15);
+            transition: width 0.25s ease;
+        }
+
+        /* ==============================
+           CATEGORY HEADER
+        ============================== */
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .category-name {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .category-score {
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        /* ==============================
+           SKILLS
+        ============================== */
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .skill {
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 15px;
+            background: #fafafa;
+            transition: 0.2s;
+        }
+
+        .skill:hover {
+            border-color: #93c5fd;
+            background: #f8fbff;
+            box-shadow: 0 5px 15px rgba(37,99,235,0.06);
+        }
+
+        .skill-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .skill-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #374151;
+        }
+
+        .skill-value {
+            min-width: 48px;
+            text-align: center;
+            padding: 5px 8px;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .skill-value.excellent {
+            background: #16a34a;
+        }
+
+        .skill-value.good {
+            background: #2563eb;
+        }
+
+        .skill-value.average {
+            background: #f59e0b;
+        }
+
+        .skill-value.low {
+            background: #dc2626;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 7px;
+            appearance: none;
+            -webkit-appearance: none;
+            border-radius: 10px;
+            outline: none;
+            background: linear-gradient(
+                    to right,
+                    #2563eb 0%,
+                    #2563eb 0%,
+                    #e5e7eb 0%,
+                    #e5e7eb 100%
+            );
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid #2563eb;
+            box-shadow: 0 2px 7px rgba(0,0,0,0.2);
+            cursor: grab;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:active {
+            cursor: grabbing;
+            transform: scale(1.1);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid #2563eb;
+            cursor: pointer;
+        }
+
+        .range-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #9ca3af;
+            margin-top: 7px;
+        }
+
+        /* ==============================
+           POSITION SECTIONS
+        ============================== */
+
+        .position-section {
+            display: none;
+        }
+
+        .position-section.visible {
+            display: block;
+        }
+
+        .position-banner {
+            padding: 15px 18px;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            color: white;
+            font-weight: bold;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+        }
+
+        /* ==============================
+           TEXT AREAS
+        ============================== */
+
+        .text-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        /* ==============================
+           BUTTONS
+        ============================== */
+
+        .button-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        button {
+            border: none;
+            border-radius: 10px;
+            padding: 13px 22px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-reset {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-reset:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            min-width: 190px;
+            box-shadow: 0 7px 18px rgba(37,99,235,0.25);
+        }
+
+        .btn-save:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 24px rgba(37,99,235,0.3);
+        }
+
+        .btn-save:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-cancel-edit {
+            background: #fee2e2;
+            color: #991b1b;
+            display: none;
+        }
+
+        .btn-cancel-edit:hover {
+            background: #fecaca;
+        }
+
+        /* ==============================
+           ALERT
+        ============================== */
+
+        .alert {
+            display: none;
+            padding: 14px 17px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert.success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+
+        .alert.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .required {
+            color: #dc2626;
+        }
+
+        .info-note {
+            background: #eff6ff;
+            color: #1e40af;
+            border: 1px solid #bfdbfe;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 13px;
+            margin-top: 15px;
+        }
+
+        /* ==============================
+           PERFORMANCE RECORDS
+        ============================== */
+
+        .records-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .records-header .card-title {
+            margin-bottom: 0;
+        }
+
+        .btn-refresh {
+            background: #eff6ff;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+            padding: 10px 16px;
+        }
+
+        .btn-refresh:hover {
+            background: #dbeafe;
+        }
+
+        .records-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .records-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        .records-table th {
+            background: #f8fafc;
+            color: #374151;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            padding: 13px 12px;
+            text-align: left;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .records-table td {
+            padding: 14px 12px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        .records-table tr:hover {
+            background: #f8fbff;
+        }
+
+        .record-id {
+            font-weight: bold;
+            color: #6b7280;
+        }
+
+        .record-player {
+            font-weight: bold;
+            color: #111827;
+        }
+
+        .position-badge {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 20px;
+            background: #eff6ff;
+            color: #1d4ed8;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .overall-badge {
+            display: inline-block;
+            min-width: 55px;
+            text-align: center;
+            padding: 6px 9px;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .overall-excellent {
+            background: #16a34a;
+        }
+
+        .overall-good {
+            background: #2563eb;
+        }
+
+        .overall-average {
+            background: #f59e0b;
+        }
+
+        .overall-low {
+            background: #dc2626;
+        }
+
+        .record-date {
+            color: #6b7280;
+            white-space: nowrap;
+        }
+
+        .record-actions {
+            display: flex;
+            gap: 7px;
+            white-space: nowrap;
+        }
+
+        .action-btn {
+            padding: 7px 10px;
+            border-radius: 7px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .view-btn {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .view-btn:hover {
+            background: #dbeafe;
+        }
+
+        .edit-btn {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .edit-btn:hover {
+            background: #fde68a;
+        }
+
+        .delete-btn {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .delete-btn:hover {
+            background: #fecaca;
+        }
+
+        .empty-records {
+            text-align: center;
+            padding: 35px 15px;
+            color: #6b7280;
+        }
+
+        .loading-records {
+            text-align: center;
+            padding: 30px;
+            color: #6b7280;
+        }
+
+        /* ==============================
+           VIEW MODAL
+        ============================== */
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15,23,42,0.65);
+            z-index: 2000;
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .modal {
+            width: 100%;
+            max-width: 1000px;
+            background: white;
+            border-radius: 18px;
+            margin: 20px auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #172554, #4c1d95);
+            color: white;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .modal-header h2 {
+            font-size: 21px;
+        }
+
+        .modal-close {
+            width: 38px;
+            height: 38px;
+            padding: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            font-size: 22px;
+        }
+
+        .modal-close:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .detail-box {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 12px;
+        }
+
+        .detail-box label {
+            display: block;
+            color: #6b7280;
+            font-size: 11px;
+            margin-bottom: 5px;
+        }
+
+        .detail-box strong {
+            color: #111827;
+            font-size: 14px;
+        }
+
+        .modal-score {
+            background: linear-gradient(135deg, #172554, #4c1d95);
+            color: white;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .modal-score span {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+
+        .modal-score strong {
+            display: block;
+            font-size: 26px;
+            color: white;
+            margin-top: 4px;
+        }
+
+        .modal-category {
+            margin-top: 20px;
+        }
+
+        .modal-category h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: #111827;
+        }
+
+        .modal-skills {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 9px;
+        }
+
+        .modal-skill {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 9px 11px;
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .modal-skill strong {
+            color: #1d4ed8;
+        }
+
+        .modal-text-section {
+            margin-top: 22px;
+        }
+
+        .modal-text-section h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .modal-text {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 14px;
+            min-height: 55px;
+            color: #4b5563;
+            font-size: 13px;
+            white-space: pre-wrap;
+        }
+
+        /* ==============================
+           DELETE CONFIRMATION MODAL
+        ============================== */
+
+        .delete-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15,23,42,0.68);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 3000;
+            padding: 20px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .delete-modal-overlay.show {
+            display: flex;
+        }
+
+        .delete-modal {
+            width: 100%;
+            max-width: 440px;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+            animation: deleteModalIn 0.2s ease-out;
+        }
+
+        @keyframes deleteModalIn {
+
+            from {
+                opacity: 0;
+                transform: translateY(15px) scale(0.96);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .delete-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fee2e2;
+            color: #dc2626;
+            font-size: 31px;
+        }
+
+        .delete-modal h2 {
+            color: #111827;
+            font-size: 22px;
+            margin-bottom: 9px;
+        }
+
+        .delete-modal p {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .delete-record-info {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 12px 15px;
+            margin: 17px 0 22px;
+            color: #374151;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .delete-modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .delete-modal-buttons button {
+            flex: 1;
+            min-height: 45px;
+        }
+
+        .btn-delete-cancel {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-delete-cancel:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-delete-confirm {
+            background: #dc2626;
+            color: white;
+            box-shadow: 0 6px 15px rgba(220,38,38,0.2);
+        }
+
+        .btn-delete-confirm:hover {
+            background: #b91c1c;
+            transform: translateY(-1px);
+        }
+
+        .btn-delete-confirm:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ==============================
+           MOBILE
+        ============================== */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                width: 205px;
+            }
+
+            .main {
+                margin-left: 205px;
+                padding: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .modal-skills {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 650px) {
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 15px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .score-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .text-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .button-row {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .records-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .records-header button {
+                width: 100%;
+            }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-skills {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-overlay {
+                padding: 10px;
+            }
+
+            .modal-body {
+                padding: 15px;
+            }
+
+            .delete-modal-overlay {
+                padding: 15px;
+            }
+
+            .delete-modal {
+                padding: 25px 20px;
+            }
+
+            .delete-modal-buttons {
+                flex-direction: column;
+            }
+
+            .delete-modal-buttons button {
+                width: 100%;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- ==============================
+     SIDEBAR
+============================== -->
+
+<aside class="sidebar">
+
+    <div class="academy-logo">
+        <div class="ball">⚽</div>
+        <h2>Vision Sports Academy</h2>
+        <p>Sports Academy Management</p>
+    </div>
+
+    <nav class="nav-menu">
+
+        <a href="/">
+            <span class="nav-icon">🏠</span>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="/training-sessions">
+            <span class="nav-icon">📅</span>
+            <span>Training Sessions</span>
+        </a>
+
+        <a href="/attendance">
+            <span class="nav-icon">✅</span>
+            <span>Attendance</span>
+        </a>
+
+        <a href="/players">
+            <span class="nav-icon">👤</span>
+            <span>Players</span>
+        </a>
+
+        <a href="/performance" class="active">
+            <span class="nav-icon">📊</span>
+            <span>Performance</span>
+        </a>
+
+        <a href="/attendance-report">
+            <span class="nav-icon">📋</span>
+            <span>Attendance Report</span>
+        </a>
+
+    </nav>
+
+</aside>
+
+
+<!-- ==============================
+     MAIN
+============================== -->
+
+<main class="main">
+
+    <div class="page-header">
+
+        <div>
+            <h1>Player Performance</h1>
+            <p>Evaluate and track football player performance across training sessions.</p>
+        </div>
+
+        <div class="header-badge">
+            ⚽ Performance Assessment
+        </div>
+
+    </div>
+
+
+    <div id="alert" class="alert"></div>
+
+
+    <!-- ==============================
+         ASSESSMENT DETAILS
+    ============================== -->
+
+    <section class="card">
+
+        <div class="card-title">
+            <span>📝</span>
+            Assessment Details
+        </div>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label for="player">
+                    Player <span class="required">*</span>
+                </label>
+
+                <select id="player">
+                    <option value="">Loading players...</option>
+                </select>
+            </div>
+
+
+            <div class="form-group">
+                <label for="trainingSession">
+                    Training Session <span class="required">*</span>
+                </label>
+
+                <select id="trainingSession">
+                    <option value="">Loading training sessions...</option>
+                </select>
+            </div>
+
+
+            <div class="form-group">
+                <label for="position">
+                    Playing Position <span class="required">*</span>
+                </label>
+
+                <select id="position" onchange="changePosition()">
+                    <option value="">Select Position</option>
+                    <option value="Goalkeeper">Goalkeeper</option>
+                    <option value="Defender">Defender</option>
+                    <option value="Midfielder">Midfielder</option>
+                    <option value="Forward">Forward</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="info-note">
+            ⭐ Rate each skill from <strong>1 (Very Low)</strong> to
+            <strong>10 (Excellent)</strong>. The overall score is calculated automatically.
+        </div>
+
+    </section>
+
+
+    <!-- ==============================
+         OVERALL SCORE
+    ============================== -->
+
+    <section class="score-summary">
+
+        <div class="score-top">
+
+            <div>
+                <div class="score-title">Overall Performance Score</div>
+
+                <div class="big-score">
+                    <span id="overallScore">1.0</span>
+                    <small>/ 10</small>
+                </div>
+            </div>
+
+            <div class="score-percent">
+                <strong id="overallPercent">10%</strong>
+                <span>Performance Rating</span>
+            </div>
+
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar" id="overallProgress"></div>
+        </div>
+
+    </section>
+
+
+    <!-- ==============================
+         TECHNICAL SKILLS
+    ============================== -->
+
+    <section class="card">
+
+        <div class="category-header">
+
+            <div class="category-name">
+                ⚽ Technical Skills
+            </div>
+
+            <div class="category-score">
+                Average: <span id="technicalAverage">1.0</span>
+            </div>
+
+        </div>
+
+        <div class="skills-grid" id="technicalSkills"></div>
+
+    </section>
+
+
+    <!-- ==============================
+         PHYSICAL SKILLS
+    ============================== -->
+
+    <section class="card">
+
+        <div class="category-header">
+
+            <div class="category-name">
+                🏃 Physical Skills
+            </div>
+
+            <div class="category-score">
+                Average: <span id="physicalAverage">1.0</span>
+            </div>
+
+        </div>
+
+        <div class="skills-grid" id="physicalSkills"></div>
+
+    </section>
+
+
+    <!-- ==============================
+         TACTICAL SKILLS
+    ============================== -->
+
+    <section class="card">
+
+        <div class="category-header">
+
+            <div class="category-name">
+                🧠 Tactical Skills
+            </div>
+
+            <div class="category-score">
+                Average: <span id="tacticalAverage">1.0</span>
+            </div>
+
+        </div>
+
+        <div class="skills-grid" id="tacticalSkills"></div>
+
+    </section>
+
+
+    <!-- ==============================
+         MENTAL SKILLS
+    ============================== -->
+
+    <section class="card">
+
+        <div class="category-header">
+
+            <div class="category-name">
+                💪 Mental & Character Skills
+            </div>
+
+            <div class="category-score">
+                Average: <span id="mentalAverage">1.0</span>
+            </div>
+
+        </div>
+
+        <div class="skills-grid" id="mentalSkills"></div>
+
+    </section>
+
+
+    <!-- ==============================
+         DEFENDER
+    ============================== -->
+
+    <section class="card position-section" id="defenderSection">
+
+        <div class="position-banner">
+            🛡️ Defender-Specific Skills
+        </div>
+
+        <div class="category-header">
+
+            <div class="category-name">
+                Defender Performance
+            </div>
+
+            <div class="category-score">
+                Average: <span id="defenderAverage">1.0</span>
+            </div>
+
+        </div>
+
+        <div class="skills-grid" id="defenderSkills"></div>
+
+    </section>
+
+
+    <!-- ==============================
+         MIDFIELDER
+    ============================== -->
+
+    <section class="card position-section" id="midfielderSection">
+
+        <div class="position-banner">
+            🎯 Midfielder-Specific Skills
+        </div>
+
+        <div class="category-header">
+
+            <div class="category-name">
+                Midfielder Performance
+            </div>
+
+            <div class="category-score">
+                Average: <span id="midfielderAverage">1.0</span>
+            </div>
+
+        </div>
+
+        <div class="skills-grid" id="midfielderSkills"></div>
+
+    </section>
+
+
+    <!-- ==============================
+         FORWARD
+    ============================== -->
+
+    <section class="card position-section" id="forwardSection">
+
+        <div class="position-banner">
+            ⚡ Forward-Specific Skills
+        </div>
+
+        <div class="category-header">
+
+            <div class="category-name">
+                Forward Performance
+            </div>
+
+            <div class="category-score">
+                Average: <span id="forwardAverage">1.0</span>
+            </div>
+
+        </div>
+
+        <div class="skills-grid" id="forwardSkills"></div>
+
+    </section>
+
+
+    <!-- ==============================
+         GOALKEEPER
+    ============================== -->
+
+    <section class="card position-section" id="goalkeeperSection">
+
+        <div class="position-banner">
+            🧤 Goalkeeper-Specific Skills
+        </div>
+
+        <div class="category-header">
+
+            <div class="category-name">
+                Goalkeeper Performance
+            </div>
+
+            <div class="category-score">
+                Average: <span id="goalkeeperAverage">1.0</span>
+            </div>
+
+        </div>
+
+        <div class="skills-grid" id="goalkeeperSkills"></div>
+
+    </section>
+
+
+    <!-- ==============================
+         COMMENTS
+    ============================== -->
+
+    <section class="card">
+
+        <div class="card-title">
+            <span>💬</span>
+            Coach Assessment
+        </div>
+
+        <div class="text-grid">
+
+            <div class="form-group">
+
+                <label for="coachComments">
+                    Coach Comments
+                </label>
+
+                <textarea
+                        id="coachComments"
+                        placeholder="Enter observations, strengths and areas noticed during the assessment..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="developmentGoals">
+                    Development Goals
+                </label>
+
+                <textarea
+                        id="developmentGoals"
+                        placeholder="Enter recommended development goals and areas for improvement..."
+                ></textarea>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==============================
+         SAVE
+    ============================== -->
+
+    <section class="card">
+
+        <div class="button-row">
+
+            <button
+                    type="button"
+                    class="btn-reset"
+                    onclick="handleReset()">
+                ↻ Reset
+            </button>
+
+            <button
+                    type="button"
+                    class="btn-cancel-edit"
+                    id="cancelEditButton"
+                    onclick="cancelEdit()">
+                ✕ Cancel Edit
+            </button>
+
+            <button
+                    type="button"
+                    class="btn-save"
+                    id="saveButton"
+                    onclick="savePerformance()">
+                💾 Save Performance
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==============================
+         PERFORMANCE RECORDS
+    ============================== -->
+
+    <section class="card">
+
+        <div class="records-header">
+
+            <div class="card-title">
+                <span>📊</span>
+                Performance Records
+            </div>
+
+            <button
+                    type="button"
+                    class="btn-refresh"
+                    onclick="loadPerformances()">
+                🔄 Refresh Records
+            </button>
+
+        </div>
+
+        <div class="records-wrapper">
+
+            <table class="records-table">
+
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Player</th>
+                    <th>Training Session</th>
+                    <th>Position</th>
+                    <th>Overall</th>
+                    <th>Assessed At</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+
+                <tbody id="performanceRecordsBody">
+
+                <tr>
+                    <td colspan="7" class="loading-records">
+                        Loading performance records...
+                    </td>
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- ==============================
+     VIEW PERFORMANCE MODAL
+============================== -->
+
+<div
+        class="modal-overlay"
+        id="performanceModal"
+        onclick="handleModalBackgroundClick(event)">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <h2>📊 Performance Details</h2>
+
+            <button
+                    type="button"
+                    class="modal-close"
+                    onclick="closePerformanceModal()">
+                ×
+            </button>
+
+        </div>
+
+        <div class="modal-body" id="performanceModalBody"></div>
+
+    </div>
+
+</div>
+
+
+<!-- ==============================
+     DELETE CONFIRMATION MODAL
+============================== -->
+
+<div
+        class="delete-modal-overlay"
+        id="deleteModal"
+        onclick="handleDeleteModalBackgroundClick(event)">
+
+    <div class="delete-modal">
+
+        <div class="delete-icon">
+            🗑️
+        </div>
+
+        <h2>Delete Performance?</h2>
+
+        <p>
+            Are you sure you want to delete this performance record?
+        </p>
+
+        <p>
+            This action cannot be undone.
+        </p>
+
+        <div
+                class="delete-record-info"
+                id="deleteRecordInfo">
+        </div>
+
+        <div class="delete-modal-buttons">
+
+            <button
+                    type="button"
+                    class="btn-delete-cancel"
+                    id="deleteCancelButton"
+                    onclick="closeDeleteModal()">
+                Cancel
+            </button>
+
+            <button
+                    type="button"
+                    class="btn-delete-confirm"
+                    id="deleteConfirmButton"
+                    onclick="confirmDeletePerformance()">
+                🗑️ Delete
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /* =========================================================
+       SKILL DEFINITIONS
+    ========================================================= */
+
+    const technicalSkills = [
+        { key: "passing", label: "Passing" },
+        { key: "ballControl", label: "Ball Control" },
+        { key: "firstTouch", label: "First Touch" },
+        { key: "dribbling", label: "Dribbling" },
+        { key: "shooting", label: "Shooting" },
+        { key: "finishing", label: "Finishing" },
+        { key: "crossing", label: "Crossing" },
+        { key: "heading", label: "Heading" },
+        { key: "tackling", label: "Tackling" },
+        { key: "marking", label: "Marking" },
+        { key: "weakFoot", label: "Weak Foot" }
+    ];
+
+
+    const physicalSkills = [
+        { key: "speed", label: "Speed" },
+        { key: "acceleration", label: "Acceleration" },
+        { key: "agility", label: "Agility" },
+        { key: "stamina", label: "Stamina" },
+        { key: "strength", label: "Strength" },
+        { key: "balance", label: "Balance" },
+        { key: "coordination", label: "Coordination" },
+        { key: "reaction", label: "Reaction" }
+    ];
+
+
+    const tacticalSkills = [
+        { key: "positioning", label: "Positioning" },
+        { key: "decisionMaking", label: "Decision Making" },
+        { key: "vision", label: "Vision" },
+        { key: "offTheBallMovement", label: "Off-the-Ball Movement" },
+        { key: "teamwork", label: "Teamwork" },
+        { key: "defensiveAwareness", label: "Defensive Awareness" },
+        { key: "attackingAwareness", label: "Attacking Awareness" },
+        { key: "gameUnderstanding", label: "Game Understanding" },
+        { key: "discipline", label: "Discipline" }
+    ];
+
+
+    const mentalSkills = [
+        { key: "concentration", label: "Concentration" },
+        { key: "confidence", label: "Confidence" },
+        { key: "communication", label: "Communication" },
+        { key: "leadership", label: "Leadership" },
+        { key: "workRate", label: "Work Rate" },
+        { key: "determination", label: "Determination" },
+        { key: "coachability", label: "Coachability" },
+        { key: "composure", label: "Composure" }
+    ];
+
+
+    const defenderSkills = [
+        { key: "defensivePositioning", label: "Defensive Positioning" },
+        { key: "interceptions", label: "Interceptions" },
+        { key: "oneVsOneDefending", label: "1v1 Defending" },
+        { key: "aerialAbility", label: "Aerial Ability" },
+        { key: "clearance", label: "Clearance" }
+    ];
+
+
+    const midfielderSkills = [
+        { key: "shortPassing", label: "Short Passing" },
+        { key: "longPassing", label: "Long Passing" },
+        { key: "creativity", label: "Creativity" },
+        { key: "throughBalls", label: "Through Balls" },
+        { key: "ballRetention", label: "Ball Retention" },
+        { key: "pressing", label: "Pressing" },
+        { key: "chanceCreation", label: "Chance Creation" },
+        { key: "midfieldPositioning", label: "Midfield Positioning" }
+    ];
+
+
+    const forwardSkills = [
+        { key: "attackingPositioning", label: "Attacking Positioning" },
+        { key: "oneVsOneAttacking", label: "1v1 Attacking" },
+        { key: "shotAccuracy", label: "Shot Accuracy" }
+    ];
+
+
+    const goalkeeperSkills = [
+        { key: "shotStopping", label: "Shot Stopping" },
+        { key: "reflexes", label: "Reflexes" },
+        { key: "handling", label: "Handling" },
+        { key: "catching", label: "Catching" },
+        { key: "diving", label: "Diving" },
+        { key: "oneVsOneGoalkeeping", label: "1v1 Goalkeeping" },
+        { key: "goalkeeperPositioning", label: "Goalkeeper Positioning" },
+        { key: "distribution", label: "Distribution" },
+        { key: "kicking", label: "Kicking" },
+        { key: "throwing", label: "Throwing" },
+        { key: "commandOfArea", label: "Command of Area" },
+        { key: "crossManagement", label: "Cross Management" },
+        { key: "goalkeeperDecisionMaking", label: "GK Decision Making" }
+    ];
+
+
+    /* =========================================================
+       GLOBAL STATE
+    ========================================================= */
+
+    let playersCache = [];
+    let sessionsCache = [];
+    let performanceRecords = [];
+    let editingPerformanceId = null;
+    let pendingDeletePerformanceId = null;
+
+
+    /* =========================================================
+       INITIALIZATION
+    ========================================================= */
+
+    document.addEventListener("DOMContentLoaded", async function () {
+
+        initializeSliders();
+
+        await loadPlayers();
+
+        await loadSessions();
+
+        await loadPerformances();
+
+        calculateOverall();
+    });
+
+
+    /* =========================================================
+       CREATE SLIDERS
+    ========================================================= */
+
+    function initializeSliders() {
+
+        createSkillSliders(
+            "technicalSkills",
+            technicalSkills,
+            "technical"
+        );
+
+        createSkillSliders(
+            "physicalSkills",
+            physicalSkills,
+            "physical"
+        );
+
+        createSkillSliders(
+            "tacticalSkills",
+            tacticalSkills,
+            "tactical"
+        );
+
+        createSkillSliders(
+            "mentalSkills",
+            mentalSkills,
+            "mental"
+        );
+
+        createSkillSliders(
+            "defenderSkills",
+            defenderSkills,
+            "defender"
+        );
+
+        createSkillSliders(
+            "midfielderSkills",
+            midfielderSkills,
+            "midfielder"
+        );
+
+        createSkillSliders(
+            "forwardSkills",
+            forwardSkills,
+            "forward"
+        );
+
+        createSkillSliders(
+            "goalkeeperSkills",
+            goalkeeperSkills,
+            "goalkeeper"
+        );
+
+        updateAllSliderVisuals();
+    }
+
+
+    function createSkillSliders(containerId, skills, groupName) {
+
+        const container =
+            document.getElementById(containerId);
+
+        if (!container) {
+            return;
+        }
+
+        container.innerHTML = "";
+
+        skills.forEach(function (skill) {
+
+            const skillHtml = `
+                <div class="skill">
+
+                    <div class="skill-head">
+
+                        <span class="skill-name">
+                            ${escapeHtml(skill.label)}
+                        </span>
+
+                        <span
+                            class="skill-value average"
+                            id="${skill.key}Value">
+                            1
+                        </span>
+
+                    </div>
+
+                    <input
+                        type="range"
+                        id="${skill.key}"
+                        min="1"
+                        max="10"
+                        step="1"
+                        value="1"
+                        data-group="${groupName}"
+                        oninput="handleSliderChange('${skill.key}')"
+                    >
+
+                    <div class="range-labels">
+                        <span>1 - Very Low</span>
+                        <span>5 - Average</span>
+                        <span>10 - Excellent</span>
+                    </div>
+
+                </div>
+            `;
+
+            container.insertAdjacentHTML(
+                "beforeend",
+                skillHtml
+            );
+        });
+    }
+
+
+    /* =========================================================
+       SLIDER HANDLING
+    ========================================================= */
+
+    function handleSliderChange(key) {
+
+        const slider =
+            document.getElementById(key);
+
+        const valueElement =
+            document.getElementById(key + "Value");
+
+        if (!slider || !valueElement) {
+            return;
+        }
+
+        const value =
+            Number(slider.value);
+
+        valueElement.textContent =
+            value;
+
+        valueElement.classList.remove(
+            "excellent",
+            "good",
+            "average",
+            "low"
+        );
+
+        if (value >= 8) {
+
+            valueElement.classList.add(
+                "excellent"
+            );
+
+        } else if (value >= 6) {
+
+            valueElement.classList.add(
+                "good"
+            );
+
+        } else if (value >= 4) {
+
+            valueElement.classList.add(
+                "average"
+            );
+
+        } else {
+
+            valueElement.classList.add(
+                "low"
+            );
+        }
+
+        updateSliderBackground(slider);
+
+        calculateOverall();
+    }
+
+
+    function updateSliderBackground(slider) {
+
+        const min =
+            Number(slider.min || 1);
+
+        const max =
+            Number(slider.max || 10);
+
+        const value =
+            Number(slider.value);
+
+        const percentage =
+            ((value - min) / (max - min)) * 100;
+
+        slider.style.background =
+            `linear-gradient(
+                to right,
+                #2563eb 0%,
+                #2563eb ${percentage}%,
+                #e5e7eb ${percentage}%,
+                #e5e7eb 100%
+            )`;
+    }
+
+
+    function updateAllSliderVisuals() {
+
+        const sliders =
+            document.querySelectorAll(
+                'input[type="range"]'
+            );
+
+        sliders.forEach(function (slider) {
+
+            const key =
+                slider.id;
+
+            const valueElement =
+                document.getElementById(
+                    key + "Value"
+                );
+
+            const value =
+                Number(slider.value);
+
+            if (valueElement) {
+
+                valueElement.textContent =
+                    value;
+
+                valueElement.classList.remove(
+                    "excellent",
+                    "good",
+                    "average",
+                    "low"
+                );
+
+                if (value >= 8) {
+
+                    valueElement.classList.add(
+                        "excellent"
+                    );
+
+                } else if (value >= 6) {
+
+                    valueElement.classList.add(
+                        "good"
+                    );
+
+                } else if (value >= 4) {
+
+                    valueElement.classList.add(
+                        "average"
+                    );
+
+                } else {
+
+                    valueElement.classList.add(
+                        "low"
+                    );
+                }
+            }
+
+            updateSliderBackground(slider);
+        });
+    }
+
+
+    /* =========================================================
+       POSITION
+    ========================================================= */
+
+    function changePosition() {
+
+        const position =
+            document.getElementById("position").value;
+
+        document
+            .getElementById("defenderSection")
+            .classList.remove("visible");
+
+        document
+            .getElementById("midfielderSection")
+            .classList.remove("visible");
+
+        document
+            .getElementById("forwardSection")
+            .classList.remove("visible");
+
+        document
+            .getElementById("goalkeeperSection")
+            .classList.remove("visible");
+
+        if (position === "Defender") {
+
+            document
+                .getElementById("defenderSection")
+                .classList.add("visible");
+
+        } else if (position === "Midfielder") {
+
+            document
+                .getElementById("midfielderSection")
+                .classList.add("visible");
+
+        } else if (position === "Forward") {
+
+            document
+                .getElementById("forwardSection")
+                .classList.add("visible");
+
+        } else if (position === "Goalkeeper") {
+
+            document
+                .getElementById("goalkeeperSection")
+                .classList.add("visible");
+        }
+
+        calculateOverall();
+    }
+
+
+    /* =========================================================
+       AVERAGE FUNCTIONS
+    ========================================================= */
+
+    function getSkillAverage(skills) {
+
+        if (
+            !skills ||
+            skills.length === 0
+        ) {
+            return 1;
+        }
+
+        let total = 0;
+
+        skills.forEach(function (skill) {
+
+            const element =
+                document.getElementById(
+                    skill.key
+                );
+
+            total += element
+                ? Number(element.value)
+                : 1;
+        });
+
+        return total / skills.length;
+    }
+
+
+    function calculateCategoryAverage(
+        skills,
+        outputId
+    ) {
+
+        const average =
+            getSkillAverage(skills);
+
+        const output =
+            document.getElementById(outputId);
+
+        if (output) {
+
+            output.textContent =
+                average.toFixed(1);
+        }
+
+        return average;
+    }
+
+
+    function getCurrentCategoryAverages() {
+
+        const technical =
+            calculateCategoryAverage(
+                technicalSkills,
+                "technicalAverage"
+            );
+
+        const physical =
+            calculateCategoryAverage(
+                physicalSkills,
+                "physicalAverage"
+            );
+
+        const tactical =
+            calculateCategoryAverage(
+                tacticalSkills,
+                "tacticalAverage"
+            );
+
+        const mental =
+            calculateCategoryAverage(
+                mentalSkills,
+                "mentalAverage"
+            );
+
+        const defender =
+            calculateCategoryAverage(
+                defenderSkills,
+                "defenderAverage"
+            );
+
+        const midfielder =
+            calculateCategoryAverage(
+                midfielderSkills,
+                "midfielderAverage"
+            );
+
+        const forward =
+            calculateCategoryAverage(
+                forwardSkills,
+                "forwardAverage"
+            );
+
+        const goalkeeper =
+            calculateCategoryAverage(
+                goalkeeperSkills,
+                "goalkeeperAverage"
+            );
+
+        return {
+            technical,
+            physical,
+            tactical,
+            mental,
+            defender,
+            midfielder,
+            forward,
+            goalkeeper
+        };
+    }
+
+
+    /* =========================================================
+       OVERALL SCORE
+       
+       MATCHES PerformanceService.java
+       
+       Common = 75%
+       Position = 25%
+    ========================================================= */
+
+    function calculateOverall() {
+
+        const averages =
+            getCurrentCategoryAverages();
+
+        const technical =
+            averages.technical;
+
+        const physical =
+            averages.physical;
+
+        const tactical =
+            averages.tactical;
+
+        const mental =
+            averages.mental;
+
+        const commonScore =
+            (
+                technical +
+                physical +
+                tactical +
+                mental
+            ) / 4;
+
+        const position =
+            document.getElementById(
+                "position"
+            ).value;
+
+        let positionAverage = 1;
+
+        if (position === "Defender") {
+
+            positionAverage =
+                averages.defender;
+
+        } else if (position === "Midfielder") {
+
+            positionAverage =
+                averages.midfielder;
+
+        } else if (position === "Forward") {
+
+            positionAverage =
+                averages.forward;
+
+        } else if (position === "Goalkeeper") {
+
+            positionAverage =
+                averages.goalkeeper;
+        }
+
+        const overall =
+            (
+                commonScore * 0.75
+            )
+            +
+            (
+                positionAverage * 0.25
+            );
+
+        const rounded =
+            Math.round(
+                overall * 10
+            ) / 10;
+
+        const percent =
+            Math.round(
+                (rounded / 10) * 100
+            );
+
+        document.getElementById(
+            "overallScore"
+        ).textContent =
+            rounded.toFixed(1);
+
+        document.getElementById(
+            "overallPercent"
+        ).textContent =
+            percent + "%";
+
+        document.getElementById(
+            "overallProgress"
+        ).style.width =
+            percent + "%";
+
+        return rounded;
+    }
+
+
+    /* =========================================================
+       LOAD PLAYERS
+    ========================================================= */
+
+    async function loadPlayers() {
+
+        const playerSelect =
+            document.getElementById("player");
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/players"
+                );
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Failed to load players."
+                );
+            }
+
+            playersCache =
+                await response.json();
+
+            playerSelect.innerHTML =
+                '<option value="">Select Player</option>';
+
+            if (
+                !Array.isArray(playersCache)
+                ||
+                playersCache.length === 0
+            ) {
+
+                playerSelect.innerHTML =
+                    '<option value="">No players available</option>';
+
+                return;
+            }
+
+            playersCache.forEach(
+                function (player) {
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+                    option.value =
+                        player.id;
+
+                    option.textContent =
+                        `#${player.id} - ${player.name}`;
+
+                    playerSelect.appendChild(
+                        option
+                    );
+                }
+            );
+
+        } catch (error) {
+
+            console.error(error);
+
+            playerSelect.innerHTML =
+                '<option value="">Unable to load players</option>';
+
+            showAlert(
+                "Unable to load players. Please check the server.",
+                "error"
+            );
+        }
+    }
+
+
+    /* =========================================================
+       LOAD TRAINING SESSIONS
+    ========================================================= */
+
+    async function loadSessions() {
+
+        const sessionSelect =
+            document.getElementById(
+                "trainingSession"
+            );
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/training-sessions"
+                );
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Failed to load training sessions."
+                );
+            }
+
+            sessionsCache =
+                await response.json();
+
+            sessionSelect.innerHTML =
+                '<option value="">Select Training Session</option>';
+
+            if (
+                !Array.isArray(sessionsCache)
+                ||
+                sessionsCache.length === 0
+            ) {
+
+                sessionSelect.innerHTML =
+                    '<option value="">No training sessions available</option>';
+
+                return;
+            }
+
+            sessionsCache.forEach(
+                function (session) {
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+                    option.value =
+                        session.id;
+
+                    option.textContent =
+                        buildSessionLabel(
+                            session
+                        );
+
+                    sessionSelect.appendChild(
+                        option
+                    );
+                }
+            );
+
+        } catch (error) {
+
+            console.error(error);
+
+            sessionSelect.innerHTML =
+                '<option value="">Unable to load sessions</option>';
+
+            showAlert(
+                "Unable to load training sessions. Please check the server.",
+                "error"
+            );
+        }
+    }
+
+
+    /* =========================================================
+       SESSION LABEL
+    ========================================================= */
+
+    function buildSessionLabel(session) {
+
+        const parts = [];
+
+        if (
+            session.id !== undefined &&
+            session.id !== null
+        ) {
+
+            parts.push(
+                "#" + session.id
+            );
+        }
+
+        if (session.sessionDate) {
+
+            parts.push(
+                formatDateOnly(
+                    session.sessionDate
+                )
+            );
+        }
+
+        if (session.ground) {
+
+            parts.push(
+                session.ground
+            );
+        }
+
+        if (session.title) {
+
+            parts.push(
+                session.title
+            );
+        }
+
+        if (session.sessionName) {
+
+            parts.push(
+                session.sessionName
+            );
+        }
+
+        if (session.trainingType) {
+
+            parts.push(
+                session.trainingType
+            );
+        }
+
+        if (parts.length === 0) {
+
+            return "Training Session";
+        }
+
+        return parts.join(" - ");
+    }
+
+
+    /* =========================================================
+       LOAD PERFORMANCE RECORDS
+    ========================================================= */
+
+    async function loadPerformances() {
+
+        const tbody =
+            document.getElementById(
+                "performanceRecordsBody"
+            );
+
+        tbody.innerHTML = `
+            <tr>
+                <td
+                    colspan="7"
+                    class="loading-records">
+                    Loading performance records...
+                </td>
+            </tr>
+        `;
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/performances"
+                );
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Failed to load performance records."
+                );
+            }
+
+            const data =
+                await response.json();
+
+            performanceRecords =
+                Array.isArray(data)
+                    ? data
+                    : [];
+
+            performanceRecords.sort(
+                function (a, b) {
+
+                    const dateA =
+                        a.assessedAt
+                            ? new Date(
+                                a.assessedAt
+                            ).getTime()
+                            : 0;
+
+                    const dateB =
+                        b.assessedAt
+                            ? new Date(
+                                b.assessedAt
+                            ).getTime()
+                            : 0;
+
+                    return dateB - dateA;
+                }
+            );
+
+            renderPerformanceRecords(
+                performanceRecords
+            );
+
+        } catch (error) {
+
+            console.error(error);
+
+            tbody.innerHTML = `
+                <tr>
+                    <td
+                        colspan="7"
+                        class="empty-records">
+                        Unable to load performance records.
+                    </td>
+                </tr>
+            `;
+        }
+    }
+
+
+    /* =========================================================
+       RENDER PERFORMANCE RECORDS
+    ========================================================= */
+
+    function renderPerformanceRecords(
+        records
+    ) {
+
+        const tbody =
+            document.getElementById(
+                "performanceRecordsBody"
+            );
+
+        if (
+            !records ||
+            records.length === 0
+        ) {
+
+            tbody.innerHTML = `
+                <tr>
+                    <td
+                        colspan="7"
+                        class="empty-records">
+                        No performance records found.
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+        tbody.innerHTML =
+            records.map(
+                function (record) {
+
+                    const playerName =
+                        getPlayerName(
+                            record.playerId
+                        );
+
+                    const sessionName =
+                        getSessionLabel(
+                            record.sessionId
+                        );
+
+                    const overall =
+                        Number(
+                            record.overallScore || 0
+                        );
+
+                    const overallClass =
+                        getOverallClass(
+                            overall
+                        );
+
+                    const date =
+                        formatDateTime(
+                            record.assessedAt
+                        );
+
+                    return `
+                        <tr>
+
+                            <td>
+                                <span class="record-id">
+                                    #${escapeHtml(record.id)}
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="record-player">
+                                    ${escapeHtml(playerName)}
+                                </span>
+                            </td>
+
+                            <td>
+                                ${escapeHtml(sessionName)}
+                            </td>
+
+                            <td>
+                                <span class="position-badge">
+                                    ${escapeHtml(
+                                        record.position || "-"
+                                    )}
+                                </span>
+                            </td>
+
+                            <td>
+                                <span
+                                    class="overall-badge ${overallClass}">
+                                    ${overall.toFixed(1)} / 10
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="record-date">
+                                    ${escapeHtml(date)}
+                                </span>
+                            </td>
+
+                            <td>
+
+                                <div class="record-actions">
+
+                                    <button
+                                        type="button"
+                                        class="action-btn view-btn"
+                                        onclick="viewPerformance(${Number(record.id)})">
+                                        👁 View
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="action-btn edit-btn"
+                                        onclick="startEdit(${Number(record.id)})">
+                                        ✏️ Edit
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="action-btn delete-btn"
+                                        onclick="openDeleteModal(${Number(record.id)})">
+                                        🗑 Delete
+                                    </button>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+                    `;
+
+                }
+            ).join("");
+    }
+
+
+    /* =========================================================
+       PLAYER / SESSION HELPERS
+    ========================================================= */
+
+    function getPlayerName(playerId) {
+
+        const player =
+            playersCache.find(
+                function (item) {
+
+                    return Number(item.id) ===
+                        Number(playerId);
+
+                }
+            );
+
+        if (player) {
+
+            return `#${player.id} - ${player.name}`;
+        }
+
+        return `Player #${playerId}`;
+    }
+
+
+    function getSessionLabel(sessionId) {
+
+        const session =
+            sessionsCache.find(
+                function (item) {
+
+                    return Number(item.id) ===
+                        Number(sessionId);
+
+                }
+            );
+
+        if (session) {
+
+            return buildSessionLabel(
+                session
+            );
+        }
+
+        return `Session #${sessionId}`;
+    }
+
+
+    /* =========================================================
+       BUILD PERFORMANCE OBJECT
+    ========================================================= */
+
+    function buildPerformanceObject() {
+
+        const performance = {
+
+            playerId:
+                Number(
+                    document.getElementById(
+                        "player"
+                    ).value
+                ),
+
+            sessionId:
+                Number(
+                    document.getElementById(
+                        "trainingSession"
+                    ).value
+                ),
+
+            position:
+                document.getElementById(
+                    "position"
+                ).value,
+
+            passing:
+                getValue("passing"),
+
+            ballControl:
+                getValue("ballControl"),
+
+            firstTouch:
+                getValue("firstTouch"),
+
+            dribbling:
+                getValue("dribbling"),
+
+            shooting:
+                getValue("shooting"),
+
+            finishing:
+                getValue("finishing"),
+
+            crossing:
+                getValue("crossing"),
+
+            heading:
+                getValue("heading"),
+
+            tackling:
+                getValue("tackling"),
+
+            marking:
+                getValue("marking"),
+
+            weakFoot:
+                getValue("weakFoot"),
+
+            speed:
+                getValue("speed"),
+
+            acceleration:
+                getValue("acceleration"),
+
+            agility:
+                getValue("agility"),
+
+            stamina:
+                getValue("stamina"),
+
+            strength:
+                getValue("strength"),
+
+            balance:
+                getValue("balance"),
+
+            coordination:
+                getValue("coordination"),
+
+            reaction:
+                getValue("reaction"),
+
+            positioning:
+                getValue("positioning"),
+
+            decisionMaking:
+                getValue("decisionMaking"),
+
+            vision:
+                getValue("vision"),
+
+            offTheBallMovement:
+                getValue("offTheBallMovement"),
+
+            teamwork:
+                getValue("teamwork"),
+
+            defensiveAwareness:
+                getValue("defensiveAwareness"),
+
+            attackingAwareness:
+                getValue("attackingAwareness"),
+
+            gameUnderstanding:
+                getValue("gameUnderstanding"),
+
+            discipline:
+                getValue("discipline"),
+
+            concentration:
+                getValue("concentration"),
+
+            confidence:
+                getValue("confidence"),
+
+            communication:
+                getValue("communication"),
+
+            leadership:
+                getValue("leadership"),
+
+            workRate:
+                getValue("workRate"),
+
+            determination:
+                getValue("determination"),
+
+            coachability:
+                getValue("coachability"),
+
+            composure:
+                getValue("composure"),
+
+            defensivePositioning:
+                getValue("defensivePositioning"),
+
+            interceptions:
+                getValue("interceptions"),
+
+            oneVsOneDefending:
+                getValue("oneVsOneDefending"),
+
+            aerialAbility:
+                getValue("aerialAbility"),
+
+            clearance:
+                getValue("clearance"),
+
+            shortPassing:
+                getValue("shortPassing"),
+
+            longPassing:
+                getValue("longPassing"),
+
+            creativity:
+                getValue("creativity"),
+
+            throughBalls:
+                getValue("throughBalls"),
+
+            ballRetention:
+                getValue("ballRetention"),
+
+            pressing:
+                getValue("pressing"),
+
+            chanceCreation:
+                getValue("chanceCreation"),
+
+            midfieldPositioning:
+                getValue("midfieldPositioning"),
+
+            attackingPositioning:
+                getValue("attackingPositioning"),
+
+            oneVsOneAttacking:
+                getValue("oneVsOneAttacking"),
+
+            shotAccuracy:
+                getValue("shotAccuracy"),
+
+            shotStopping:
+                getValue("shotStopping"),
+
+            reflexes:
+                getValue("reflexes"),
+
+            handling:
+                getValue("handling"),
+
+            catching:
+                getValue("catching"),
+
+            diving:
+                getValue("diving"),
+
+            oneVsOneGoalkeeping:
+                getValue("oneVsOneGoalkeeping"),
+
+            goalkeeperPositioning:
+                getValue("goalkeeperPositioning"),
+
+            distribution:
+                getValue("distribution"),
+
+            kicking:
+                getValue("kicking"),
+
+            throwing:
+                getValue("throwing"),
+
+            commandOfArea:
+                getValue("commandOfArea"),
+
+            crossManagement:
+                getValue("crossManagement"),
+
+            goalkeeperDecisionMaking:
+                getValue(
+                    "goalkeeperDecisionMaking"
+                ),
+
+            overallScore:
+                calculateOverall(),
+
+            coachComments:
+                document.getElementById(
+                    "coachComments"
+                ).value.trim(),
+
+            developmentGoals:
+                document.getElementById(
+                    "developmentGoals"
+                ).value.trim()
+        };
+
+        return performance;
+    }
+
+
+    function getValue(id) {
+
+        const element =
+            document.getElementById(id);
+
+        if (!element) {
+            return 1;
+        }
+
+        return Number(element.value) || 1;
+    }
+
+
+    /* =========================================================
+       SAVE / UPDATE
+    ========================================================= */
+
+    async function savePerformance() {
+
+        const playerId =
+            document.getElementById(
+                "player"
+            ).value;
+
+        const sessionId =
+            document.getElementById(
+                "trainingSession"
+            ).value;
+
+        const position =
+            document.getElementById(
+                "position"
+            ).value;
+
+        if (!playerId) {
+
+            showAlert(
+                "Please select a player.",
+                "error"
+            );
+
+            return;
+        }
+
+        if (!sessionId) {
+
+            showAlert(
+                "Please select a training session.",
+                "error"
+            );
+
+            return;
+        }
+
+        if (!position) {
+
+            showAlert(
+                "Please select the player's position.",
+                "error"
+            );
+
+            return;
+        }
+
+        const performance =
+            buildPerformanceObject();
+
+        const isEditing =
+            editingPerformanceId !== null;
+
+        const url =
+            isEditing
+                ? `/api/performances/${editingPerformanceId}`
+                : "/api/performances";
+
+        const method =
+            isEditing
+                ? "PUT"
+                : "POST";
+
+        const saveButton =
+            document.getElementById(
+                "saveButton"
+            );
+
+        saveButton.disabled = true;
+
+        saveButton.textContent =
+            isEditing
+                ? "Updating..."
+                : "Saving...";
+
+        try {
+
+            const response =
+                await fetch(
+                    url,
+                    {
+                        method: method,
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify(
+                                performance
+                            )
+                    }
+                );
+
+            const responseText =
+                await response.text();
+
+            if (!response.ok) {
+
+                throw new Error(
+                    responseText
+                    ||
+                    `Failed to ${
+                        isEditing
+                            ? "update"
+                            : "save"
+                    } performance.`
+                );
+            }
+
+            if (isEditing) {
+
+                showAlert(
+                    "Performance updated successfully.",
+                    "success"
+                );
+
+                editingPerformanceId =
+                    null;
+
+                resetFormCompletely();
+
+                updateEditModeUI();
+
+            } else {
+
+                showAlert(
+                    "Performance saved successfully.",
+                    "success"
+                );
+
+                resetSkillsOnly();
+            }
+
+            await loadPerformances();
+
+        } catch (error) {
+
+            console.error(error);
+
+            showAlert(
+                error.message
+                ||
+                "Unable to save performance.",
+                "error"
+            );
+
+        } finally {
+
+            saveButton.disabled = false;
+
+            updateEditModeUI();
+        }
+    }
+
+
+    /* =========================================================
+       EDIT
+    ========================================================= */
+
+    function startEdit(id) {
+
+        closePerformanceModal();
+        closeDeleteModal();
+
+        const record =
+            performanceRecords.find(
+                function (item) {
+
+                    return Number(item.id) ===
+                        Number(id);
+
+                }
+            );
+
+        if (!record) {
+
+            showAlert(
+                "Performance record could not be found.",
+                "error"
+            );
+
+            return;
+        }
+
+        editingPerformanceId =
+            Number(record.id);
+
+        document.getElementById(
+            "player"
+        ).value =
+            record.playerId ?? "";
+
+        document.getElementById(
+            "trainingSession"
+        ).value =
+            record.sessionId ?? "";
+
+        document.getElementById(
+            "position"
+        ).value =
+            record.position ?? "";
+
+        changePosition();
+
+        setSkillValues(record);
+
+        document.getElementById(
+            "coachComments"
+        ).value =
+            record.coachComments ?? "";
+
+        document.getElementById(
+            "developmentGoals"
+        ).value =
+            record.developmentGoals ?? "";
+
+        updateAllSliderVisuals();
+
+        calculateOverall();
+
+        updateEditModeUI();
+
+        showAlert(
+            `Editing performance record #${record.id}.`,
+            "success"
+        );
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+
+    /* =========================================================
+       SET ALL SKILL VALUES
+    ========================================================= */
+
+    function setSkillValues(record) {
+
+        const allSkillGroups = [
+
+            technicalSkills,
+
+            physicalSkills,
+
+            tacticalSkills,
+
+            mentalSkills,
+
+            defenderSkills,
+
+            midfielderSkills,
+
+            forwardSkills,
+
+            goalkeeperSkills
+        ];
+
+        allSkillGroups.forEach(
+            function (group) {
+
+                group.forEach(
+                    function (skill) {
+
+                        const element =
+                            document.getElementById(
+                                skill.key
+                            );
+
+                        if (!element) {
+                            return;
+                        }
+
+                        const value =
+                            record[
+                                skill.key
+                            ];
+
+                        if (
+                            value !== null
+                            &&
+                            value !== undefined
+                            &&
+                            value !== ""
+                        ) {
+
+                            element.value =
+                                Number(value);
+
+                        } else {
+
+                            element.value =
+                                1;
+                        }
+                    }
+                );
+            }
+        );
+    }
+
+
+    /* =========================================================
+       EDIT MODE UI
+    ========================================================= */
+
+    function updateEditModeUI() {
+
+        const saveButton =
+            document.getElementById(
+                "saveButton"
+            );
+
+        const cancelButton =
+            document.getElementById(
+                "cancelEditButton"
+            );
+
+        if (
+            editingPerformanceId !== null
+        ) {
+
+            saveButton.textContent =
+                "✏️ Update Performance";
+
+            cancelButton.style.display =
+                "inline-block";
+
+        } else {
+
+            saveButton.textContent =
+                "💾 Save Performance";
+
+            cancelButton.style.display =
+                "none";
+        }
+    }
+
+
+    /* =========================================================
+       CANCEL EDIT
+    ========================================================= */
+
+    function cancelEdit() {
+
+        editingPerformanceId =
+            null;
+
+        resetFormCompletely();
+
+        updateEditModeUI();
+
+        hideAlert();
+    }
+
+
+    /* =========================================================
+       RESET
+    ========================================================= */
+
+    function handleReset() {
+
+        if (
+            editingPerformanceId !== null
+        ) {
+
+            cancelEdit();
+
+            return;
+        }
+
+        resetSkillsOnly();
+    }
+
+
+    function resetSkillsOnly() {
+
+        const sliders =
+            document.querySelectorAll(
+                'input[type="range"]'
+            );
+
+        sliders.forEach(
+            function (slider) {
+
+                slider.value = 1;
+            }
+        );
+
+        document.getElementById(
+            "coachComments"
+        ).value = "";
+
+        document.getElementById(
+            "developmentGoals"
+        ).value = "";
+
+        updateAllSliderVisuals();
+
+        calculateOverall();
+    }
+
+
+    function resetFormCompletely() {
+
+        document.getElementById(
+            "player"
+        ).value = "";
+
+        document.getElementById(
+            "trainingSession"
+        ).value = "";
+
+        document.getElementById(
+            "position"
+        ).value = "";
+
+        document.getElementById(
+            "coachComments"
+        ).value = "";
+
+        document.getElementById(
+            "developmentGoals"
+        ).value = "";
+
+        document
+            .getElementById(
+                "defenderSection"
+            )
+            .classList.remove(
+                "visible"
+            );
+
+        document
+            .getElementById(
+                "midfielderSection"
+            )
+            .classList.remove(
+                "visible"
+            );
+
+        document
+            .getElementById(
+                "forwardSection"
+            )
+            .classList.remove(
+                "visible"
+            );
+
+        document
+            .getElementById(
+                "goalkeeperSection"
+            )
+            .classList.remove(
+                "visible"
+            );
+
+        const sliders =
+            document.querySelectorAll(
+                'input[type="range"]'
+            );
+
+        sliders.forEach(
+            function (slider) {
+
+                slider.value = 1;
+            }
+        );
+
+        updateAllSliderVisuals();
+
+        calculateOverall();
+    }
+
+
+    /* =========================================================
+       OPEN DELETE MODAL
+    ========================================================= */
+
+    function openDeleteModal(id) {
+
+        const record =
+            performanceRecords.find(
+                function (item) {
+
+                    return Number(item.id) ===
+                        Number(id);
+
+                }
+            );
+
+        if (!record) {
+
+            showAlert(
+                "Performance record could not be found.",
+                "error"
+            );
+
+            return;
+        }
+
+        pendingDeletePerformanceId =
+            Number(record.id);
+
+        const playerName =
+            getPlayerName(
+                record.playerId
+            );
+
+        const sessionName =
+            getSessionLabel(
+                record.sessionId
+            );
+
+        document.getElementById(
+            "deleteRecordInfo"
+        ).innerHTML = `
+            Record #${escapeHtml(record.id)}
+            &nbsp;•&nbsp;
+            ${escapeHtml(playerName)}
+            <br>
+            <span style="
+                display:inline-block;
+                margin-top:5px;
+                color:#6b7280;
+                font-weight:normal;
+            ">
+                ${escapeHtml(record.position || "-")}
+                &nbsp;•&nbsp;
+                ${escapeHtml(sessionName)}
+            </span>
+        `;
+
+        document.getElementById(
+            "deleteModal"
+        ).classList.add(
+            "show"
+        );
+
+        document.body.style.overflow =
+            "hidden";
+
+        setTimeout(
+            function () {
+
+                document
+                    .getElementById(
+                        "deleteCancelButton"
+                    )
+                    .focus();
+
+            },
+            50
+        );
+    }
+
+
+    /* =========================================================
+       CONFIRM DELETE
+    ========================================================= */
+
+    async function confirmDeletePerformance() {
+
+        if (
+            pendingDeletePerformanceId === null
+        ) {
+            return;
+        }
+
+        const id =
+            pendingDeletePerformanceId;
+
+        const deleteButton =
+            document.getElementById(
+                "deleteConfirmButton"
+            );
+
+        const cancelButton =
+            document.getElementById(
+                "deleteCancelButton"
+            );
+
+        deleteButton.disabled = true;
+        cancelButton.disabled = true;
+
+        deleteButton.textContent =
+            "Deleting...";
+
+        try {
+
+            const response =
+                await fetch(
+                    `/api/performances/${id}`,
+                    {
+                        method: "DELETE"
+                    }
+                );
+
+            const responseText =
+                await response.text();
+
+            if (!response.ok) {
+
+                throw new Error(
+                    responseText
+                    ||
+                    "Failed to delete performance."
+                );
+            }
+
+            if (
+                editingPerformanceId !== null
+                &&
+                Number(editingPerformanceId) ===
+                    Number(id)
+            ) {
+
+                editingPerformanceId =
+                    null;
+
+                resetFormCompletely();
+
+                updateEditModeUI();
+            }
+
+            closeDeleteModal();
+
+            showAlert(
+                "Performance deleted successfully.",
+                "success"
+            );
+
+            await loadPerformances();
+
+        } catch (error) {
+
+            console.error(error);
+
+            closeDeleteModal();
+
+            showAlert(
+                error.message
+                ||
+                "Unable to delete performance.",
+                "error"
+            );
+
+        } finally {
+
+            deleteButton.disabled =
+                false;
+
+            cancelButton.disabled =
+                false;
+
+            deleteButton.textContent =
+                "🗑️ Delete";
+        }
+    }
+
+
+    /* =========================================================
+       CLOSE DELETE MODAL
+    ========================================================= */
+
+    function closeDeleteModal() {
+
+        const modal =
+            document.getElementById(
+                "deleteModal"
+            );
+
+        modal.classList.remove(
+            "show"
+        );
+
+        pendingDeletePerformanceId =
+            null;
+
+        if (
+            !document
+                .getElementById(
+                    "performanceModal"
+                )
+                .classList.contains(
+                    "show"
+                )
+        ) {
+
+            document.body.style.overflow =
+                "";
+        }
+    }
+
+
+    function handleDeleteModalBackgroundClick(
+        event
+    ) {
+
+        if (
+            event.target.id ===
+            "deleteModal"
+        ) {
+
+            closeDeleteModal();
+        }
+    }
+
+
+    /* =========================================================
+       VIEW PERFORMANCE
+    ========================================================= */
+
+    function viewPerformance(id) {
+
+        const record =
+            performanceRecords.find(
+                function (item) {
+
+                    return Number(item.id) ===
+                        Number(id);
+
+                }
+            );
+
+        if (!record) {
+
+            showAlert(
+                "Performance record could not be found.",
+                "error"
+            );
+
+            return;
+        }
+
+        const modal =
+            document.getElementById(
+                "performanceModal"
+            );
+
+        const body =
+            document.getElementById(
+                "performanceModalBody"
+            );
+
+        const overall =
+            Number(
+                record.overallScore || 0
+            );
+
+        body.innerHTML = `
+
+            <div class="detail-grid">
+
+                <div class="detail-box">
+
+                    <label>Player</label>
+
+                    <strong>
+                        ${escapeHtml(
+                            getPlayerName(
+                                record.playerId
+                            )
+                        )}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <label>Training Session</label>
+
+                    <strong>
+                        ${escapeHtml(
+                            getSessionLabel(
+                                record.sessionId
+                            )
+                        )}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <label>Position</label>
+
+                    <strong>
+                        ${escapeHtml(
+                            record.position || "-"
+                        )}
+                    </strong>
+
+                </div>
+
+
+                <div class="modal-score">
+
+                    <span>Overall Score</span>
+
+                    <strong>
+                        ${overall.toFixed(1)} / 10
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            ${renderModalSkillCategory(
+                "⚽ Technical Skills",
+                technicalSkills,
+                record
+            )}
+
+
+            ${renderModalSkillCategory(
+                "🏃 Physical Skills",
+                physicalSkills,
+                record
+            )}
+
+
+            ${renderModalSkillCategory(
+                "🧠 Tactical Skills",
+                tacticalSkills,
+                record
+            )}
+
+
+            ${renderModalSkillCategory(
+                "💪 Mental & Character Skills",
+                mentalSkills,
+                record
+            )}
+
+
+            ${renderPositionModalCategory(
+                record
+            )}
+
+
+            <div class="modal-text-section">
+
+                <h3>💬 Coach Comments</h3>
+
+                <div class="modal-text">
+                    ${escapeHtml(
+                        record.coachComments
+                        ||
+                        "No coach comments provided."
+                    )}
+                </div>
+
+            </div>
+
+
+            <div class="modal-text-section">
+
+                <h3>🎯 Development Goals</h3>
+
+                <div class="modal-text">
+                    ${escapeHtml(
+                        record.developmentGoals
+                        ||
+                        "No development goals provided."
+                    )}
+                </div>
+
+            </div>
+
+
+            <div class="modal-text-section">
+
+                <h3>🕒 Assessed At</h3>
+
+                <div class="modal-text">
+                    ${escapeHtml(
+                        formatDateTime(
+                            record.assessedAt
+                        )
+                    )}
+                </div>
+
+            </div>
+
+        `;
+
+        modal.classList.add(
+            "show"
+        );
+
+        document.body.style.overflow =
+            "hidden";
+    }
+
+
+    /* =========================================================
+       MODAL CATEGORY
+    ========================================================= */
+
+    function renderModalSkillCategory(
+        title,
+        skills,
+        record
+    ) {
+
+        return `
+
+            <div class="modal-category">
+
+                <h3>
+                    ${escapeHtml(title)}
+                </h3>
+
+                <div class="modal-skills">
+
+                    ${
+                        skills.map(
+                            function (skill) {
+
+                                const value =
+                                    Number(
+                                        record[
+                                            skill.key
+                                        ] ?? 1
+                                    );
+
+                                return `
+
+                                    <div class="modal-skill">
+
+                                        <span>
+                                            ${escapeHtml(
+                                                skill.label
+                                            )}
+                                        </span>
+
+                                        <strong>
+                                            ${value}/10
+                                        </strong>
+
+                                    </div>
+
+                                `;
+                            }
+                        ).join("")
+                    }
+
+                </div>
+
+            </div>
+
+        `;
+    }
+
+
+    function renderPositionModalCategory(
+        record
+    ) {
+
+        const position =
+            record.position;
+
+        if (
+            position === "Defender"
+        ) {
+
+            return renderModalSkillCategory(
+                "🛡️ Defender Skills",
+                defenderSkills,
+                record
+            );
+        }
+
+        if (
+            position === "Midfielder"
+        ) {
+
+            return renderModalSkillCategory(
+                "🎯 Midfielder Skills",
+                midfielderSkills,
+                record
+            );
+        }
+
+        if (
+            position === "Forward"
+        ) {
+
+            return renderModalSkillCategory(
+                "⚡ Forward Skills",
+                forwardSkills,
+                record
+            );
+        }
+
+        if (
+            position === "Goalkeeper"
+        ) {
+
+            return renderModalSkillCategory(
+                "🧤 Goalkeeper Skills",
+                goalkeeperSkills,
+                record
+            );
+        }
+
+        return "";
+    }
+
+
+    /* =========================================================
+       CLOSE VIEW MODAL
+    ========================================================= */
+
+    function closePerformanceModal() {
+
+        document
+            .getElementById(
+                "performanceModal"
+            )
+            .classList.remove(
+                "show"
+            );
+
+        if (
+            !document
+                .getElementById(
+                    "deleteModal"
+                )
+                .classList.contains(
+                    "show"
+                )
+        ) {
+
+            document.body.style.overflow =
+                "";
+        }
+    }
+
+
+    function handleModalBackgroundClick(
+        event
+    ) {
+
+        if (
+            event.target.id ===
+            "performanceModal"
+        ) {
+
+            closePerformanceModal();
+        }
+    }
+
+
+    /* =========================================================
+       ESC KEY
+    ========================================================= */
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key === "Escape"
+            ) {
+
+                const deleteModal =
+                    document.getElementById(
+                        "deleteModal"
+                    );
+
+                const performanceModal =
+                    document.getElementById(
+                        "performanceModal"
+                    );
+
+                if (
+                    deleteModal.classList.contains(
+                        "show"
+                    )
+                ) {
+
+                    closeDeleteModal();
+
+                } else if (
+                    performanceModal.classList.contains(
+                        "show"
+                    )
+                ) {
+
+                    closePerformanceModal();
+                }
+            }
+        }
+    );
+
+
+    /* =========================================================
+       SCORE COLOR
+    ========================================================= */
+
+    function getOverallClass(score) {
+
+        if (score >= 8) {
+            return "overall-excellent";
+        }
+
+        if (score >= 6) {
+            return "overall-good";
+        }
+
+        if (score >= 4) {
+            return "overall-average";
+        }
+
+        return "overall-low";
+    }
+
+
+    /* =========================================================
+       DATE FORMATTING
+    ========================================================= */
+
+    function formatDateTime(value) {
+
+        if (!value) {
+            return "-";
+        }
+
+        try {
+
+            const date =
+                new Date(value);
+
+            if (
+                Number.isNaN(
+                    date.getTime()
+                )
+            ) {
+
+                return String(value);
+            }
+
+            return date.toLocaleString();
+
+        } catch (error) {
+
+            return String(value);
+        }
+    }
+
+
+    function formatDateOnly(value) {
+
+        if (!value) {
+            return "";
+        }
+
+        try {
+
+            const date =
+                new Date(value);
+
+            if (
+                Number.isNaN(
+                    date.getTime()
+                )
+            ) {
+
+                return String(value);
+            }
+
+            return date.toLocaleDateString();
+
+        } catch (error) {
+
+            return String(value);
+        }
+    }
+
+
+    /* =========================================================
+       ALERT
+    ========================================================= */
+
+    function showAlert(
+        message,
+        type
+    ) {
+
+        const alert =
+            document.getElementById(
+                "alert"
+            );
+
+        alert.textContent =
+            message;
+
+        alert.className =
+            "alert show " + type;
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+        clearTimeout(
+            window.performanceAlertTimeout
+        );
+
+        window.performanceAlertTimeout =
+            setTimeout(
+                function () {
+
+                    hideAlert();
+
+                },
+                5000
+            );
+    }
+
+
+    function hideAlert() {
+
+        const alert =
+            document.getElementById(
+                "alert"
+            );
+
+        alert.className =
+            "alert";
+
+        alert.textContent =
+            "";
+    }
+
+
+    /* =========================================================
+       HTML ESCAPE
+    ========================================================= */
+
+    function escapeHtml(value) {
+
+        if (
+            value === null
+            ||
+            value === undefined
+        ) {
+
+            return "";
+        }
+
+        return String(value)
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+            .replace(
+                /</g,
+                "&lt;"
+            )
+            .replace(
+                />/g,
+                "&gt;"
+            )
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+    }
+
+</script>
+
+</body>
+</html>
