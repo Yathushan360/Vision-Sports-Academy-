@@ -120,5 +120,30 @@ class PaymentServiceTest {
         verify(paymentRepository, times(1)).save(samplePendingPayment);
     }
 
-  
+    @Test
+    @DisplayName("Verify double payment attempt triggers InvalidPaymentStateException (Finite State Protection)")
+    void testProcessPayment_AlreadyPaid_ThrowsInvalidPaymentStateException() {
+        samplePendingPayment.setStatus(PaymentStatus.PAID);
+        samplePendingPayment.setPaidDate(LocalDate.now().minusDays(1));
+        when(paymentRepository.findById(1)).thenReturn(Optional.of(samplePendingPayment));
+
+        PaymentProcessRequest request = new PaymentProcessRequest(
+                1,
+                new BigDecimal("2500.00"),
+                "CASH",
+                LocalDate.now(),
+                "TXN-123",
+                null
+        );
+
+        InvalidPaymentStateException exception = assertThrows(
+                InvalidPaymentStateException.class,
+                () -> paymentService.processPayment(request)
+        );
+
+        assertTrue(exception.getMessage().contains("already been settled"));
+        verify(paymentRepository, never()).save(samplePendingPayment);
+    }
+
+   
 }
