@@ -145,5 +145,28 @@ class PaymentServiceTest {
         verify(paymentRepository, never()).save(samplePendingPayment);
     }
 
+    @Test
+    @DisplayName("Verify underpayment triggers PaymentProcessingException")
+    void testProcessPayment_InsufficientAmount_ThrowsException() {
+        when(paymentRepository.findById(1)).thenReturn(Optional.of(samplePendingPayment));
+
+        PaymentProcessRequest request = new PaymentProcessRequest(
+                1,
+                new BigDecimal("1000.00"), // Outstanding is 2500.00
+                "CASH",
+                LocalDate.now(),
+                "TXN-123",
+                null
+        );
+
+        PaymentProcessingException exception = assertThrows(
+                PaymentProcessingException.class,
+                () -> paymentService.processPayment(request)
+        );
+
+        assertTrue(exception.getMessage().contains("Insufficient payment amount"));
+        verify(paymentRepository, never()).save(samplePendingPayment);
+    }
+
    
 }
