@@ -168,5 +168,40 @@ class PaymentServiceTest {
         verify(paymentRepository, never()).save(samplePendingPayment);
     }
 
-   
+    @Test
+    @DisplayName("Verify overdue assessment applies static penalty of Rs. 500 and transitions to OVERDUE")
+    void testCalculateOverduePayments_AppliesLateFeePenalty() {
+        Payment overduePayment = new Payment();
+        overduePayment.setPaymentId(2);
+        overduePayment.setAmount(new BigDecimal("2500.00"));
+        overduePayment.setDueDate(LocalDate.now().minusDays(2)); // Past due date
+        overduePayment.setStatus(PaymentStatus.PENDING);
+
+        when(paymentRepository.findByStatus(PaymentStatus.PENDING))
+                .thenReturn(Collections.singletonList(overduePayment));
+
+        paymentService.calculateOverduePayments();
+
+        assertEquals(PaymentStatus.OVERDUE, overduePayment.getStatus());
+        // 2500.00 + 500.00 = 3000.00
+        assertEquals(new BigDecimal("3000.00"), overduePayment.getAmount());
+        verify(paymentRepository, times(1)).save(overduePayment);
+    }
+
+    @Test
+    @DisplayName("Verify overdue reminder dispatch creates audit record in payment_reminders")
+    void testSendOverdueReminders_DispatchesAndAuditsNotification() {
+        Payment overduePayment = new Payment();
+        overduePayment.setPaymentId(5);
+        overduePayment.setPlayerId(2048);
+        overduePayment.setStatus(PaymentStatus.OVERDUE);
+
+        when(paymentRepository.findByStatus(PaymentStatus.PENDING)).thenReturn(Collections.emptyList());
+        when(paymentRepository.findByStatus(PaymentStatus.OVERDUE)).thenReturn(Collections.singletonList(overduePayment));
+
+        int remindersSent = paymentService.sendOverdueReminders();
+
+        assertEquals(1, remindersSent);
+        verify(paymentReminderRepository, times(1)).save(any(PaymentReminder.class));
+    }
 }
