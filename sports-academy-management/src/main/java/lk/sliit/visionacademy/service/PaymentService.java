@@ -8,6 +8,9 @@ import lk.sliit.visionacademy.entity.PaymentStatus;
 import lk.sliit.visionacademy.entity.ReminderChannel;
 import lk.sliit.visionacademy.exception.InvalidPaymentStateException;
 import lk.sliit.visionacademy.exception.PaymentProcessingException;
+import lk.sliit.visionacademy.notification.AbstractNotificationDispatcher;
+import lk.sliit.visionacademy.notification.EmailNotificationDispatcher;
+import lk.sliit.visionacademy.notification.SmsNotificationDispatcher;
 import lk.sliit.visionacademy.repository.FeeStructureRepository;
 import lk.sliit.visionacademy.repository.PaymentReminderRepository;
 import lk.sliit.visionacademy.repository.PaymentRepository;
@@ -39,6 +42,23 @@ public class PaymentService implements IPaymentService {
 
     @Autowired
     private PaymentReminderRepository paymentReminderRepository;
+
+    @Autowired(required = false)
+    private SmsNotificationDispatcher smsDispatcher;
+
+    @Autowired(required = false)
+    private EmailNotificationDispatcher emailDispatcher;
+
+    /**
+     * Demonstrates Runtime Polymorphism (Lecture 05/10 Slides 11, 26, 27):
+     * Superclass reference AbstractNotificationDispatcher refers to concrete subclass instance.
+     */
+    private AbstractNotificationDispatcher resolveDispatcher(ReminderChannel channel) {
+        if (channel == ReminderChannel.EMAIL && emailDispatcher != null) {
+            return emailDispatcher;
+        }
+        return smsDispatcher != null ? smsDispatcher : new SmsNotificationDispatcher();
+    }
 
     @Override
     public List<FeeStructure> getAllFeeStructures() {
@@ -210,10 +230,13 @@ public class PaymentService implements IPaymentService {
         int dispatchedCount = 0;
 
         for (Payment payment : overduePayments) {
+            // Polymorphic dispatch via template method
+            AbstractNotificationDispatcher dispatcher = resolveDispatcher(ReminderChannel.SMS);
+            dispatcher.dispatch(payment, "Notice: Your academy training fee is overdue. Please settle immediately.");
+
             PaymentReminder reminder = new PaymentReminder(payment, ReminderChannel.SMS);
             paymentReminderRepository.save(reminder);
             dispatchedCount++;
-            System.out.println("Dispatched automated SMS reminder to Player #" + payment.getPlayerId() + " for Payment #" + payment.getPaymentId());
         }
 
         return dispatchedCount;
@@ -228,9 +251,13 @@ public class PaymentService implements IPaymentService {
                 .orElseThrow(() -> new PaymentProcessingException("Payment not found with ID: " + paymentId));
 
         ReminderChannel selectedChannel = (channel != null) ? channel : ReminderChannel.SMS;
+
+        // Polymorphic dispatch via template method
+        AbstractNotificationDispatcher dispatcher = resolveDispatcher(selectedChannel);
+        dispatcher.dispatch(payment, "Official Reminder: Academy fee payment of Rs. " + payment.getAmount() + " is pending.");
+
         PaymentReminder reminder = new PaymentReminder(payment, selectedChannel);
         PaymentReminder saved = paymentReminderRepository.save(reminder);
-        System.out.println("Dispatched " + selectedChannel + " reminder to Player #" + payment.getPlayerId() + " for Payment #" + paymentId);
         return saved;
     }
 

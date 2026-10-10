@@ -204,4 +204,23 @@ class PaymentServiceTest {
         assertEquals(1, remindersSent);
         verify(paymentReminderRepository, times(1)).save(any(PaymentReminder.class));
     }
+
+    @Test
+    @DisplayName("Verify AbstractNotificationDispatcher template method and polymorphism (Lecture 05/10)")
+    void testAbstractNotificationDispatcher_TemplateMethodExecution() {
+        lk.sliit.visionacademy.notification.AbstractNotificationDispatcher sms =
+                new lk.sliit.visionacademy.notification.SmsNotificationDispatcher();
+        lk.sliit.visionacademy.notification.AbstractNotificationDispatcher email =
+                new lk.sliit.visionacademy.notification.EmailNotificationDispatcher();
+
+        assertEquals("SMS", sms.getChannelName());
+        assertEquals(3, sms.getRetryLimit());
+        assertEquals("EMAIL", email.getChannelName());
+        assertEquals(5, email.getRetryLimit());
+
+        // Template method dispatch calls concrete pre/post hooks and overridden sendPayload
+        assertTrue(sms.dispatch(samplePendingPayment, "Test SMS reminder"));
+        assertTrue(email.dispatch(samplePendingPayment, "Test Email reminder"));
+        assertFalse(sms.dispatch(null, "Null payment should fail gracefully"));
+    }
 }
