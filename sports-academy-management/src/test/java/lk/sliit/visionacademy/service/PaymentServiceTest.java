@@ -223,4 +223,28 @@ class PaymentServiceTest {
         assertTrue(email.dispatch(samplePendingPayment, "Test Email reminder"));
         assertFalse(sms.dispatch(null, "Null payment should fail gracefully"));
     }
+
+    @Test
+    @DisplayName("Verify FinancialRulesEngine static initialization block and static methods (Lecture 05/10 Slides 20-33)")
+    void testFinancialRulesEngine_StaticInitializationAndMethods() {
+        // Direct access to static variables without creating an object (Slide 20, 27)
+        assertEquals("LKR", lk.sliit.visionacademy.util.FinancialRulesEngine.ACADEMY_CURRENCY);
+        assertEquals(7, lk.sliit.visionacademy.util.FinancialRulesEngine.DEFAULT_GRACE_PERIOD_DAYS);
+        assertEquals(new BigDecimal("500.00"), lk.sliit.visionacademy.util.FinancialRulesEngine.STANDARD_LATE_FEE_PENALTY);
+        assertEquals(new BigDecimal("250.00"), lk.sliit.visionacademy.util.FinancialRulesEngine.REGISTRATION_SURCHARGE);
+
+        // Calling static methods directly using the class name (Slide 29)
+        LocalDate today = LocalDate.now();
+        assertEquals(today.plusDays(7), lk.sliit.visionacademy.util.FinancialRulesEngine.calculateDefaultDueDate(today));
+
+        BigDecimal fee = new BigDecimal("2500.00");
+        BigDecimal withLateFee = lk.sliit.visionacademy.util.FinancialRulesEngine.applyLateFee(fee);
+        assertEquals(new BigDecimal("3000.00"), withLateFee);
+
+        assertTrue(lk.sliit.visionacademy.util.FinancialRulesEngine.isOverdue(today.minusDays(1), today));
+        assertFalse(lk.sliit.visionacademy.util.FinancialRulesEngine.isOverdue(today.plusDays(1), today));
+
+        assertEquals("Rs. 2,500.00", lk.sliit.visionacademy.util.FinancialRulesEngine.formatCurrency(fee));
+        assertNotNull(lk.sliit.visionacademy.util.FinancialRulesEngine.getRegulatoryRates());
+    }
 }

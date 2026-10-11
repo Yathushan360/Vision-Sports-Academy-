@@ -14,6 +14,7 @@ import lk.sliit.visionacademy.notification.SmsNotificationDispatcher;
 import lk.sliit.visionacademy.repository.FeeStructureRepository;
 import lk.sliit.visionacademy.repository.PaymentReminderRepository;
 import lk.sliit.visionacademy.repository.PaymentRepository;
+import lk.sliit.visionacademy.util.FinancialRulesEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +32,8 @@ import java.util.stream.Collectors;
 @Service
 public class PaymentService implements IPaymentService {
 
-    // STATIC MEMBER: Shared constant default penalty across all instances
-    public static final BigDecimal LATE_FEE_PENALTY = new BigDecimal("500.00");
+    // STATIC MEMBER: Shared constant referenced from class-level rules engine (Lecture 05/10)
+    public static final BigDecimal LATE_FEE_PENALTY = FinancialRulesEngine.STANDARD_LATE_FEE_PENALTY;
 
     @Autowired
     private PaymentRepository paymentRepository;
@@ -66,12 +67,12 @@ public class PaymentService implements IPaymentService {
     }
 
     /**
-     * Generates monthly training fee for a player with default 7-day grace period.
-     * Demonstrates Method Overloading (compile-time polymorphism).
+     * Generates monthly training fee for a player with default grace period.
+     * Demonstrates Method Overloading and Static Method usage.
      */
     @Override
     public Payment generateMonthlyFee(Integer playerId, Integer feeId) throws PaymentProcessingException {
-        return generateMonthlyFee(playerId, feeId, LocalDate.now().plusDays(7));
+        return generateMonthlyFee(playerId, feeId, FinancialRulesEngine.calculateDefaultDueDate(LocalDate.now()));
     }
 
     /**
@@ -209,9 +210,12 @@ public class PaymentService implements IPaymentService {
     public void calculateOverduePayments(BigDecimal penalty) {
         List<Payment> pendingPayments = paymentRepository.findByStatus(PaymentStatus.PENDING);
         for (Payment payment : pendingPayments) {
-            if (payment.getDueDate().isBefore(LocalDate.now())) {
+            if (FinancialRulesEngine.isOverdue(payment.getDueDate(), LocalDate.now())) {
                 payment.setStatus(PaymentStatus.OVERDUE);
-                payment.setAmount(payment.getAmount().add(penalty));
+                BigDecimal updatedAmount = (penalty != null)
+                        ? payment.getAmount().add(penalty)
+                        : FinancialRulesEngine.applyLateFee(payment.getAmount());
+                payment.setAmount(updatedAmount);
                 paymentRepository.save(payment);
             }
         }
