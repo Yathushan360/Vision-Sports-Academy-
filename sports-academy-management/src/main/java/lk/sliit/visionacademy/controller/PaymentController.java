@@ -8,6 +8,8 @@ import lk.sliit.visionacademy.entity.FeeStructure;
 import lk.sliit.visionacademy.entity.Payment;
 import lk.sliit.visionacademy.entity.PaymentStatus;
 import lk.sliit.visionacademy.entity.ReminderChannel;
+import lk.sliit.visionacademy.exception.FeeTierNotFoundException;
+import lk.sliit.visionacademy.exception.InsufficientPaymentAmountException;
 import lk.sliit.visionacademy.exception.InvalidPaymentStateException;
 import lk.sliit.visionacademy.exception.PaymentProcessingException;
 import lk.sliit.visionacademy.service.IPaymentService;
@@ -142,14 +144,24 @@ public class PaymentController {
             paymentService.generateMonthlyFee(request.getPlayerId(), request.getFeeId(), dueDate);
             redirectAttributes.addFlashAttribute("success", "Fee successfully generated and assigned to Player #" + request.getPlayerId());
             return "redirect:/payments/view";
+        } catch (FeeTierNotFoundException e) {
+            // MULTIPLE CATCH (Lecture 10/11 Slides 30-31): Specific domain configuration catch
+            model.addAttribute("feeStructures", paymentService.getAllFeeStructures());
+            model.addAttribute("error", "Fee Configuration Error: " + e.getMessage());
+            return "generate-fee";
         } catch (PaymentProcessingException e) {
+            // General domain business catch
             model.addAttribute("feeStructures", paymentService.getAllFeeStructures());
             model.addAttribute("error", e.getMessage());
             return "generate-fee";
         } catch (Exception e) {
+            // Fallback catch for unexpected errors
             model.addAttribute("feeStructures", paymentService.getAllFeeStructures());
-            model.addAttribute("error", "An unexpected error occurred: " + e.getMessage());
+            model.addAttribute("error", "An unexpected system error occurred: " + e.getMessage());
             return "generate-fee";
+        } finally {
+            // FINALLY BLOCK (Lecture 10/11 Slides 36-40): Always executed for audit tracing
+            System.out.println("[AUDIT FINALLY] generateFee request execution completed for Player #" + request.getPlayerId());
         }
     }
 
@@ -238,9 +250,12 @@ public class PaymentController {
         try {
             Payment payment = paymentService.processPayment(request);
             return ResponseEntity.ok(PaymentResponseDTO.fromEntity(payment));
-        } catch (InvalidPaymentStateException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (InvalidPaymentStateException | InsufficientPaymentAmountException e) {
+            // MULTI-CATCH CLAUSE (Lecture 10/11 Slide 32):
+            // Catches more than one type of exception with a single handler. Parameter 'e' is implicitly final.
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
         } catch (PaymentProcessingException e) {
+            // MULTIPLE CATCH (Lecture 10/11 Slides 30-31): General domain checked exception handler
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -259,6 +274,9 @@ public class PaymentController {
             LocalDate dueDate = (request.getDueDate() != null) ? request.getDueDate() : LocalDate.now().plusDays(7);
             Payment payment = paymentService.generateMonthlyFee(request.getPlayerId(), request.getFeeId(), dueDate);
             return ResponseEntity.status(HttpStatus.CREATED).body(PaymentResponseDTO.fromEntity(payment));
+        } catch (FeeTierNotFoundException e) {
+            // MULTIPLE CATCH (Lecture 10/11 Slides 30-31): Specific checked exception returns 404 NOT FOUND
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (PaymentProcessingException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {

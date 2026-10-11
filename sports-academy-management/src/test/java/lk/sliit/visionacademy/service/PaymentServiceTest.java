@@ -2,6 +2,8 @@ package lk.sliit.visionacademy.service;
 
 import lk.sliit.visionacademy.dto.PaymentProcessRequest;
 import lk.sliit.visionacademy.entity.*;
+import lk.sliit.visionacademy.exception.FeeTierNotFoundException;
+import lk.sliit.visionacademy.exception.InsufficientPaymentAmountException;
 import lk.sliit.visionacademy.exception.InvalidPaymentStateException;
 import lk.sliit.visionacademy.exception.PaymentProcessingException;
 import lk.sliit.visionacademy.repository.FeeStructureRepository;
@@ -83,16 +85,17 @@ class PaymentServiceTest {
     }
 
     @Test
-    @DisplayName("Verify fee generation throws PaymentProcessingException when fee ID does not exist")
+    @DisplayName("Verify fee generation throws FeeTierNotFoundException when fee ID does not exist (Lecture 10/11)")
     void testGenerateMonthlyFee_InvalidFeeId_ThrowsException() {
         when(feeStructureRepository.findById(999)).thenReturn(Optional.empty());
 
-        PaymentProcessingException exception = assertThrows(
-                PaymentProcessingException.class,
+        FeeTierNotFoundException exception = assertThrows(
+                FeeTierNotFoundException.class,
                 () -> paymentService.generateMonthlyFee(1024, 999)
         );
 
-        assertTrue(exception.getMessage().contains("Invalid Fee ID: 999"));
+        assertTrue(exception.getMessage().contains("999"));
+        assertEquals(999, exception.getFeeId());
         verify(paymentRepository, never()).save(any(Payment.class));
     }
 
@@ -146,7 +149,7 @@ class PaymentServiceTest {
     }
 
     @Test
-    @DisplayName("Verify underpayment triggers PaymentProcessingException")
+    @DisplayName("Verify underpayment triggers InsufficientPaymentAmountException with amounts (Lecture 10/11)")
     void testProcessPayment_InsufficientAmount_ThrowsException() {
         when(paymentRepository.findById(1)).thenReturn(Optional.of(samplePendingPayment));
 
@@ -159,12 +162,14 @@ class PaymentServiceTest {
                 null
         );
 
-        PaymentProcessingException exception = assertThrows(
-                PaymentProcessingException.class,
+        InsufficientPaymentAmountException exception = assertThrows(
+                InsufficientPaymentAmountException.class,
                 () -> paymentService.processPayment(request)
         );
 
         assertTrue(exception.getMessage().contains("Insufficient payment amount"));
+        assertEquals(new BigDecimal("2500.00"), exception.getRequiredAmount());
+        assertEquals(new BigDecimal("1000.00"), exception.getProvidedAmount());
         verify(paymentRepository, never()).save(samplePendingPayment);
     }
 
@@ -247,4 +252,34 @@ class PaymentServiceTest {
         assertEquals("Rs. 2,500.00", lk.sliit.visionacademy.util.FinancialRulesEngine.formatCurrency(fee));
         assertNotNull(lk.sliit.visionacademy.util.FinancialRulesEngine.getRegulatoryRates());
     }
+
+    @Test
+    @DisplayName("Verify sendReminder nested try statement and audit persistence (Lecture 10/11 Slides 33-40)")
+    void testSendReminder_Success_SavesAuditRecord() throws PaymentProcessingException {
+        when(paymentRepository.findById(1)).thenReturn(Optional.of(samplePendingPayment));
+        when(paymentReminderRepository.save(any(PaymentReminder.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        PaymentReminder reminder = paymentService.sendReminder(1, ReminderChannel.SMS);
+
+        assertNotNull(reminder);
+        assertEquals(samplePendingPayment, reminder.getPayment());
+        assertEquals(ReminderChannel.SMS, reminder.getChannel());
+        verify(paymentReminderRepository, times(1)).save(any(PaymentReminder.class));
+    }
+
+    @Test
+    @DisplayName("Verify sendReminder outer catch intercepts DB error and wraps in PaymentProcessingException (Lecture 10/11)")
+    void testSendReminder_DatabaseFailure_PropagatesPaymentProcessingException() {
+        when(paymentRepository.findById(1)).thenReturn(Optional.of(samplePendingPayment));
+        when(paymentReminderRepository.save(any(PaymentReminder.class))).thenThrow(new RuntimeException("DB Connection Timeout"));
+
+        PaymentProcessingException exception = assertThrows(
+                PaymentProcessingException.class,
+                () -> paymentService.sendReminder(1, ReminderChannel.SMS)
+        );
+
+        assertTrue(exception.getMessage().contains("Database error saving reminder audit log"));
+        assertNotNull(exception.getCause());
+    }
 }
+

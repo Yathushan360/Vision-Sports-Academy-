@@ -6,6 +6,8 @@ import lk.sliit.visionacademy.entity.Payment;
 import lk.sliit.visionacademy.entity.PaymentReminder;
 import lk.sliit.visionacademy.entity.PaymentStatus;
 import lk.sliit.visionacademy.entity.ReminderChannel;
+import lk.sliit.visionacademy.exception.FeeTierNotFoundException;
+import lk.sliit.visionacademy.exception.InsufficientPaymentAmountException;
 import lk.sliit.visionacademy.exception.InvalidPaymentStateException;
 import lk.sliit.visionacademy.exception.PaymentProcessingException;
 import lk.sliit.visionacademy.notification.AbstractNotificationDispatcher;
@@ -81,7 +83,7 @@ public class PaymentService implements IPaymentService {
     @Override
     public Payment generateMonthlyFee(Integer playerId, Integer feeId, LocalDate dueDate) throws PaymentProcessingException {
         FeeStructure fee = feeStructureRepository.findById(feeId)
-                .orElseThrow(() -> new PaymentProcessingException("Invalid Fee ID: " + feeId));
+                .orElseThrow(() -> new FeeTierNotFoundException("Invalid Fee Tier ID: " + feeId, feeId));
 
         Payment payment = new Payment();
         payment.setPlayerId(playerId);
@@ -115,11 +117,14 @@ public class PaymentService implements IPaymentService {
             );
         }
 
-        // Domain Invariant: Payment amount validation
+        // Domain Invariant: Payment amount validation with specialized checked exception
         if (request.getAmount() != null && request.getAmount().compareTo(payment.getAmount()) < 0) {
-            throw new PaymentProcessingException(
+            throw new InsufficientPaymentAmountException(
                     "Insufficient payment amount for Payment #" + payment.getPaymentId() +
-                    ". Outstanding: Rs. " + payment.getAmount() + ", Provided: Rs. " + request.getAmount()
+                    ". Outstanding: " + FinancialRulesEngine.formatCurrency(payment.getAmount()) +
+                    ", Provided: " + FinancialRulesEngine.formatCurrency(request.getAmount()),
+                    payment.getAmount(),
+                    request.getAmount()
             );
         }
 
@@ -248,6 +253,7 @@ public class PaymentService implements IPaymentService {
 
     /**
      * Dispatches a single reminder notification for a given payment record.
+     * Demonstrates Nested try Statements and Finally Block (Lecture 10/11 Slides 33-40).
      */
     @Override
     public PaymentReminder sendReminder(Integer paymentId, ReminderChannel channel) throws PaymentProcessingException {
@@ -256,13 +262,27 @@ public class PaymentService implements IPaymentService {
 
         ReminderChannel selectedChannel = (channel != null) ? channel : ReminderChannel.SMS;
 
-        // Polymorphic dispatch via template method
-        AbstractNotificationDispatcher dispatcher = resolveDispatcher(selectedChannel);
-        dispatcher.dispatch(payment, "Official Reminder: Academy fee payment of Rs. " + payment.getAmount() + " is pending.");
+        // OUTER TRY BLOCK (Lecture 10/11 Slides 33-35): Manages database audit persistence
+        try {
+            // INNER TRY BLOCK (Lecture 10/11 Slides 33-35): Monitors external network/gateway communication
+            try {
+                AbstractNotificationDispatcher dispatcher = resolveDispatcher(selectedChannel);
+                dispatcher.dispatch(payment, "Official Reminder: Academy fee payment of Rs. " + payment.getAmount() + " is pending.");
+            } catch (RuntimeException gatewayEx) {
+                // Inner catch: Prevents transient delivery glitch from crashing database audit
+                System.err.println("[GATEWAY EXCEPTION CAUGHT IN INNER TRY] Transmission failed: " + gatewayEx.getMessage());
+            }
 
-        PaymentReminder reminder = new PaymentReminder(payment, selectedChannel);
-        PaymentReminder saved = paymentReminderRepository.save(reminder);
-        return saved;
+            PaymentReminder reminder = new PaymentReminder(payment, selectedChannel);
+            return paymentReminderRepository.save(reminder);
+
+        } catch (Exception dbEx) {
+            // Outer catch: Intercepts persistence failure and propagates checked domain exception
+            throw new PaymentProcessingException("Database error saving reminder audit log for Payment #" + paymentId, dbEx);
+        } finally {
+            // FINALLY BLOCK (Lecture 10/11 Slides 36-40): Always executes regardless of exceptions
+            System.out.println("[AUDIT FINALLY] sendReminder cycle finalized for Payment #" + paymentId);
+        }
     }
 
     /**
