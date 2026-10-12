@@ -40,6 +40,8 @@ public class ReportingController {
         model.addAttribute("outstandingPayments", outstandingPayments);
         model.addAttribute("revenueByType", reportingService.getRevenueByFeeType());
         model.addAttribute("statusDistribution", reportingService.getStatusDistribution());
+        model.addAttribute("agingSchedule", reportingService.getAgingSchedule());
+        model.addAttribute("sortedDueDates", reportingService.getDistinctDueDatesSorted());
 
         return "financial-report";
     }

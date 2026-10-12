@@ -21,6 +21,10 @@ public class FinancialSummaryDTO {
     private int overdueCount;
     private int totalTransactionsCount;
 
+    // Java Collections (Lecture 07): HashSet deduplication & TreeSet sorted distinct counts
+    private int uniqueDebtorsCount;
+    private int distinctDueDatesCount;
+
     private double collectionRate;
     private LocalDateTime generatedDate;
 
@@ -136,5 +140,21 @@ public class FinancialSummaryDTO {
 
     public BigDecimal getFormattedCollectionRate() {
         return BigDecimal.valueOf(collectionRate).setScale(1, RoundingMode.HALF_UP);
+    }
+
+    public int getUniqueDebtorsCount() {
+        return uniqueDebtorsCount;
+    }
+
+    public void setUniqueDebtorsCount(int uniqueDebtorsCount) {
+        this.uniqueDebtorsCount = uniqueDebtorsCount;
+    }
+
+    public int getDistinctDueDatesCount() {
+        return distinctDueDatesCount;
+    }
+
+    public void setDistinctDueDatesCount(int distinctDueDatesCount) {
+        this.distinctDueDatesCount = distinctDueDatesCount;
     }
 }

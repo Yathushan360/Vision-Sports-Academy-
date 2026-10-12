@@ -281,5 +281,37 @@ class PaymentServiceTest {
         assertTrue(exception.getMessage().contains("Database error saving reminder audit log"));
         assertNotNull(exception.getCause());
     }
+
+    @Test
+    @DisplayName("Verify PriorityQueue orders overdue payments by highest debt first (Lecture 07 Slides 25-32)")
+    void testPriorityQueue_OrdersByHighestDebtFirst() {
+        Payment p1 = new Payment();
+        p1.setPaymentId(10);
+        p1.setAmount(new BigDecimal("1500.00"));
+        p1.setStatus(PaymentStatus.OVERDUE);
+
+        Payment p2 = new Payment();
+        p2.setPaymentId(20);
+        p2.setAmount(new BigDecimal("5000.00")); // Largest debt
+        p2.setStatus(PaymentStatus.OVERDUE);
+
+        Payment p3 = new Payment();
+        p3.setPaymentId(30);
+        p3.setAmount(new BigDecimal("2500.00"));
+        p3.setStatus(PaymentStatus.OVERDUE);
+
+        when(paymentRepository.findByStatus(PaymentStatus.PENDING)).thenReturn(Collections.emptyList());
+        when(paymentRepository.findByStatus(PaymentStatus.OVERDUE)).thenReturn(java.util.Arrays.asList(p1, p2, p3));
+
+        java.util.PriorityQueue<Payment> queue = paymentService.getPrioritizedOverdueQueue();
+
+        assertNotNull(queue);
+        assertEquals(3, queue.size());
+        // Polling removes in priority order (highest debt first)
+        assertEquals(20, queue.poll().getPaymentId()); // 5000.00
+        assertEquals(30, queue.poll().getPaymentId()); // 2500.00
+        assertEquals(10, queue.poll().getPaymentId()); // 1500.00
+        assertTrue(queue.isEmpty());
+    }
 }
 

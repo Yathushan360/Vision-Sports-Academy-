@@ -22,7 +22,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.stream.Collectors;
 
 /**
@@ -227,7 +229,46 @@ public class PaymentService implements IPaymentService {
     }
 
     /**
+     * Java Collection Framework: Queue & PriorityQueue (Lecture 07 Slides 25-32).
+     * Organizes overdue invoices into a heap-ordered PriorityQueue where payments with
+     * higher debt balances are positioned at the head of the queue.
+     */
+    @Override
+    public PriorityQueue<Payment> getPrioritizedOverdueQueue() {
+        calculateOverduePayments();
+        List<Payment> overduePayments = paymentRepository.findByStatus(PaymentStatus.OVERDUE);
+
+        // Custom Comparator: Descending order by debt amount (highest balance first)
+        PriorityQueue<Payment> queue = new PriorityQueue<>(
+                (p1, p2) -> {
+                    BigDecimal a1 = (p1.getAmount() != null) ? p1.getAmount() : BigDecimal.ZERO;
+                    BigDecimal a2 = (p2.getAmount() != null) ? p2.getAmount() : BigDecimal.ZERO;
+                    return a2.compareTo(a1);
+                }
+        );
+
+        queue.addAll(overduePayments);
+        return queue;
+    }
+
+    /**
+     * Extracts overdue payments in descending order of financial priority.
+     * Demonstrates Queue polling (FIFO according to priority ordering).
+     */
+    @Override
+    public List<Payment> getPrioritizedOverduePayments() {
+        PriorityQueue<Payment> queue = new PriorityQueue<>(getPrioritizedOverdueQueue());
+        List<Payment> prioritizedList = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            prioritizedList.add(queue.poll());
+        }
+        return prioritizedList;
+    }
+
+    /**
      * Batch triggers payment reminder notifications for all currently OVERDUE fee records.
+     * Utilizes PriorityQueue<Payment> (Lecture 07) to ensure highest-risk overdue debts
+     * are alerted first before smaller accounts.
      * Records each notification attempt in the database for auditing and history tracking.
      */
     @Override
@@ -235,10 +276,13 @@ public class PaymentService implements IPaymentService {
         // Ensure overdue checks are updated first
         calculateOverduePayments();
 
-        List<Payment> overduePayments = paymentRepository.findByStatus(PaymentStatus.OVERDUE);
+        // PriorityQueue orders receivables by highest balance first
+        PriorityQueue<Payment> priorityQueue = getPrioritizedOverdueQueue();
         int dispatchedCount = 0;
 
-        for (Payment payment : overduePayments) {
+        while (!priorityQueue.isEmpty()) {
+            Payment payment = priorityQueue.poll();
+
             // Polymorphic dispatch via template method
             AbstractNotificationDispatcher dispatcher = resolveDispatcher(ReminderChannel.SMS);
             dispatcher.dispatch(payment, "Notice: Your academy training fee is overdue. Please settle immediately.");

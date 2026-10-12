@@ -12,6 +12,7 @@ import lk.sliit.visionacademy.exception.PaymentProcessingException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.PriorityQueue;
 
 public interface IPaymentService {
 
@@ -47,4 +48,9 @@ public interface IPaymentService {
     int sendOverdueReminders();
     PaymentReminder sendReminder(Integer paymentId, ReminderChannel channel) throws PaymentProcessingException;
     List<PaymentReminder> getReminderLogs(Integer paymentId);
+
+    // Java Collection Framework (Lecture 07 Slides 25-32):
+    // PriorityQueue orders overdue payments by debt magnitude for high-priority recovery
+    PriorityQueue<Payment> getPrioritizedOverdueQueue();
+    List<Payment> getPrioritizedOverduePayments();
 }

@@ -268,14 +268,14 @@
             <div class="kpi-card card-pending">
                 <div class="kpi-header">Pending Receivables</div>
                 <div class="kpi-value" th:text="${'Rs. ' + #numbers.formatDecimal(summary.totalPendingAmount, 1, 2)}">Rs. 0.00</div>
-                <div class="kpi-subtext" th:text="${summary.pendingCount + ' Pending Payments'}">0 Pending Payments</div>
+                <div class="kpi-subtext" th:text="${summary.pendingCount + ' Pending (' + summary.uniqueDebtorsCount + ' Unique Students)'}">0 Pending Payments</div>
             </div>
 
             <!-- Overdue Debts & Penalties -->
             <div class="kpi-card card-overdue">
                 <div class="kpi-header">Overdue Debts & Penalties</div>
                 <div class="kpi-value" th:text="${'Rs. ' + #numbers.formatDecimal(summary.totalOverdueAmount, 1, 2)}">Rs. 0.00</div>
-                <div class="kpi-subtext" th:text="${summary.overdueCount + ' Overdue Invoices'}">0 Overdue Invoices</div>
+                <div class="kpi-subtext" th:text="${summary.overdueCount + ' Overdue Invoices | ' + summary.distinctDueDatesCount + ' Billing Cycles'}">0 Overdue Invoices</div>
             </div>
 
             <!-- Collection Efficiency -->
@@ -330,6 +330,29 @@
                         </tr>
                         <tr th:if="${statusDistribution == null or #maps.isEmpty(statusDistribution)}">
                             <td colspan="2" style="text-align: center; color: var(--text-muted); padding: 16px;">No records available.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Overdue Debt Aging Schedule (LinkedHashMap: Preserved Insertion Order) -->
+            <div class="content-card" style="grid-column: span 2;">
+                <h3>Overdue Debt Aging Analysis (Preserved Chronological Ordering)</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Aging Bracket</th>
+                            <th style="text-align: right;">Overdue Debt Exposure (LKR)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="entry : ${agingSchedule}">
+                            <td style="font-weight: 600;" th:text="${entry.key}">1 - 7 Days (Grace Period)</td>
+                            <td style="text-align: right; font-weight: 700; color: var(--red);"
+                                th:text="${'Rs. ' + #numbers.formatDecimal(entry.value, 1, 2)}">Rs. 0.00</td>
+                        </tr>
+                        <tr th:if="${agingSchedule == null or #maps.isEmpty(agingSchedule)}">
+                            <td colspan="2" style="text-align: center; color: var(--text-muted); padding: 16px;">No overdue debt recorded.</td>
                         </tr>
                     </tbody>
                 </table>
