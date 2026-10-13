@@ -1,33 +1,55 @@
-CREATE DATABASE IF NOT EXISTS sports_academy_db;
-USE sports_academy_db;
+CREATE DATABASE IF NOT EXISTS vision_academy_db;
+USE vision_academy_db;
 
-CREATE TABLE fee_structure (
-    fee_id INT,
-    fee_type ENUM('MONTHLY_TRAINING', 'REGISTRATION') NOT NULL,
-    amount DECIMAL(10,2) NOT NULL, 
-    age_group VARCHAR(10), 
-    effective_from DATE NOT NULL, 
-    CONSTRAINT pk_fee PRIMARY KEY (fee_id)
+-- Member 1: User & Profile Management
+CREATE TABLE IF NOT EXISTS user_accounts (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(20) NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE payments (
-    payment_id INT, 
-    player_id INT NOT NULL, 
-    fee_id INT NOT NULL, 
-    amount DECIMAL(10,2) NOT NULL, 
-    due_date DATE NOT NULL, 
-    paid_date DATE, 
-    status ENUM('PENDING', 'PAID', 'OVERDUE') DEFAULT 'PENDING' NOT NULL, 
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT pk_payments PRIMARY KEY (payment_id), 
-    CONSTRAINT fk_payments_fee FOREIGN KEY (fee_id) REFERENCES fee_structure(fee_id)
+CREATE TABLE IF NOT EXISTS parent_guardians (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    parent_code VARCHAR(20) NOT NULL UNIQUE,
+    full_name VARCHAR(100) NOT NULL,
+    phone VARCHAR(30) NOT NULL,
+    email VARCHAR(120),
+    address VARCHAR(255),
+    status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
+    user_account_id BIGINT UNIQUE,
+    CONSTRAINT fk_parent_user FOREIGN KEY (user_account_id) REFERENCES user_accounts(id)
 );
 
-CREATE TABLE payment_reminders (
-    reminder_id    INT,
-    payment_id     INT NOT NULL,
-    sent_at        DATETIME DEFAULT CURRENT_TIMESTAMP,
-    channel        ENUM('EMAIL', 'SMS', 'APP') DEFAULT 'SMS',
-    CONSTRAINT pk_reminders PRIMARY KEY (reminder_id),
-    CONSTRAINT fk_reminders_payment FOREIGN KEY (payment_id) REFERENCES payments(payment_id) ON DELETE CASCADE
+CREATE TABLE IF NOT EXISTS coaches (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    coach_code VARCHAR(20) NOT NULL UNIQUE,
+    full_name VARCHAR(100) NOT NULL,
+    phone VARCHAR(30),
+    email VARCHAR(120),
+    coaching_license VARCHAR(100),
+    assigned_group VARCHAR(50),
+    status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
+    user_account_id BIGINT UNIQUE,
+    CONSTRAINT fk_coach_user FOREIGN KEY (user_account_id) REFERENCES user_accounts(id)
 );
+
+CREATE TABLE IF NOT EXISTS players (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    player_code VARCHAR(20) NOT NULL UNIQUE,
+    full_name VARCHAR(100) NOT NULL,
+    date_of_birth DATE,
+    age_group VARCHAR(20) NOT NULL,
+    medical_information VARCHAR(500),
+    kit_size VARCHAR(20),
+    status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
+    parent_id BIGINT,
+    user_account_id BIGINT UNIQUE,
+    CONSTRAINT fk_player_parent FOREIGN KEY (parent_id) REFERENCES parent_guardians(id),
+    CONSTRAINT fk_player_user FOREIGN KEY (user_account_id) REFERENCES user_accounts(id)
+);
+
+-- Demo administrator. The application also ensures this account exists.
+-- Login: admin / admin123
