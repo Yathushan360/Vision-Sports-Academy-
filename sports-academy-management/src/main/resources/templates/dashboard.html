@@ -1,3 +1,491 @@
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | Vision Sports Academy</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #f4f7fb;
+            color: #1e293b;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            flex-shrink: 0;
+            background: #172554;
+            color: white;
+            padding: 25px 16px;
+        }
+
+        .brand {
+            padding: 0 12px 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+            margin-bottom: 22px;
+        }
+
+        .brand h2 {
+            font-size: 21px;
+            line-height: 1.4;
+        }
+
+        .brand p {
+            color: #bfdbfe;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        .nav-title {
+            color: #93c5fd;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin: 20px 12px 10px;
+            text-transform: uppercase;
+        }
+
+        .sidebar nav a {
+            display: block;
+            color: #e2e8f0;
+            text-decoration: none;
+            padding: 12px;
+            margin: 4px 0;
+            border-radius: 7px;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .sidebar nav a:hover {
+            background: #1e40af;
+            color: white;
+        }
+
+        .nav-divider {
+            border: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            margin: 18px 8px;
+        }
+
+        .main {
+            flex: 1;
+            min-width: 0;
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+        }
+
+        .topbar h1 {
+            font-size: 28px;
+            color: #172554;
+        }
+
+        .topbar p {
+            color: #64748b;
+            margin-top: 7px;
+            font-size: 14px;
+        }
+
+        .date-label {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: #475569;
+            font-size: 13px;
+        }
+
+        .welcome {
+            background: linear-gradient(120deg, #1d4ed8, #2563eb, #0f766e);
+            color: white;
+            border-radius: 14px;
+            padding: 28px;
+            margin-bottom: 28px;
+        }
+
+        .welcome h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .welcome p {
+            line-height: 1.7;
+            color: #eff6ff;
+            max-width: 750px;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04);
+        }
+
+        .panel-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+        }
+
+        .panel-head h2 {
+            color: #172554;
+            font-size: 20px;
+            margin-bottom: 7px;
+        }
+
+        .panel-head p {
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: #dbeafe;
+            color: #1d4ed8;
+            border-radius: 20px;
+            padding: 7px 12px;
+            font-size: 11px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .card {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            min-width: 0;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            background: #ffffff;
+            color: inherit;
+            text-decoration: none;
+            transition: border-color 0.2s, transform 0.2s,
+                        box-shadow 0.2s;
+        }
+
+        .card:hover {
+            border-color: #93c5fd;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 14px rgba(15, 23, 42, 0.08);
+        }
+
+        .card-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 46px;
+            height: 46px;
+            background: #eff6ff;
+            border-radius: 10px;
+            font-size: 23px;
+        }
+
+        .card h3 {
+            color: #1e293b;
+            font-size: 15px;
+            margin: 2px 0 8px;
+        }
+
+        .card p {
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .footer {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 12px;
+            padding: 10px 0 5px;
+        }
+
+        @media (max-width: 850px) {
+            .layout {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 18px;
+            }
+
+            .brand {
+                padding-bottom: 15px;
+                margin-bottom: 12px;
+            }
+
+            .sidebar nav {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 4px;
+            }
+
+            .nav-title {
+                grid-column: 1 / -1;
+            }
+
+            .nav-divider {
+                display: none;
+            }
+
+            .main {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .main {
+                padding: 14px;
+            }
+
+            .welcome,
+            .panel {
+                padding: 18px;
+            }
+
+            .topbar h1 {
+                font-size: 24px;
+            }
+
+            .sidebar nav {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="layout">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <h2>Vision Sports Academy</h2>
+            <p>Academy Management System</p>
+        </div>
+
+        <nav>
+            <div class="nav-title">Main Menu</div>
+
+            <a href="/dashboard">Dashboard</a>
+            <a href="/players">Players</a>
+            <a href="/training-sessions">Training Sessions</a>
+            <a href="/attendance">Attendance</a>
+            <a href="/performance">Player Performance</a>
+            <a href="/attendance-report">Attendance Report</a>
+
+            <hr class="nav-divider">
+
+            <div class="nav-title">Billing & Finance</div>
+
+            <a href="/payments/view">Payments</a>
+            <a href="/payments/generate">Issue Fee</a>
+            <a href="/fee-structures">Fee Config</a>
+            <a href="/reports/financial-summary">Financial Reports</a>
+        </nav>
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+            <div>
+                <h1>Dashboard</h1>
+                <p>Overview of Vision Sports Academy management.</p>
+            </div>
+
+            <div class="date-label">
+                Academy Management Portal
+            </div>
+        </header>
+
+        <section class="welcome">
+            <h2>Welcome to Vision Sports Academy</h2>
+            <p>
+                Manage players, training sessions, attendance, player
+                performance, payments and financial information from
+                one central dashboard.
+            </p>
+        </section>
+
+        <section class="panel">
+            <div class="panel-head">
+                <div>
+                    <h2>Player and Training Management</h2>
+                    <p>Manage player information and daily academy activities.</p>
+                </div>
+                <span class="status-badge">Academy Operations</span>
+            </div>
+
+            <div class="cards">
+                <a href="/players" class="card">
+                    <div class="card-icon">👥</div>
+                    <div>
+                        <h3>Player Management</h3>
+                        <p>View and manage registered players and their details.</p>
+                    </div>
+                </a>
+
+                <a href="/training-sessions" class="card">
+                    <div class="card-icon">📅</div>
+                    <div>
+                        <h3>Training Sessions</h3>
+                        <p>Manage training schedules, grounds, coaches and groups.</p>
+                    </div>
+                </a>
+
+                <a href="/attendance" class="card">
+                    <div class="card-icon">✅</div>
+                    <div>
+                        <h3>Attendance Management</h3>
+                        <p>Record and manage player attendance for sessions.</p>
+                    </div>
+                </a>
+
+                <a href="/attendance-report" class="card">
+                    <div class="card-icon">📋</div>
+                    <div>
+                        <h3>Attendance Reports</h3>
+                        <p>Review attendance records and attendance percentages.</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-head">
+                <div>
+                    <h2>Player Performance</h2>
+                    <p>Assess player skills and monitor development.</p>
+                </div>
+                <span class="status-badge">Performance Tracking</span>
+            </div>
+
+            <div class="cards">
+                <a href="/performance" class="card">
+                    <div class="card-icon">🏆</div>
+                    <div>
+                        <h3>Player Performance Assessment</h3>
+                        <p>
+                            Record technical, physical, tactical and mental
+                            scores, position-specific assessments and development goals.
+                        </p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-head">
+                <div>
+                    <h2>User and Profile Management</h2>
+                    <p>Access user and profile management features where configured.</p>
+                </div>
+                <span class="status-badge">User Management</span>
+            </div>
+
+            <div class="cards">
+                <a href="/profile" class="card">
+                    <div class="card-icon">👤</div>
+                    <div>
+                        <h3>My Profile</h3>
+                        <p>Open the profile page if the profile route is configured.</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-head">
+                <div>
+                    <h2>Billing, Payments and Reporting</h2>
+                    <p>Manage academy fees, payments and financial reports.</p>
+                </div>
+                <span class="status-badge">Billing Modules</span>
+            </div>
+
+            <div class="cards">
+                <a href="/payments/view" class="card">
+                    <div class="card-icon">💳</div>
+                    <div>
+                        <h3>Payments</h3>
+                        <p>View payment information and invoices.</p>
+                    </div>
+                </a>
+
+                <a href="/payments/generate" class="card">
+                    <div class="card-icon">📝</div>
+                    <div>
+                        <h3>Issue Fee</h3>
+                        <p>Access the fee generation page.</p>
+                    </div>
+                </a>
+
+                <a href="/fee-structures" class="card">
+                    <div class="card-icon">⚙️</div>
+                    <div>
+                        <h3>Fee Configuration</h3>
+                        <p>Access academy fee structure management.</p>
+                    </div>
+                </a>
+
+                <a href="/reports/financial-summary" class="card">
+                    <div class="card-icon">📊</div>
+                    <div>
+                        <h3>Financial Reports</h3>
+                        <p>Access financial summaries and reports.</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <footer class="footer">
+            Vision Sports Academy Management System
+        </footer>
+
+    </main>
+</div>
+</body>
+</html>
+
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dashboard | Vision Sports Academy</title><link rel="stylesheet" href="/css/style.css"><style>.nav-divider{border:0;border-top:1px solid rgba(255,255,255,.15);margin:12px 0}.cards{flex-wrap:wrap}.cards .card{min-width:220px}</style><link rel="stylesheet" href="/css/unified-layout.css"><style>/* Unified Vision Sports Academy layout overrides */
 :root { --vsa-navy:#10233f; --vsa-active:#293e5b; --vsa-bg:#f4f7fb; }
 html, body { min-height:100%; }
@@ -31,3 +519,4 @@ main.content { width:100% !important; max-width:none !important; margin:0 !impor
 <nav class="unified-nav"><a class="active" href="/dashboard"><span class="unified-icon">⌂</span><span>Dashboard</span></a><a class="" href="/players"><span class="unified-icon">⚽</span><span>Players</span></a><a class="" href="/parents"><span class="unified-icon">👨‍👩‍👧</span><span>Parents / Guardians</span></a><a class="" href="/coaches"><span class="unified-icon">🏆</span><span>Coaches</span></a><a class="" href="/training-sessions"><span class="unified-icon">▦</span><span>Training Sessions</span></a><a class="" href="/attendance"><span class="unified-icon">✓</span><span>Attendance</span></a><a class="" href="/attendance-report"><span class="unified-icon">▥</span><span>Attendance Reports</span></a><a class="" href="/performance"><span class="unified-icon">🏅</span><span>Player Performance</span></a></nav>
 <a class="unified-logout" href="/logout" style="display:block;text-align:center;text-decoration:none">Logout</a>
 </aside><main><header><div><span class="eyebrow">ACADEMY MANAGEMENT PORTAL</span><h1>Dashboard</h1><p>Manage academy users, training sessions, attendance, and billing operations.</p></div><div class="user-pill">Admin: <b id="currentUser">admin</b></div></header><section class="cards"><a href="/players" class="card"><span>⚽</span><div><h3>Players</h3><strong id="playerCount">—</strong><p>Profiles & search</p></div></a><a href="/parents" class="card"><span>👨‍👩‍👧</span><div><h3>Parents</h3><strong id="parentCount">—</strong><p>Guardians & links</p></div></a><a href="/coaches" class="card"><span>🏆</span><div><h3>Coaches</h3><strong id="coachCount">—</strong><p>Licenses & groups</p></div></a></section><section class="panel"><div class="panel-head"><div><h2>Training & Attendance</h2><p>Member 2 module — training sessions, player attendance, and performance evaluations.</p></div></div><div class="cards"><a href="/training-sessions" class="card"><span>📅</span><div><h3>Training Sessions</h3><p>Create and view training sessions</p></div></a><a href="/attendance" class="card"><span>✓</span><div><h3>Attendance</h3><p>Record player attendance</p></div></a><a href="/attendance-report" class="card"><span>📊</span><div><h3>Attendance Reports</h3><p>Review attendance records</p></div></a><a href="/performance" class="card"><span>🏅</span><div><h3>Player Performance</h3><p>View player assessments</p></div></a></div></section><section class="panel"><div class="panel-head"><div><h2>Billing, Payments & Reporting</h2><p>Member 3 module — manage fees, process player payments, automated overdue penalties, and financial analytics.</p></div><span class="status-badge" style="background:#eaf4ff;color:#1a56db">Active</span></div><div class="cards"><a href="/payments/view" class="card"><span>💳</span><div><h3>Payments</h3><p>View & settle invoices</p></div></a><a href="/payments/generate" class="card"><span>📝</span><div><h3>Issue Fee</h3><p>Assign training dues to players</p></div></a><a href="/fee-structures" class="card"><span>⚙️</span><div><h3>Fee Config</h3><p>Manage academy fee structures</p></div></a><a href="/reports/financial-summary" class="card"><span>📊</span><div><h3>Financial Reports</h3><p>KPIs, aging schedule & CSV export</p></div></a></div></section><section class="panel"><div class="panel-head"><div><h2>System Integration Progress</h2><p>Unified Vision Sports Academy modules (Member 1, Member 2 & Member 3).</p></div><span class="status-badge">All Integrated</span></div><div class="progress-grid"><div>✓ Member 1: User & Profiles</div><div>✓ Member 1: Player CRUD</div><div>✓ Member 2: Training Sessions</div><div>✓ Member 2: Attendance</div><div>✓ Member 3: Billing & Payments</div><div>✓ Member 3: Financial Reporting</div></div></section></main></div><script src="/js/common.js"></script><script>loadCounts();</script></body></html>
+ main
