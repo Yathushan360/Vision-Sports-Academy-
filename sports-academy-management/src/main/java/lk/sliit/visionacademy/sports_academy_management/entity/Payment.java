@@ -14,6 +14,7 @@ import java.util.List;
 public class Payment {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "payment_id")
     private Integer paymentId;
 
@@ -27,7 +28,7 @@ public class Payment {
      * - If individual Payment records are settled or removed, the parent FeeStructure continues
      *   to exist without being affected (shared independent lifecycle).
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fee_id", nullable = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private FeeStructure feeStructure;
