@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Receipt - Vision Sports Academy</title>
+    <style>
+        :root {
+            --primary: #1a56db;
+            --primary-dark: #1e429f;
+            --dark: #111827;
+            --muted: #4b5563;
+            --border: #e5e7eb;
+            --bg-light: #f9fafb;
+            --paid-green: #047857;
+            --paid-bg: #ecfdf5;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--dark);
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .receipt-container {
+            max-width: 750px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            padding: 48px;
+            position: relative;
+        }
+
+        .actions-bar {
+            max-width: 750px;
+            margin: 0 auto 20px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--muted);
+            border: 1px solid var(--border);
+        }
+
+        .btn-outline:hover {
+            background-color: #f3f4f6;
+            color: var(--dark);
+        }
+
+        .receipt-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 24px;
+            margin-bottom: 32px;
+        }
+
+        .academy-brand h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin: 0 0 6px 0;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .academy-brand p {
+            margin: 2px 0;
+            color: var(--muted);
+            font-size: 0.88rem;
+        }
+
+        .receipt-meta {
+            text-align: right;
+        }
+
+        .receipt-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--dark);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin: 0 0 6px 0;
+        }
+
+        .receipt-id {
+            font-family: monospace;
+            font-size: 1rem;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .detail-item h4 {
+            margin: 0 0 4px 0;
+            font-size: 0.75rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .detail-item p {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 32px;
+        }
+
+        th {
+            background-color: #f3f4f6;
+            color: var(--muted);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 12px 16px;
+            border-bottom: 2px solid var(--border);
+            text-align: left;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.95rem;
+        }
+
+        .amount-col {
+            text-align: right;
+        }
+
+        .summary-box {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 40px;
+        }
+
+        .summary-content {
+            width: 280px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 0.95rem;
+            color: var(--muted);
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-top: 2px solid var(--border);
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .stamp-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px dashed var(--border);
+        }
+
+        .paid-stamp {
+            display: inline-block;
+            border: 3px solid var(--paid-green);
+            color: var(--paid-green);
+            padding: 8px 24px;
+            border-radius: 8px;
+            font-size: 1.4rem;
+            font-weight: 900;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transform: rotate(-5deg);
+            background-color: var(--paid-bg);
+        }
+
+        .signature-block {
+            text-align: center;
+        }
+
+        .signature-line {
+            width: 180px;
+            border-bottom: 1px solid #9ca3af;
+            margin-bottom: 8px;
+        }
+
+        .signature-title {
+            font-size: 0.8rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-note {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .actions-bar {
+                display: none;
+            }
+            .receipt-container {
+                box-shadow: none;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Action Navigation (Hidden in print) -->
+    <div class="actions-bar">
+        <a th:href="@{/payments/view}" class="btn btn-outline">&larr; Back to Payments</a>
+        <button onclick="window.print()" class="btn">
+            &#128438; Print / Save as PDF
+        </button>
+    </div>
+
+    <div class="receipt-container">
+        <!-- Header -->
+        <div class="receipt-header">
+            <div class="academy-brand">
+                <h1>Vision Sports Academy</h1>
+                <p>Excellence in Athletic & Youth Training</p>
+                <p>125 Academy Road, Colombo, Sri Lanka</p>
+                <p>Tel: +94 11 234 5678 | Email: billing@visionacademy.lk</p>
+            </div>
+            <div class="receipt-meta">
+                <div class="receipt-title">Official Receipt</div>
+                <div class="receipt-id" th:text="${'REC-' + #dates.format(#dates.createNow(), 'yyyy') + '-' + #numbers.formatInteger(payment.paymentId, 4)}">REC-2026-0001</div>
+                <div style="font-size: 0.85rem; color: var(--muted); margin-top: 6px;">
+                    Date: <span th:text="${payment.paidDate != null ? payment.paidDate : #temporals.format(payment.createdAt, 'yyyy-MM-dd')}">2026-10-13</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student & Account Details -->
+        <div class="details-grid">
+            <div class="detail-item">
+                <h4>Player Identification</h4>
+                <p th:text="${'Player #' + payment.playerId}">Player #1024</p>
+            </div>
+            <div class="detail-item">
+                <h4>Payment Method</h4>
+                <p th:text="${payment.paymentMethod != null ? payment.paymentMethod : 'ONLINE_GATEWAY'}">ONLINE</p>
+            </div>
+            <div class="detail-item">
+                <h4>Invoice Reference</h4>
+                <p th:text="${'INV-PAY-' + payment.paymentId}">INV-PAY-1</p>
+            </div>
+            <div class="detail-item">
+                <h4>Transaction Reference</h4>
+                <p th:text="${payment.transactionReference != null ? payment.transactionReference : 'SYS-AUTO-' + payment.paymentId}">TXN-984214</p>
+            </div>
+        </div>
+
+        <!-- Line Item Breakdown -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Age Group</th>
+                    <th>Billing Due Date</th>
+                    <th class="amount-col">Amount (LKR)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <strong th:text="${payment.feeStructure != null ? payment.feeStructure.feeType : 'General Training Fee'}">MONTHLY_TRAINING</strong>
+                        <div style="font-size: 0.8rem; color: var(--muted);">Sports Academy Tuition & Membership Fee</div>
+                    </td>
+                    <td th:text="${payment.feeStructure != null && payment.feeStructure.ageGroup != null ? payment.feeStructure.ageGroup : 'All Ages'}">U16</td>
+                    <td th:text="${payment.dueDate}">2026-10-01</td>
+                    <td class="amount-col" th:text="${'Rs. ' + #numbers.formatDecimal(payment.amount, 1, 2)}">Rs. 2500.00</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Summary -->
+        <div class="summary-box">
+            <div class="summary-content">
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span th:text="${'Rs. ' + #numbers.formatDecimal(payment.amount, 1, 2)}">Rs. 2500.00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Tax / Handling:</span>
+                    <span>Rs. 0.00</span>
+                </div>
+                <div class="summary-total">
+                    <span>Total Paid:</span>
+                    <span th:text="${'Rs. ' + #numbers.formatDecimal(payment.amount, 1, 2)}">Rs. 2500.00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stamp & Verification -->
+        <div class="stamp-section">
+            <div>
+                <span class="paid-stamp" th:text="${payment.status}">PAID</span>
+            </div>
+            <div class="signature-block">
+                <div class="signature-line"></div>
+                <div class="signature-title">Authorized Accounts Officer</div>
+                <div style="font-size: 0.75rem; color: #9ca3af; margin-top: 2px;">Vision Sports Academy</div>
+            </div>
+        </div>
+
+        <div class="footer-note">
+            This is an official computer-generated receipt issued by the Vision Sports Academy Management System.
+        </div>
+    </div>
+
+</body>
+</html>

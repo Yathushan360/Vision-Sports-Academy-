@@ -166,11 +166,22 @@
 
         <form th:action="@{/payments/generate}" th:object="${feeRequest}" method="post">
             
-            <!-- Player ID -->
+            <!-- Player ID (Integrated with Member 1 Player CRUD) -->
             <div class="form-group">
-                <label for="playerId">Player ID *</label>
-                <input type="number" id="playerId" th:field="*{playerId}" placeholder="e.g. 1024" required />
-                <div class="form-hint">Enter the unique student/player identification number.</div>
+                <label for="playerId">Player Profile (Member 1) *</label>
+                <div th:if="${players != null and !players.isEmpty()}">
+                    <select id="playerId" th:field="*{playerId}" required>
+                        <option value="" disabled selected>-- Select Registered Player (Member 1) --</option>
+                        <option th:each="p : ${players}"
+                                th:value="${p.id}"
+                                th:text="${p.fullName + ' (' + p.playerCode + ') - ' + p.ageGroup + ' [ID: ' + p.id + ']'}">
+                        </option>
+                    </select>
+                </div>
+                <div th:unless="${players != null and !players.isEmpty()}">
+                    <input type="number" id="playerId" th:field="*{playerId}" placeholder="e.g. 1" required />
+                </div>
+                <div class="form-hint">Select a registered player from Member 1's profiles or enter the unique ID.</div>
                 <div th:if="${#fields.hasErrors('playerId')}" th:errors="*{playerId}" class="field-error"></div>
             </div>
 
