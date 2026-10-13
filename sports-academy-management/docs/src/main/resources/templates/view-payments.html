@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Payments - Vision Sports Academy</title>
+    <style>
+        :root {
+            --primary-color: #1a56db;
+            --primary-hover: #1e429f;
+            --bg-light: #f9fafb;
+            --text-dark: #111827;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --status-pending-bg: #fef3c7;
+            --status-pending-text: #92400e;
+            --status-paid-bg: #def7ec;
+            --status-paid-text: #03543f;
+            --status-overdue-bg: #fde8e8;
+            --status-overdue-text: #9b1c1c;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 32px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .badge-portal {
+            background-color: #e1effe;
+            color: #1e429f;
+            padding: 6px 12px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            align-items: center;
+        }
+
+        .search-input {
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            width: 220px;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 0.95rem;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-outline:hover {
+            background-color: #f3f4f6;
+            color: var(--text-dark);
+        }
+
+        .error-banner {
+            background-color: #fde8e8;
+            color: #9b1c1c;
+            border-left: 4px solid #f98080;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .success-banner {
+            background-color: #def7ec;
+            color: #03543f;
+            border-left: 4px solid #31c48d;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            margin-top: 8px;
+        }
+
+        th {
+            background-color: #f9fafb;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.95rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-PENDING {
+            background-color: var(--status-pending-bg);
+            color: var(--status-pending-text);
+        }
+
+        .status-PAID {
+            background-color: var(--status-paid-bg);
+            color: var(--status-paid-text);
+        }
+
+        .status-OVERDUE {
+            background-color: var(--status-overdue-bg);
+            color: var(--status-overdue-text);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 16px;
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>Vision Sports Academy</h1>
+                <p style="margin: 4px 0 0; color: var(--text-muted); font-size: 0.9rem;">Parent & Player Payment Portal</p>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <form method="post" th:action="@{/payments/reminders/trigger}" style="display:inline;">
+                    <button type="submit" class="btn" style="padding: 8px 14px; font-size: 0.88rem; background-color: #d97706;"
+                            onclick="return confirm('Send automated SMS reminders to all overdue players?');">
+                        &#128276; Trigger Reminders
+                    </button>
+                </form>
+                <a th:href="@{/payments/generate}" class="btn" style="padding: 8px 14px; font-size: 0.88rem; background-color: #047857;">
+                    + Issue Fee
+                </a>
+                <a th:href="@{/fee-structures}" class="btn btn-outline" style="padding: 8px 14px; font-size: 0.88rem;">
+                    &#9881; Fee Config
+                </a>
+                <a th:href="@{/reports/financial-summary}" class="btn btn-outline" style="padding: 8px 14px; font-size: 0.88rem;">
+                    &#128202; Analytics
+                </a>
+                <span class="badge-portal">Billing & Payments</span>
+            </div>
+        </div>
+
+        <div th:if="${success}" class="success-banner" th:text="${success}"></div>
+        <div th:if="${error}" class="error-banner" th:text="${error}"></div>
+
+        <!-- Filter / Search Form -->
+        <form class="search-bar" method="get" th:action="@{/payments/view}">
+            <input type="number" name="playerId" placeholder="Enter Player ID..." class="search-input"
+                   th:value="${selectedPlayerId}" />
+            <button type="submit" class="btn">Filter</button>
+            <a th:href="@{/payments/view}" class="btn btn-outline">Clear Filter</a>
+        </form>
+
+        <!-- Payment Records Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Payment ID</th>
+                    <th>Player ID</th>
+                    <th>Fee Type</th>
+                    <th>Amount (LKR)</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="payment : ${payments}">
+                    <td th:text="${payment.paymentId}">#1</td>
+                    <td th:text="${payment.playerId}">1024</td>
+                    <td th:text="${payment.feeStructure != null ? payment.feeStructure.feeType : 'General Training'}">MONTHLY_TRAINING</td>
+                    <td style="font-weight: 600;" th:text="${'Rs. ' + #numbers.formatDecimal(payment.amount, 1, 2)}">Rs. 2500.00</td>
+                    <td th:text="${payment.dueDate}">2026-10-01</td>
+                    <td>
+                        <span th:class="${'status-badge status-' + payment.status}" th:text="${payment.status}">PENDING</span>
+                    </td>
+                    <td>
+                        <a th:if="${payment.status.name() == 'PAID'}"
+                           th:href="@{'/payments/receipt/' + ${payment.paymentId}}"
+                           class="btn-outline" style="padding: 6px 12px; font-size: 0.82rem; border-radius: 6px; display: inline-block;">
+                           &#128196; View Receipt
+                        </a>
+                        <form th:if="${payment.status.name() != 'PAID'}"
+                              method="post" th:action="@{'/payments/pay/' + ${payment.paymentId}}" style="display:inline;">
+                            <button type="submit" class="btn" style="padding: 6px 12px; font-size: 0.82rem; border-radius: 6px;">
+                                &#128179; Pay Now
+                            </button>
+                        </form>
+                        <form th:if="${payment.status.name() == 'OVERDUE'}"
+                              method="post" th:action="@{'/payments/reminders/send/' + ${payment.paymentId}}" style="display:inline; margin-left: 4px;">
+                            <button type="submit" class="btn-outline" style="padding: 6px 10px; font-size: 0.82rem; border-color: #d97706; color: #b45309;" title="Send SMS reminder to parent">
+                                &#128276; Remind
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${payments != null and #lists.isEmpty(payments)}">
+                    <td colspan="7" class="empty-state">No payment records found for the specified criteria.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
