@@ -376,10 +376,1213 @@
             font-weight: 700;
         }
 
+test/integration-merge
         .present-number { color: #059669; }
         .absent-number { color: #dc2626; }
         .late-number { color: #d97706; }
         .excused-number { color: #7c3aed; }
+        .player-name {
+
+            color: #1f2937;
+
+            font-weight: 650;
+
+            font-size: 12px;
+
+        }
+
+        .player-id {
+
+            color: #94a3b8;
+
+            font-size: 10px;
+
+            margin-top: 2px;
+
+        }
+
+
+        /* =========================================================
+           AGE GROUP BADGE
+        ========================================================= */
+
+        .group-badge {
+
+            display: inline-block;
+
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            background: #f1f5f9;
+
+            color: #475569;
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+        }
+
+
+        /* =========================================================
+           NUMBER CELLS
+        ========================================================= */
+
+        .number-cell {
+
+            font-weight: 650;
+
+            color: #334155;
+
+        }
+
+        .present-number {
+
+            color: #059669;
+
+        }
+
+        .absent-number {
+
+            color: #dc2626;
+
+        }
+
+        .late-number {
+
+            color: #d97706;
+
+        }
+
+        .excused-number {
+
+            color: #7c3aed;
+
+        }
+
+
+        /* =========================================================
+           PERCENTAGE
+        ========================================================= */
+
+        .percentage-cell {
+
+            min-width: 145px;
+
+        }
+
+        .percentage-top {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 12px;
+
+            margin-bottom: 6px;
+
+        }
+
+        .percentage-value {
+
+            font-weight: 750;
+
+            font-size: 12px;
+
+        }
+
+        .percentage-good {
+
+            color: #15803d;
+
+        }
+
+        .percentage-medium {
+
+            color: #ca8a04;
+
+        }
+
+        .percentage-low {
+
+            color: #dc2626;
+
+        }
+
+        .mini-progress {
+
+            width: 100%;
+
+            height: 7px;
+
+            border-radius: 20px;
+
+            background: #e5e7eb;
+
+            overflow: hidden;
+
+        }
+
+        .mini-progress-fill {
+
+            height: 100%;
+
+            border-radius: 20px;
+
+            transition:
+                width 0.4s ease;
+
+        }
+
+        .mini-good {
+
+            background: #16a34a;
+
+        }
+
+        .mini-medium {
+
+            background: #eab308;
+
+        }
+
+        .mini-low {
+
+            background: #dc2626;
+
+        }
+
+
+        /* =========================================================
+           EMPTY / ERROR STATE
+        ========================================================= */
+
+        .empty {
+
+            text-align: center;
+
+            padding: 55px 20px !important;
+
+            color: #94a3b8;
+
+        }
+
+        .empty-icon {
+
+            font-size: 35px;
+
+            margin-bottom: 10px;
+
+        }
+
+        .empty-title {
+
+            color: #475569;
+
+            font-size: 14px;
+
+            font-weight: 650;
+
+            margin-bottom: 5px;
+
+        }
+
+        .empty-text {
+
+            font-size: 11px;
+
+        }
+
+
+        /* =========================================================
+           LOADING
+        ========================================================= */
+
+        .loading-spinner {
+
+            display: inline-block;
+
+            width: 20px;
+            height: 20px;
+
+            border:
+                3px solid #e2e8f0;
+
+            border-top-color: #4f46e5;
+
+            border-radius: 50%;
+
+            animation:
+                spin 0.8s linear infinite;
+
+            margin-bottom: 10px;
+
+        }
+
+        @keyframes spin {
+
+            to {
+                transform: rotate(360deg);
+            }
+
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (max-width: 1100px) {
+
+            .sidebar {
+
+                width: 220px;
+
+            }
+
+            .main {
+
+                margin-left: 220px;
+
+            }
+
+            .content {
+
+                padding:
+                    25px 22px 40px;
+
+            }
+
+        }
+
+
+        @media (max-width: 850px) {
+
+            .sidebar {
+
+                width: 75px;
+
+                padding:
+                    20px 10px;
+
+            }
+
+            .logo {
+
+                justify-content: center;
+
+                padding:
+                    4px 0 25px;
+
+            }
+
+            .logo-text {
+
+                display: none;
+
+            }
+
+            .nav-title {
+
+                display: none;
+
+            }
+
+            .nav-item {
+
+                justify-content: center;
+
+                padding:
+                    13px 8px;
+
+            }
+
+            .nav-item span:last-child {
+
+                display: none;
+
+            }
+
+            .main {
+
+                margin-left: 75px;
+
+            }
+
+            .topbar {
+
+                padding:
+                    0 20px;
+
+            }
+
+            .coach-info {
+
+                display: none;
+
+            }
+
+            .stats {
+
+                grid-template-columns:
+                    1fr 1fr;
+
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            .topbar-left p {
+
+                display: none;
+
+            }
+
+            .system-status {
+
+                display: none;
+
+            }
+
+            .content {
+
+                padding:
+                    20px 15px 35px;
+
+            }
+
+            .page-header h2 {
+
+                font-size: 23px;
+
+            }
+
+            .report-icon {
+
+                width: 45px;
+                height: 45px;
+
+                font-size: 21px;
+
+            }
+
+            .stats {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+            .filter-grid {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+            .overall-card {
+
+                padding: 18px;
+
+            }
+
+            .table-card {
+
+                padding: 14px;
+
+            }
+
+        }
+
+    
+        /* Shared Vision Sports Academy navigation theme */
+        .sidebar {
+            width: 295px !important;
+            background: #102541 !important;
+            background-image: none !important;
+            color: #ffffff !important;
+            box-shadow: none !important;
+        }
+        .nav-item.active, .nav-menu a.active {
+            background: #293e5c !important;
+            background-image: none !important;
+            color: #ffffff !important;
+            box-shadow: none !important;
+            transform: none !important;
+        }
+        .nav-item, .nav-menu a {
+            color: #e5edf8 !important;
+            border-radius: 10px !important;
+        }
+        .nav-item:hover, .nav-menu a:hover {
+            background: #203a5a !important;
+            color: #ffffff !important;
+            transform: none !important;
+        }
+        .main {
+            margin-left: 295px !important;
+        }
+        @media (max-width: 760px) {
+            .sidebar { width: 220px !important; }
+            .main { margin-left: 220px !important; padding: 18px !important; }
+        }
+        
+</style>
+
+<link rel="stylesheet" href="/css/unified-layout.css"><style>/* Unified Vision Sports Academy layout overrides */
+:root { --vsa-navy:#10233f; --vsa-active:#293e5b; --vsa-bg:#f4f7fb; }
+html, body { min-height:100%; }
+body { background:var(--vsa-bg) !important; }
+.unified-sidebar { position:fixed !important; inset:0 auto 0 0 !important; width:294px !important; height:100vh !important; overflow-y:auto !important; box-sizing:border-box !important; padding:20px 16px !important; margin:0 !important; background:var(--vsa-navy) !important; color:#fff !important; display:flex !important; flex-direction:column !important; gap:18px !important; z-index:9999 !important; border:0 !important; }
+.unified-brand { display:flex !important; align-items:center !important; gap:13px !important; padding:4px 8px 18px !important; flex:0 0 auto !important; }
+.unified-mark { width:50px !important; height:50px !important; min-width:50px !important; display:grid !important; place-items:center !important; border-radius:15px !important; background:linear-gradient(135deg,#2d8cff,#164f9a) !important; color:white !important; font-size:17px !important; font-weight:900 !important; }
+.unified-brand strong { display:block !important; font-size:16px !important; line-height:1.3 !important; color:#fff !important; }
+.unified-brand small { display:block !important; margin-top:3px !important; font-size:13px !important; color:#c4d2e5 !important; }
+.unified-nav { display:flex !important; flex-direction:column !important; gap:6px !important; width:100% !important; }
+.unified-nav a { display:flex !important; align-items:center !important; gap:12px !important; min-height:48px !important; box-sizing:border-box !important; padding:12px 14px !important; border-radius:11px !important; background:transparent !important; color:#d7e1ef !important; text-decoration:none !important; font-size:14px !important; font-weight:500 !important; line-height:1.3 !important; border:0 !important; }
+.unified-nav a:hover { background:rgba(255,255,255,.08) !important; color:#fff !important; }
+.unified-nav a.active { background:var(--vsa-active) !important; color:#fff !important; }
+.unified-icon { width:20px !important; min-width:20px !important; text-align:center !important; font-size:17px !important; }
+.unified-logout { margin-top:auto !important; width:100% !important; flex:0 0 auto !important; padding:12px 14px !important; border:1px solid rgba(255,255,255,.2) !important; border-radius:10px !important; background:transparent !important; color:#fff !important; font:inherit !important; cursor:pointer !important; }
+.app { min-height:100vh !important; }
+.app > main, body > main, main.main, .main { margin-left:294px !important; width:calc(100% - 294px) !important; max-width:none !important; box-sizing:border-box !important; }
+.app > main { padding:38px 44px !important; }
+main.main, .main { padding:24px 32px !important; }
+main.content { width:100% !important; max-width:none !important; margin:0 !important; padding:24px 32px !important; box-sizing:border-box !important; }
+.topbar { box-sizing:border-box !important; max-width:none !important; }
+@media(max-width:850px) {
+ .unified-sidebar { width:220px !important; padding:16px 10px !important; }
+ .app > main, body > main, main.main, .main { margin-left:220px !important; width:calc(100% - 220px) !important; }
+ .app > main { padding:24px 18px !important; }
+ main.main, .main { padding:20px 16px !important; }
+ main.content { padding:20px 16px !important; }
+}
+</style></head>
+
+
+<body>
+
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="unified-sidebar">
+<div class="unified-brand"><div class="unified-mark">VSA</div><div><strong>Vision Sports</strong><small>Academy</small></div></div>
+<nav class="unified-nav"><a class="" href="/dashboard"><span class="unified-icon">⌂</span><span>Dashboard</span></a><a class="" href="/players"><span class="unified-icon">⚽</span><span>Players</span></a><a class="" href="/parents"><span class="unified-icon">👨‍👩‍👧</span><span>Parents / Guardians</span></a><a class="" href="/coaches"><span class="unified-icon">🏆</span><span>Coaches</span></a><a class="" href="/training-sessions"><span class="unified-icon">▦</span><span>Training Sessions</span></a><a class="" href="/attendance"><span class="unified-icon">✓</span><span>Attendance</span></a><a class="active" href="/attendance-report"><span class="unified-icon">▥</span><span>Attendance Reports</span></a><a class="" href="/performance"><span class="unified-icon">🏅</span><span>Player Performance</span></a></nav>
+<a class="unified-logout" href="/logout" style="display:block;text-align:center;text-decoration:none">Logout</a>
+</aside>
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<div class="main">
+
+
+    <!-- =====================================================
+         TOP BAR
+    ====================================================== -->
+
+    <header class="topbar">
+
+        <div class="topbar-left">
+
+            <h1>
+                Attendance Report
+            </h1>
+
+            <p>
+                Player attendance overview
+            </p>
+
+        </div>
+
+
+        <div class="topbar-right">
+
+
+            <div class="system-status">
+
+                <span class="status-dot"></span>
+
+                System Connected
+
+            </div>
+
+
+            <div class="coach-profile">
+
+                <div class="coach-avatar">
+                    🧑‍🏫
+                </div>
+
+                <div class="coach-info">
+
+                    <strong>
+                        Coach
+                    </strong>
+
+                    <span>
+                        Academy Staff
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         CONTENT
+    ====================================================== -->
+
+    <main class="content">
+
+
+        <!-- =================================================
+             PAGE HEADER
+        ================================================== -->
+
+        <div class="page-header">
+
+            <div>
+
+                <h2>
+                    Attendance Report
+                </h2>
+
+                <p>
+                    View player attendance summaries,
+                    session statistics and attendance percentages.
+                </p>
+
+            </div>
+
+
+            <div class="report-icon">
+                📈
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             STATISTICS
+        ================================================== -->
+
+        <div class="stats">
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <div>
+
+                        <h3>
+                            Total Players
+                        </h3>
+
+                        <div
+                            class="number"
+                            id="totalPlayers">
+
+                            0
+
+                        </div>
+
+                    </div>
+
+                    <div class="stat-icon">
+                        👥
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card records">
+
+                <div class="stat-top">
+
+                    <div>
+
+                        <h3>
+                            Total Attendance Records
+                        </h3>
+
+                        <div
+                            class="number"
+                            id="totalRecords">
+
+                            0
+
+                        </div>
+
+                    </div>
+
+                    <div class="stat-icon">
+                        📋
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =================================================
+             OVERALL ATTENDANCE
+        ================================================== -->
+
+        <div class="overall-card">
+
+            <div class="overall-header">
+
+                <div class="overall-title">
+
+                    <div class="overall-icon">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Overall Attendance
+                        </h3>
+
+                        <p>
+                            Present + Late are counted as attended
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="overall-number"
+                    id="overallPercentage">
+
+                    0%
+
+                </div>
+
+            </div>
+
+
+            <div class="progress-track">
+
+                <div
+                    class="progress-fill"
+                    id="overallProgress">
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             FILTERS
+        ================================================== -->
+
+        <div class="filter-card">
+
+            <div class="filter-title">
+
+                🔎
+
+                <span>
+                    Search & Filter
+                </span>
+
+            </div>
+
+
+            <div class="filter-grid">
+
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+                        🔍
+                    </span>
+
+                    <input
+                        type="text"
+                        id="searchPlayer"
+                        placeholder="Search player name or ID...">
+
+                </div>
+
+
+                <select id="groupFilter">
+
+                    <option value="">
+                        All Age Groups
+                    </option>
+
+                    <option value="U8">
+                        U8
+                    </option>
+
+                    <option value="U10">
+                        U10
+                    </option>
+
+                    <option value="U12">
+                        U12
+                    </option>
+
+                    <option value="U14">
+                        U14
+                    </option>
+
+                    <option value="U16">
+                        U16
+                    </option>
+
+                    <option value="U18">
+                        U18
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             REPORT TABLE
+        ================================================== -->
+
+        <div class="table-card">
+
+
+            <div class="table-header">
+
+                <div class="table-title">
+
+                    <h3>
+                        Player Attendance Summary
+                    </h3>
+
+                    <span
+                        class="record-count"
+                        id="visiblePlayerCount">
+
+                        0 Players
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Player
+                            </th>
+
+                            <th>
+                                Age Group
+                            </th>
+
+                            <th>
+                                Total Sessions
+                            </th>
+
+                            <th>
+                                Present
+                            </th>
+
+                            <th>
+                                Absent
+                            </th>
+
+                            <th>
+                                Late
+                            </th>
+
+                            <th>
+                                Excused
+                            </th>
+
+                            <th>
+                                Attendance %
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="reportTable">
+
+                        <tr>
+
+                            <td
+                                colspan="8"
+                                class="empty">
+
+                                <div
+                                    class="loading-spinner">
+                                </div>
+
+                                <div class="empty-title">
+                                    Loading attendance data...
+                                </div>
+
+                                <div class="empty-text">
+                                    Please wait while the report is being prepared.
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+    </main>
+
+</div>
+
+
+<script>
+
+
+    /* =========================================================
+       API URLS
+    ========================================================= */
+
+    const playerApiUrl =
+        "/api/players";
+
+    const attendanceApiUrl =
+        "/api/attendance";
+
+
+    /* =========================================================
+       DATA
+    ========================================================= */
+
+    let players = [];
+
+    let attendanceRecords = [];
+
+
+    /* =========================================================
+       LOAD DATA
+    ========================================================= */
+
+    function normalizeAcademyPlayers(items) {
+        return (Array.isArray(items) ? items : []).map(player => ({
+            ...player, name: player.fullName || player.name || `Player #${player.id}`,
+            playerGroup: player.ageGroup || player.playerGroup || ""
+        }));
+    }
+
+    function populateGroupFilter() {
+        const select = document.getElementById("groupFilter");
+        if (!select) return;
+        const current = select.value;
+        const groups = [...new Set(players.map(p => p.playerGroup).filter(Boolean))].sort((a,b) => a.localeCompare(b));
+        select.innerHTML = '<option value="">All Age Groups</option>';
+        groups.forEach(group => { const option = document.createElement("option"); option.value = group; option.textContent = group; select.appendChild(option); });
+        if (groups.includes(current)) select.value = current;
+    }
+
+    async function loadData() {
+
+        try {
+
+            const playerResponse =
+                await fetch(
+                    playerApiUrl
+                );
+
+
+            const attendanceResponse =
+                await fetch(
+                    attendanceApiUrl
+                );
+
+
+            if (
+                !playerResponse.ok ||
+                !attendanceResponse.ok
+            ) {
+
+                throw new Error(
+                    "Unable to load data."
+                );
+
+            }
+
+
+            players = normalizeAcademyPlayers(await playerResponse.json());
+            populateGroupFilter();
+
+
+            attendanceRecords =
+                await attendanceResponse.json();
+
+
+            updateReport();
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Attendance report error:",
+                error
+            );
+
+
+            document.getElementById(
+                "reportTable"
+            ).innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="8"
+                        class="empty">
+
+                        <div class="empty-icon">
+                            ⚠️
+                        </div>
+
+                        <div class="empty-title">
+                            Unable to load attendance data
+                        </div>
+
+                        <div class="empty-text">
+                            Please check that the backend is running
+                            and try again.
+                        </div>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+
+    }
+
+
+    /* =========================================================
+       CREATE REPORT
+    ========================================================= */
+
+    function updateReport() {
+
+        const search =
+            document
+                .getElementById(
+                    "searchPlayer"
+                )
+                .value
+                .toLowerCase()
+                .trim();
+
+
+        const selectedGroup =
+            document
+                .getElementById(
+                    "groupFilter"
+                )
+                .value;
+
+
+        const filteredPlayers =
+            players.filter(
+                player => {
+
+
+                    const playerName =
+                        String(
+                            player.name || ""
+                        )
+                        .toLowerCase();
+
+
+                    const playerId =
+                        String(
+                            player.id || ""
+                        );
+
+
+                    const matchesSearch =
+                        !search ||
+                        playerId.includes(
+                            search
+                        ) ||
+                        playerName.includes(
+                            search
+                        );
+
+
+                    const matchesGroup =
+                        !selectedGroup ||
+                        player.playerGroup ===
+                        selectedGroup;
+
+
+                    return (
+                        matchesSearch &&
+                        matchesGroup
+                    );
+
+                }
+            );
+
+
+        displayReport(
+            filteredPlayers
+        );
+
+
+        updateStatistics();
+
+    }
+
+
+    /* =========================================================
+       DISPLAY REPORT
+    ========================================================= */
+
+    function displayReport(
+        playerList
+    ) {
+
+        const table =
+            document.getElementById(
+                "reportTable"
+            );
+
+
+        table.innerHTML = "";
+
+
+        document.getElementById(
+            "visiblePlayerCount"
+        ).textContent =
+            playerList.length +
+            (
+                playerList.length === 1
+                    ? " Player"
+                    : " Players"
+            );
+
+
+        if (
+            playerList.length === 0
+        ) {
+
+            table.innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="8"
+                        class="empty">
+
+                        <div class="empty-icon">
+                            🔍
+                        </div>
+
+                        <div class="empty-title">
+                            No players found
+                        </div>
+
+                        <div class="empty-text">
+                            Try changing your search or age group filter.
+                        </div>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        playerList.forEach(
+            player => {
+
+
+                /* =============================================
+                   PLAYER ATTENDANCE RECORDS
+                ============================================== */
+
+                const records =
+                    attendanceRecords.filter(
+                        record =>
+                            Number(
+                                record.playerId
+                            ) === Number(
+                                player.id
+                            )
+                    );
+
+
+                const total =
+                    records.length;
+
+
+                const present =
+                    records.filter(
+                        record =>
+                            record.status ===
+                            "PRESENT"
+                    ).length;
+
+
+                const absent =
+                    records.filter(
+                        record =>
+                            record.status ===
+                            "ABSENT"
+                    ).length;
+main
 
         .percentage-cell {
             min-width: 130px;
@@ -954,4 +2157,3 @@
 </script>
 </body>
 </html>
-```
