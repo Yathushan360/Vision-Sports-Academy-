@@ -1,278 +1,158 @@
-
 package lk.sliit.visionacademy.sports_academy_management.service;
 
-import lk.sliit.visionacademy.sports_academy_management.entity.AccountStatus;
-import lk.sliit.visionacademy.sports_academy_management.entity.ParentGuardian;
-import lk.sliit.visionacademy.sports_academy_management.entity.Role;
-import lk.sliit.visionacademy.sports_academy_management.entity.UserAccount;
-import lk.sliit.visionacademy.sports_academy_management.model.Player;
-import lk.sliit.visionacademy.sports_academy_management.repository.ParentGuardianRepository;
-import lk.sliit.visionacademy.sports_academy_management.repository.PlayerRepository;
-import lk.sliit.visionacademy.sports_academy_management.repository.UserAccountRepository;
+import lk.sliit.visionacademy.sports_academy_management.entity.*;
+import lk.sliit.visionacademy.sports_academy_management.repository.*;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PlayerService {
 
-    private final PlayerRepository playerRepository;
+    private final PlayerRepository players;
     private final ParentGuardianRepository parents;
     private final UserAccountRepository users;
     private final PasswordService passwords;
 
     public PlayerService(
-            PlayerRepository playerRepository,
+            PlayerRepository players,
             ParentGuardianRepository parents,
             UserAccountRepository users,
             PasswordService passwords) {
 
-        this.playerRepository = playerRepository;
+        this.players = players;
         this.parents = parents;
         this.users = users;
         this.passwords = passwords;
     }
 
-    // Member 2: existing player CRUD methods
-
-    public List<Player> getAllPlayers() {
-        return playerRepository.findAll();
-    }
-
-    public Optional<Player> getPlayerById(Long id) {
-        return playerRepository.findById(id);
-    }
-
-    public Player savePlayer(Player player) {
-        synchronizeLegacyFields(player);
-
-        if (player.getStatus() == null) {
-            player.setStatus(AccountStatus.ACTIVE);
-        }
-
-        return playerRepository.save(player);
-    }
-
-    public Player updatePlayer(Long id, Player incoming) {
-        Optional<Player> result = playerRepository.findById(id);
-
-        if (result.isEmpty()) {
-            return null;
-        }
-
-        Player current = result.get();
-
-        current.setName(incoming.getName());
-        current.setAge(incoming.getAge());
-        current.setPlayerGroup(incoming.getPlayerGroup());
-        current.setContactNumber(incoming.getContactNumber());
-
-        if (incoming.getPlayerCode() != null) {
-            current.setPlayerCode(incoming.getPlayerCode());
-        }
-
-        if (incoming.getFullName() != null) {
-            current.setFullName(incoming.getFullName());
-        }
-
-        current.setDateOfBirth(incoming.getDateOfBirth());
-
-        if (incoming.getAgeGroup() != null) {
-            current.setAgeGroup(incoming.getAgeGroup());
-        }
-
-        current.setMedicalInformation(incoming.getMedicalInformation());
-        current.setKitSize(incoming.getKitSize());
-
-        if (incoming.getStatus() != null) {
-            current.setStatus(incoming.getStatus());
-        }
-
-        synchronizeLegacyFields(current);
-        synchronizeUserStatus(current);
-
-        return playerRepository.save(current);
-    }
-
-    public void deletePlayer(Long id) {
-        playerRepository.deleteById(id);
-    }
-
-    // Member 1: player listing and search
-
     public List<Player> all() {
-        return getAllPlayers();
+        return players.findAll();
     }
 
     public Player get(Long id) {
-        return playerRepository.findById(id).orElseThrow();
+        return players.findById(id).orElseThrow();
     }
 
-    public List<Player> search(String query) {
-        if (query == null || query.isBlank()) {
+    public List<Player> search(String q) {
+
+        if (q == null || q.isBlank()) {
             return all();
         }
 
-        String term = query.trim();
+        String s = q.trim();
 
-        List<Player> results = new ArrayList<>(
-                playerRepository.findByAgeGroupIgnoreCase(term)
+        List<Player> byAge =
+                players.findByAgeGroupIgnoreCase(s);
+
+        List<Player> byNameCode =
+                players.findByFullNameContainingIgnoreCaseOrPlayerCodeContainingIgnoreCase(s, s);
+
+        byAge.addAll(
+                byNameCode.stream()
+                        .filter(p -> !byAge.contains(p))
+                        .toList()
         );
 
-        for (Player player :
-                playerRepository.findByFullNameContainingIgnoreCaseOrPlayerCodeContainingIgnoreCase(
-                        term, term)) {
-
-            if (!results.contains(player)) {
-                results.add(player);
-            }
-        }
-
-        return results;
+        return byAge;
     }
 
-    // Member 1: profile creation, parent linking and optional login
-
-    @Transactional
     public Player save(
-            Player player,
+            Player p,
             Long parentId,
             String username,
             String password) {
 
-        if (player.getPlayerCode() == null
-                || player.getPlayerCode().isBlank()) {
-
-            player.setPlayerCode(
+        if (p.getPlayerCode() == null || p.getPlayerCode().isBlank()) {
+            p.setPlayerCode(
                     "PLY-" + System.currentTimeMillis() % 100000
             );
         }
 
-        linkParent(player, parentId);
-
-        if (player.getStatus() == null) {
-            player.setStatus(AccountStatus.ACTIVE);
+        if (parentId != null) {
+            p.setParent(
+                    parents.findById(parentId).orElseThrow()
+            );
+        } else {
+            p.setParent(null);
         }
 
-        synchronizeLegacyFields(player);
+        if (p.getStatus() == null) {
+            p.setStatus(AccountStatus.ACTIVE);
+        }
 
-        if (player.getUserAccount() == null
+        /*
+         * Create the optional login account.
+         * The login account status now matches the player status.
+         */
+        if (p.getUserAccount() == null
                 && username != null
                 && !username.isBlank()) {
 
-            UserAccount account = new UserAccount();
-            account.setUsername(username);
-            account.setPasswordHash(
+            UserAccount u = new UserAccount();
+
+            u.setUsername(username);
+
+            u.setPasswordHash(
                     passwords.encode(
                             password == null || password.isBlank()
                                     ? "player123"
                                     : password
                     )
             );
-            account.setRole(Role.PLAYER);
-            account.setStatus(player.getStatus());
 
-            player.setUserAccount(users.save(account));
+            u.setRole(Role.PLAYER);
+
+            // Keep login account status synchronized
+            // with the player's account status.
+            u.setStatus(p.getStatus());
+
+            p.setUserAccount(users.save(u));
         }
 
-        return playerRepository.save(player);
+        return players.save(p);
     }
 
-    // Member 1: profile update, parent link and login status sync
-
-    @Transactional
     public Player update(
             Long id,
             Player incoming,
             Long parentId) {
 
-        Player current = get(id);
+        Player p = get(id);
 
-        if (incoming.getPlayerCode() != null) {
-            current.setPlayerCode(incoming.getPlayerCode());
+        p.setFullName(incoming.getFullName());
+        p.setDateOfBirth(incoming.getDateOfBirth());
+        p.setAgeGroup(incoming.getAgeGroup());
+        p.setMedicalInformation(incoming.getMedicalInformation());
+        p.setKitSize(incoming.getKitSize());
+
+        AccountStatus newStatus =
+                incoming.getStatus() == null
+                        ? AccountStatus.ACTIVE
+                        : incoming.getStatus();
+
+        // Update player status
+        p.setStatus(newStatus);
+
+        // Keep linked login account status synchronized
+        if (p.getUserAccount() != null) {
+            p.getUserAccount().setStatus(newStatus);
+            users.save(p.getUserAccount());
         }
 
-        current.setFullName(incoming.getFullName());
-        current.setDateOfBirth(incoming.getDateOfBirth());
-        current.setAgeGroup(incoming.getAgeGroup());
-        current.setMedicalInformation(incoming.getMedicalInformation());
-        current.setKitSize(incoming.getKitSize());
-
-        AccountStatus status = incoming.getStatus() == null
-                ? AccountStatus.ACTIVE
-                : incoming.getStatus();
-
-        current.setStatus(status);
-
-        linkParent(current, parentId);
-        synchronizeLegacyFields(current);
-        synchronizeUserStatus(current);
-
-        return playerRepository.save(current);
-    }
-
-    @Transactional
-    public void delete(Long id) {
-        playerRepository.deleteById(id);
-    }
-
-    private void linkParent(Player player, Long parentId) {
+        // Update parent/guardian link
         if (parentId == null) {
-            player.setParent(null);
+            p.setParent(null);
         } else {
-            ParentGuardian parent = parents.findById(parentId)
-                    .orElseThrow(() ->
-                            new RuntimeException("Parent not found: " + parentId));
-
-            player.setParent(parent);
-        }
-    }
-
-    private void synchronizeUserStatus(Player player) {
-        if (player.getUserAccount() != null
-                && player.getStatus() != null) {
-
-            player.getUserAccount().setStatus(player.getStatus());
-            users.save(player.getUserAccount());
-        }
-    }
-
-    private void synchronizeLegacyFields(Player player) {
-        if (player.getFullName() == null
-                && player.getName() != null) {
-
-            player.setFullName(player.getName());
-        }
-
-        if (player.getName() == null
-                && player.getFullName() != null) {
-
-            player.setName(player.getFullName());
-        }
-
-        if (player.getAgeGroup() == null
-                && player.getPlayerGroup() != null) {
-
-            player.setAgeGroup(player.getPlayerGroup());
-        }
-
-        if (player.getPlayerGroup() == null
-                && player.getAgeGroup() != null) {
-
-            player.setPlayerGroup(player.getAgeGroup());
-        }
-
-        LocalDate dob = player.getDateOfBirth();
-
-        if (dob != null) {
-            player.setAge(
-                    Math.max(0, Period.between(dob, LocalDate.now()).getYears())
+            p.setParent(
+                    parents.findById(parentId).orElseThrow()
             );
         }
+
+        return players.save(p);
+    }
+
+    public void delete(Long id) {
+        players.deleteById(id);
     }
 }

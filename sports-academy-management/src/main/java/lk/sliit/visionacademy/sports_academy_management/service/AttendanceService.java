@@ -5,7 +5,6 @@ import lk.sliit.visionacademy.sports_academy_management.repository.AttendanceRep
 import lk.sliit.visionacademy.sports_academy_management.repository.PlayerRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,9 +14,7 @@ public class AttendanceService {
     private final AttendanceRepository repository;
     private final PlayerRepository playerRepository;
 
-    public AttendanceService(
-            AttendanceRepository repository,
-            PlayerRepository playerRepository) {
+    public AttendanceService(AttendanceRepository repository, PlayerRepository playerRepository) {
         this.repository = repository;
         this.playerRepository = playerRepository;
     }
@@ -40,34 +37,16 @@ public class AttendanceService {
 
     public Attendance saveAttendance(Attendance attendance) {
 
-        if (attendance == null) {
-            throw new IllegalArgumentException(
-                    "Attendance information is required."
-            );
+        if (attendance == null || attendance.getPlayerId() == null) {
+            throw new IllegalArgumentException("Select a player from Member 1's Player Management module.");
         }
-
-        if (attendance.getPlayerId() == null) {
-            throw new IllegalArgumentException(
-                    "Select a player before marking attendance."
-            );
-        }
-
         if (!playerRepository.existsById(attendance.getPlayerId())) {
-            throw new IllegalArgumentException(
-                    "Player ID " + attendance.getPlayerId()
-                            + " does not exist."
-            );
-        }
-
-        if (attendance.getSessionId() == null) {
-            throw new IllegalArgumentException(
-                    "Select a training session before marking attendance."
-            );
+            throw new IllegalArgumentException("Player ID " + attendance.getPlayerId() + " does not exist in Member 1's player profiles.");
         }
 
         /*
-         * Check whether this player already has attendance
-         * recorded for this training session.
+         * Check whether this player already has
+         * attendance for this training session.
          */
         Attendance existingAttendance =
                 repository.findBySessionIdAndPlayerId(
@@ -76,24 +55,40 @@ public class AttendanceService {
                 );
 
         /*
-         * Update the existing record instead of creating
-         * a duplicate attendance record.
+         * If attendance already exists,
+         * update the existing record instead
+         * of creating a duplicate.
          */
         if (existingAttendance != null) {
-            existingAttendance.setStatus(attendance.getStatus());
-            existingAttendance.setRemarks(attendance.getRemarks());
-            existingAttendance.setMarkedBy(attendance.getMarkedBy());
-            existingAttendance.setMarkedAt(LocalDateTime.now());
+
+            existingAttendance.setStatus(
+                    attendance.getStatus()
+            );
+
+            existingAttendance.setRemarks(
+                    attendance.getRemarks()
+            );
+
+            existingAttendance.setMarkedBy(
+                    attendance.getMarkedBy()
+            );
+
+            existingAttendance.setMarkedAt(
+                    java.time.LocalDateTime.now()
+            );
 
             return repository.save(existingAttendance);
         }
 
         /*
-         * Create a new attendance record when one
-         * does not already exist.
+         * If no attendance exists,
+         * create a new record.
          */
         if (attendance.getMarkedAt() == null) {
-            attendance.setMarkedAt(LocalDateTime.now());
+
+            attendance.setMarkedAt(
+                    java.time.LocalDateTime.now()
+            );
         }
 
         return repository.save(attendance);
