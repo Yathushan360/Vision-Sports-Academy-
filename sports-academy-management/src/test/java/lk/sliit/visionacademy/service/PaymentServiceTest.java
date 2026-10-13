@@ -313,5 +313,78 @@ class PaymentServiceTest {
         assertEquals(10, queue.poll().getPaymentId()); // 1500.00
         assertTrue(queue.isEmpty());
     }
+
+    @Test
+    @DisplayName("Verify Composition Relationship: Payment owns PaymentAuditTrail lifecycle (Lecture 04/06.1)")
+    void testComposition_PaymentOwnsPaymentAuditTrailLifecycle() {
+        Payment payment = new Payment();
+        payment.setPaymentId(55);
+        payment.setPlayerId(999);
+        payment.setAmount(new BigDecimal("3500.00"));
+
+        // Composition: Add audit trail parts to the payment whole
+        payment.addAuditTrail("INVOICE_GENERATED", "Monthly invoice generated for player #999");
+        payment.addAuditTrail("REMINDER_DISPATCHED", "SMS reminder sent");
+
+        assertNotNull(payment.getAuditTrail());
+        assertEquals(2, payment.getAuditTrail().size());
+
+        // Verify Part points back to the Whole (strong ownership)
+        PaymentAuditTrail trail1 = payment.getAuditTrail().get(0);
+        assertEquals("INVOICE_GENERATED", trail1.getAction());
+        assertEquals(payment, trail1.getPayment());
+        assertNotNull(trail1.getRecordedAt());
+
+        PaymentAuditTrail trail2 = payment.getAuditTrail().get(1);
+        assertEquals("REMINDER_DISPATCHED", trail2.getAction());
+        assertEquals(payment, trail2.getPayment());
+    }
+
+    @Test
+    @DisplayName("Verify Dependency Relationship: PaymentReceiptPrinter uses Payment temporarily (Lecture 04/06.1)")
+    void testDependency_PaymentReceiptPrinter_UsesPaymentWithoutState() {
+        PaymentReceiptPrinter printer = new PaymentReceiptPrinter();
+
+        // Dependency: Payment object passed as a method parameter (Uses-A relationship)
+        String receipt = printer.printReceipt(samplePendingPayment);
+
+        assertNotNull(receipt);
+        assertTrue(receipt.contains("VISION SPORTS ACADEMY"));
+        assertTrue(receipt.contains("Player #1024"));
+        assertTrue(receipt.contains("Rs. 2,500.00"));
+        assertTrue(receipt.contains("MONTHLY_TRAINING"));
+
+        // Null defensive verification
+        String nullReceipt = printer.printReceipt(null);
+        assertTrue(nullReceipt.contains("ERROR"));
+    }
+
+    @Test
+    @DisplayName("Verify Aggregation Relationship: FeeStructure exists independently of Payment (Lecture 04/06.1)")
+    void testAggregation_PaymentAndFeeStructure_IndependentLifecycle() {
+        // FeeStructure exists independently in the catalog
+        FeeStructure independentFee = new FeeStructure();
+        independentFee.setFeeId(500);
+        independentFee.setAmount(new BigDecimal("4000.00"));
+        independentFee.setAgeGroup("U18");
+
+        Payment paymentA = new Payment();
+        paymentA.setPaymentId(101);
+        paymentA.setFeeStructure(independentFee); // Aggregation reference
+
+        Payment paymentB = new Payment();
+        paymentB.setPaymentId(102);
+        paymentB.setFeeStructure(independentFee); // Shared aggregation reference
+
+        // Both payments reference the same catalog tier
+        assertSame(independentFee, paymentA.getFeeStructure());
+        assertSame(independentFee, paymentB.getFeeStructure());
+
+        // Deleting or completing paymentA does not destroy independentFee or paymentB
+        paymentA.setFeeStructure(null);
+        assertNotNull(independentFee);
+        assertSame(independentFee, paymentB.getFeeStructure());
+        assertEquals(500, independentFee.getFeeId());
+    }
 }
 

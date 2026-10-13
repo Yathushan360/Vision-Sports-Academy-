@@ -94,6 +94,9 @@ public class PaymentService implements IPaymentService {
         payment.setDueDate(dueDate);
         payment.setStatus(PaymentStatus.PENDING);
 
+        // Composition: Record initial audit trail event as a part of the Payment whole (Lecture 04/06.1)
+        payment.addAuditTrail("INVOICE_GENERATED", "Monthly training fee of Rs. " + fee.getAmount() + " issued with due date " + dueDate);
+
         return paymentRepository.save(payment);
     }
 
@@ -143,6 +146,10 @@ public class PaymentService implements IPaymentService {
         if (request.getTransactionReference() != null && !request.getTransactionReference().isBlank()) {
             payment.setTransactionReference(request.getTransactionReference());
         }
+
+        // Composition: Record settlement event in the Payment's audit trail (Lecture 04/06.1)
+        payment.addAuditTrail("PAYMENT_SETTLED", "Settled Rs. " + (request.getAmount() != null ? request.getAmount() : payment.getAmount()) +
+                " via " + payment.getPaymentMethod() + " [Ref: " + payment.getTransactionReference() + "]");
 
         return paymentRepository.save(payment);
     }
@@ -223,6 +230,8 @@ public class PaymentService implements IPaymentService {
                         ? payment.getAmount().add(penalty)
                         : FinancialRulesEngine.applyLateFee(payment.getAmount());
                 payment.setAmount(updatedAmount);
+                // Composition: Record penalty assessment in the Payment's audit trail (Lecture 04/06.1)
+                payment.addAuditTrail("OVERDUE_PENALTY_APPLIED", "Late fee assessed. New balance: Rs. " + updatedAmount);
                 paymentRepository.save(payment);
             }
         }

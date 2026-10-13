@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "payments")
@@ -18,10 +20,27 @@ public class Payment {
     @Column(name = "player_id", nullable = false)
     private Integer playerId;
 
+    /**
+     * OOAD CONCEPT: AGGREGATION RELATIONSHIP (Lecture 04 Slides 8-14, Lecture 06.1):
+     * - Weak "Has-A" relationship (represented by an open/hollow diamond on FeeStructure in UML).
+     * - FeeStructure exists independently in the academy catalog.
+     * - If individual Payment records are settled or removed, the parent FeeStructure continues
+     *   to exist without being affected (shared independent lifecycle).
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fee_id", nullable = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private FeeStructure feeStructure;
+
+    /**
+     * OOAD CONCEPT: COMPOSITION RELATIONSHIP (Lecture 04 Slides 15-28, Lecture 06.1):
+     * - Strong "Whole-Part" relationship (represented by a filled diamond on Payment in UML).
+     * - Lifetime Dependency: PaymentAuditTrail parts cannot exist without the Payment whole.
+     * - Enforced via CascadeType.ALL and orphanRemoval = true: destroying a Payment
+     *   automatically destroys all its associated audit log parts.
+     */
+    @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<PaymentAuditTrail> auditTrail = new ArrayList<>();
 
     @Column(name = "amount", nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
@@ -126,5 +145,24 @@ public class Payment {
 
     private void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public List<PaymentAuditTrail> getAuditTrail() {
+        return auditTrail;
+    }
+
+    public void setAuditTrail(List<PaymentAuditTrail> auditTrail) {
+        this.auditTrail = auditTrail;
+    }
+
+    /**
+     * Composition helper: Instantiates and attaches a PaymentAuditTrail part to this Payment whole.
+     */
+    public void addAuditTrail(String action, String details) {
+        if (this.auditTrail == null) {
+            this.auditTrail = new ArrayList<>();
+        }
+        PaymentAuditTrail trail = new PaymentAuditTrail(this, action, details);
+        this.auditTrail.add(trail);
     }
 }

@@ -13,6 +13,7 @@ import lk.sliit.visionacademy.exception.InsufficientPaymentAmountException;
 import lk.sliit.visionacademy.exception.InvalidPaymentStateException;
 import lk.sliit.visionacademy.exception.PaymentProcessingException;
 import lk.sliit.visionacademy.service.IPaymentService;
+import lk.sliit.visionacademy.service.PaymentReceiptPrinter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,10 @@ public class PaymentController {
     // Dependency injection via the Service Interface (Decoupled & Encapsulated)
     @Autowired
     private IPaymentService paymentService;
+
+    // OOAD DEPENDENCY (Lecture 04/06.1): Service for formatting receipts without storing payment state
+    @Autowired
+    private PaymentReceiptPrinter paymentReceiptPrinter;
 
     // =========================================================================
     // UI ENDPOINTS (Thymeleaf Views)
@@ -86,9 +91,28 @@ public class PaymentController {
         try {
             Payment payment = paymentService.getPaymentById(id);
             model.addAttribute("payment", payment);
+            // OOAD Dependency: Passes Payment temporarily to receipt printer (Lecture 04/06.1)
+            model.addAttribute("receiptText", paymentReceiptPrinter.printReceipt(payment));
             return "payment-receipt";
         } catch (Exception e) {
             return "redirect:/payments/view?error=" + e.getMessage();
+        }
+    }
+
+    /**
+     * Plain-text printable receipt endpoint.
+     * Demonstrates OOAD Dependency Relationship: PaymentReceiptPrinter takes Payment as method argument.
+     * URL: GET /payments/receipt/{id}/raw
+     */
+    @GetMapping(value = "/receipt/{id}/raw", produces = "text/plain")
+    @ResponseBody
+    public ResponseEntity<String> printRawReceipt(@PathVariable("id") Integer id) {
+        try {
+            Payment payment = paymentService.getPaymentById(id);
+            String rawReceipt = paymentReceiptPrinter.printReceipt(payment);
+            return ResponseEntity.ok(rawReceipt);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: " + e.getMessage());
         }
     }
 

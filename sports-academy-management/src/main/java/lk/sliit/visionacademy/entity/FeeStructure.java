@@ -5,6 +5,15 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/**
+ * Entity representing academy fee rates and tiers.
+ *
+ * OOAD CONCEPT: AGGREGATION RELATIONSHIP (Lecture 04 Slides 8-14, Lecture 06.1):
+ * - FeeStructure serves as the independent catalog configuration ("Whole" in catalog context).
+ * - Payments hold an aggregation reference to FeeStructure (Payment "*" -- "1" FeeStructure).
+ * - Weak lifecycle coupling: FeeStructure exists independently of whether any Payments
+ *   have been generated, settled, or deleted.
+ */
 @Entity
 @Table(name = "fee_structure")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
