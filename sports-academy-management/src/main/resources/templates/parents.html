@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <title>Parents | Vision Sports Academy</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside>
+
+        <div class="side-brand">
+            <div class="brand-mark">VSA</div>
+
+            <div>
+                <b>Vision Sports</b>
+                <small>Academy</small>
+            </div>
+        </div>
+
+        <nav>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/players">Players</a>
+            <a class="active" href="/parents">Parents / Guardians</a>
+            <a href="/coaches">Coaches</a>
+        </nav>
+
+        <button id="logout" class="logout">Logout</button>
+
+    </aside>
+
+
+    <main>
+
+        <header>
+
+            <div>
+                <span class="eyebrow">MEMBER 1 · FR1.2</span>
+
+                <h1>Parent / Guardian Management</h1>
+
+                <p>
+                    Register guardians and link them to multiple players.
+                </p>
+            </div>
+
+        </header>
+
+
+        <section class="panel">
+
+            <div class="toolbar">
+
+                <div></div>
+
+                <button
+                        class="secondary"
+                        onclick="openParentForm()">
+                    + Register Parent
+                </button>
+
+            </div>
+
+
+            <div class="table-wrap">
+
+                <table>
+
+                    <thead>
+
+                    <tr>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Players</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+
+                    </thead>
+
+                    <tbody id="rows"></tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- REGISTER PARENT MODAL -->
+<!-- ========================= -->
+
+<div id="parentModal" class="modal hidden">
+
+    <div class="modal-card small">
+
+        <div class="modal-head">
+
+            <h2>Register Parent / Guardian</h2>
+
+            <button onclick="closeParentForm()">×</button>
+
+        </div>
+
+
+        <form id="parentForm">
+
+            <div class="form-grid">
+
+                <div>
+                    <label>Full Name *</label>
+                    <input id="pFullName" required>
+                </div>
+
+
+                <div>
+                    <label>Phone *</label>
+                    <input id="pPhone" required>
+                </div>
+
+
+                <div>
+                    <label>Email</label>
+                    <input id="pEmail" type="email">
+                </div>
+
+
+                <div>
+                    <label>Address</label>
+                    <input id="pAddress">
+                </div>
+
+
+                <div>
+                    <label>Username</label>
+                    <input id="pUsername">
+                </div>
+
+
+                <div>
+                    <label>Password</label>
+                    <input
+                            id="pPassword"
+                            type="password"
+                            placeholder="parent123">
+                </div>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <button
+                        type="button"
+                        class="secondary"
+                        onclick="closeParentForm()">
+                    Cancel
+                </button>
+
+                <button class="primary">
+                    Save Parent
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- MANAGE PLAYERS MODAL -->
+<!-- ========================= -->
+
+<div id="playerLinkModal" class="modal hidden">
+
+    <div class="modal-card small">
+
+        <div class="modal-head">
+
+            <div>
+
+                <h2>Manage Players</h2>
+
+                <p id="linkParentName"></p>
+
+            </div>
+
+            <button onclick="closePlayerLinkModal()">×</button>
+
+        </div>
+
+
+        <div id="playerSelection">
+
+            Loading players...
+
+        </div>
+
+
+        <div class="form-actions">
+
+            <button
+                    type="button"
+                    class="secondary"
+                    onclick="closePlayerLinkModal()">
+                Cancel
+            </button>
+
+            <button
+                    type="button"
+                    class="primary"
+                    onclick="savePlayerLinks()">
+                Save Links
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="/js/common.js"></script>
+<script src="/js/parents.js"></script>
+
+</body>
+
+</html>

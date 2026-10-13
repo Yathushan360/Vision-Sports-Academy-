@@ -1,20 +1,18 @@
+
 package lk.sliit.visionacademy.sports_academy_management.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import tools.jackson.databind.JsonNode;
+import lk.sliit.visionacademy.sports_academy_management.entity.AccountStatus;
 import lk.sliit.visionacademy.sports_academy_management.model.Player;
 import lk.sliit.visionacademy.sports_academy_management.service.PlayerService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/players")
@@ -26,162 +24,202 @@ public class PlayerController {
         this.playerService = playerService;
     }
 
-    // =========================================
-    // GET ALL PLAYERS
-    // =========================================
-
     @GetMapping
-    public List<Player> getAllPlayers() {
-        return playerService.getAllPlayers();
+    public List<Map<String, Object>> getAllPlayers(
+            @RequestParam(required = false) String search) {
+
+        List<Player> players = (search == null || search.isBlank())
+                ? playerService.getAllPlayers()
+                : playerService.search(search);
+
+        return players.stream().map(this::map).toList();
     }
 
-    // =========================================
-    // GET PLAYER BY ID
-    // =========================================
-
     @GetMapping("/{id}")
-    public ResponseEntity<Player> getPlayerById(
+    public ResponseEntity<Map<String, Object>> getPlayerById(
             @PathVariable Long id) {
 
         return playerService.getPlayerById(id)
-                .map(ResponseEntity::ok)
+                .map(player -> ResponseEntity.ok(map(player)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // =========================================
-    // CREATE PLAYER
-    // =========================================
-
     @PostMapping
-    public Player createPlayer(@RequestBody Player player) {
-        return playerService.savePlayer(player);
-    }
+    public Map<String, Object> createPlayer(@RequestBody JsonNode body) {
+        Player player = fromJson(body);
 
-    // =========================================
-    // UPDATE PLAYER
-    // =========================================
+        Player saved;
+        if (hasProfileFields(body)) {
+            saved = playerService.save(
+                    player,
+                    longValue(body, "parentId"),
+                    stringValue(body, "username"),
+                    stringValue(body, "password")
+            );
+        } else {
+            saved = playerService.savePlayer(player);
+        }
+
+        return map(saved);
+    }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Player> updatePlayer(
+    public ResponseEntity<Map<String, Object>> updatePlayer(
             @PathVariable Long id,
-            @RequestBody Player player) {
+            @RequestBody JsonNode body) {
 
-        Player updatedPlayer =
-                playerService.updatePlayer(id, player);
+        Player incoming = fromJson(body);
+        Player updated;
 
-        if (updatedPlayer != null) {
-            return ResponseEntity.ok(updatedPlayer);
+        if (playerService.getPlayerById(id).isEmpty()) {
+            return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.notFound().build();
-    }
+        if (hasProfileFields(body)) {
+            updated = playerService.update(
+                    id,
+                    incoming,
+                    longValue(body, "parentId")
+            );
+        } else {
+            updated = playerService.updatePlayer(id, incoming);
+        }
 
-    // =========================================
-    // DELETE PLAYER
-    // =========================================
+        if (updated == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(map(updated));
+    }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePlayer(
-            @PathVariable Long id) {
-
-        if (playerService.getPlayerById(id).isPresent()) {
-
-            playerService.deletePlayer(id);
-
-            return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deletePlayer(@PathVariable Long id) {
+        if (playerService.getPlayerById(id).isEmpty()) {
+            return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.notFound().build();
+        playerService.deletePlayer(id);
+        return ResponseEntity.noContent().build();
     }
 
-    // =========================================
-    // ADD TEST PLAYERS
-    // =========================================
-    // This adds multiple players at once.
-    // Useful for testing Attendance and Reports.
-    // =========================================
-
     @PostMapping("/add-test-data")
-    public List<Player> addTestPlayers() {
-
+    public List<Map<String, Object>> addTestPlayers() {
         List<Player> players = new ArrayList<>();
 
-        Player player1 = new Player();
-        player1.setName("Ahamed");
-        player1.setAge(16);
-        player1.setPlayerGroup("U16");
-        player1.setContactNumber("0771234567");
-        players.add(player1);
+        addTestPlayer(players, "Ahamed", 16, "U16", "0771234567");
+        addTestPlayer(players, "Mohamed Rifaz", 15, "U16", "0772345678");
+        addTestPlayer(players, "Yashan", 14, "U14", "0773456789");
+        addTestPlayer(players, "Safnas", 13, "U14", "0774567890");
+        addTestPlayer(players, "Fawzan", 12, "U12", "0775678901");
+        addTestPlayer(players, "Rizwan", 11, "U12", "0776789012");
+        addTestPlayer(players, "Arham", 10, "U10", "0777890123");
+        addTestPlayer(players, "Zayan", 9, "U10", "0778901234");
+        addTestPlayer(players, "Adam", 8, "U8", "0779012345");
+        addTestPlayer(players, "Imran", 7, "U8", "0770123456");
 
-        Player player2 = new Player();
-        player2.setName("Mohamed Rifaz");
-        player2.setAge(15);
-        player2.setPlayerGroup("U16");
-        player2.setContactNumber("0772345678");
-        players.add(player2);
+        return players.stream()
+                .map(playerService::savePlayer)
+                .map(this::map)
+                .toList();
+    }
 
-        Player player3 = new Player();
-        player3.setName("Yashan");
-        player3.setAge(14);
-        player3.setPlayerGroup("U14");
-        player3.setContactNumber("0773456789");
-        players.add(player3);
+    private void addTestPlayer(
+            List<Player> players,
+            String name,
+            int age,
+            String group,
+            String contact) {
 
-        Player player4 = new Player();
-        player4.setName("Safnas");
-        player4.setAge(13);
-        player4.setPlayerGroup("U14");
-        player4.setContactNumber("0774567890");
-        players.add(player4);
+        Player player = new Player();
+        player.setName(name);
+        player.setAge(age);
+        player.setPlayerGroup(group);
+        player.setContactNumber(contact);
+        players.add(player);
+    }
 
-        Player player5 = new Player();
-        player5.setName("Fawzan");
-        player5.setAge(12);
-        player5.setPlayerGroup("U12");
-        player5.setContactNumber("0775678901");
-        players.add(player5);
+    private Player fromJson(JsonNode body) {
+        Player player = new Player();
 
-        Player player6 = new Player();
-        player6.setName("Rizwan");
-        player6.setAge(11);
-        player6.setPlayerGroup("U12");
-        player6.setContactNumber("0776789012");
-        players.add(player6);
-
-        Player player7 = new Player();
-        player7.setName("Arham");
-        player7.setAge(10);
-        player7.setPlayerGroup("U10");
-        player7.setContactNumber("0777890123");
-        players.add(player7);
-
-        Player player8 = new Player();
-        player8.setName("Zayan");
-        player8.setAge(9);
-        player8.setPlayerGroup("U10");
-        player8.setContactNumber("0778901234");
-        players.add(player8);
-
-        Player player9 = new Player();
-        player9.setName("Adam");
-        player9.setAge(8);
-        player9.setPlayerGroup("U8");
-        player9.setContactNumber("0779012345");
-        players.add(player9);
-
-        Player player10 = new Player();
-        player10.setName("Imran");
-        player10.setAge(7);
-        player10.setPlayerGroup("U8");
-        player10.setContactNumber("0770123456");
-        players.add(player10);
-
-        List<Player> savedPlayers = new ArrayList<>();
-
-        for (Player player : players) {
-            savedPlayers.add(playerService.savePlayer(player));
+        if (body.hasNonNull("id")) {
+            player.setId(body.get("id").asLong());
         }
 
-        return savedPlayers;
+        player.setName(stringValue(body, "name"));
+        if (body.hasNonNull("age")) {
+            player.setAge(body.get("age").asInt());
+        }
+        player.setPlayerGroup(stringValue(body, "playerGroup"));
+        player.setContactNumber(stringValue(body, "contactNumber"));
+
+        player.setPlayerCode(stringValue(body, "playerCode"));
+        player.setFullName(stringValue(body, "fullName"));
+        player.setAgeGroup(stringValue(body, "ageGroup"));
+        player.setMedicalInformation(stringValue(body, "medicalInformation"));
+        player.setKitSize(stringValue(body, "kitSize"));
+
+        String dob = stringValue(body, "dateOfBirth");
+        if (dob != null && !dob.isBlank()) {
+            player.setDateOfBirth(LocalDate.parse(dob));
+        }
+
+        String status = stringValue(body, "status");
+        if (status != null && !status.isBlank()) {
+            player.setStatus(AccountStatus.valueOf(status));
+        }
+
+        return player;
+    }
+
+    private boolean hasProfileFields(JsonNode body) {
+        return body.has("playerCode")
+                || body.has("fullName")
+                || body.has("dateOfBirth")
+                || body.has("ageGroup")
+                || body.has("medicalInformation")
+                || body.has("kitSize")
+                || body.has("parentId")
+                || body.has("username")
+                || body.has("password")
+                || body.has("status");
+    }
+
+    private String stringValue(JsonNode body, String field) {
+        JsonNode value = body.get(field);
+        return value == null || value.isNull() ? null : value.asText();
+    }
+
+    private Long longValue(JsonNode body, String field) {
+        JsonNode value = body.get(field);
+        return value == null || value.isNull() || value.asText().isBlank()
+                ? null
+                : value.asLong();
+    }
+
+    private Map<String, Object> map(Player player) {
+        Map<String, Object> result = new LinkedHashMap<>();
+
+        result.put("id", player.getId());
+
+        // Member 2 fields
+        result.put("name", player.getName());
+        result.put("age", player.getAge());
+        result.put("playerGroup", player.getPlayerGroup());
+        result.put("contactNumber", player.getContactNumber());
+
+        // Member 1 profile fields
+        result.put("playerCode", player.getPlayerCode());
+        result.put("fullName", player.getFullName());
+        result.put("dateOfBirth", player.getDateOfBirth());
+        result.put("ageGroup", player.getAgeGroup());
+        result.put("medicalInformation", player.getMedicalInformation());
+        result.put("kitSize", player.getKitSize());
+        result.put("status", player.getStatus());
+        result.put("parentId",
+                player.getParent() == null ? null : player.getParent().getId());
+        result.put("parentName",
+                player.getParent() == null ? "" : player.getParent().getFullName());
+
+        return result;
     }
 }
